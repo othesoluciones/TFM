@@ -1,3 +1,4 @@
 bottle==0.12.9
 Bottleneck==1.0.0
+numpy==1.10.1
 lxml==3.4.4

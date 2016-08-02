@@ -69,7 +69,8 @@ def notifica():
  redirect('/notificaciones')
 
 
-MONGODB_URI = 'mongodb://othesoluciones:othesoluciones@ds029635.mlab.com:29635/othesoluciones1'
+cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
+MONGODB_URI =cadenaCon
 
 db = Connection(MONGODB_URI).othesoluciones1
 

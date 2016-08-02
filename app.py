@@ -1,6 +1,11 @@
 import os
-from bottle import route, default_app, template, run, static_file, error
+import datetime
+import string
+from bottle import route, default_app, template, run, static_file, error, post, get, redirect, view, request
 from lxml import etree
+from pymongo import MongoClient as Connection
+from pymongo import DESCENDING
+
 @route('/')
 def index():
     doc=etree.parse("sevilla.xml")
@@ -17,9 +22,7 @@ def hoy():
 def reporte():
 	return template("p_reporte.tpl")
 	
-@route('/notificaciones')
-def notificaciones():
-	return template("p_notificaciones.tpl")
+
 	
 @route('/predicciones')
 def predicciones():
@@ -34,5 +37,43 @@ def server_static(filepath):
 @error(404)
 def error404(error):
     return 'Nothing here, sorry'
+
+
+@get(['/notificaciones', '/notificaciones/:page#\d+#'])
+@view('p_notificaciones')
+def notificaciones(page=0):
+    ''' List messages. '''
+    PAGE_SIZE = 5
+    page = int(page)
+    prev_page = None
+    if page > 0:
+        prev_page = page - 1
+    next_page = None
+    if db.coleccion_notificaciones.count() > (page + 1) * PAGE_SIZE:
+        next_page = page + 1
+    coleccion_notificaciones = (db.coleccion_notificaciones.find()
+                .sort('date', DESCENDING)
+                .limit(PAGE_SIZE).skip(page * PAGE_SIZE))
+    return {'coleccion_notificaciones': coleccion_notificaciones,
+            'prev_page': prev_page,
+            'next_page': next_page,
+            }	
+	
+@post('/notifica')
+def notifica():
+ notif = {'email': request.POST['email'],
+               'captador': request.POST['captador'],
+               'periodicidad': request.POST['periodicidad'],
+               'realizada': datetime.datetime.now()}
+ db.coleccion_notificaciones.insert(notif)
+ redirect('/notificaciones')
+
+
+MONGODB_URI = 'mongodb://othesoluciones:othesoluciones@ds029635.mlab.com:29635/othesoluciones1'
+
+db = Connection(MONGODB_URI).othesoluciones1
+
+#Para ejecutar con BBDD local 
+#db = Connection().othesoluciones1
 
 run(host='0.0.0.0', port=int(os.environ.get('PORT',5000)))

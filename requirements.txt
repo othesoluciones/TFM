@@ -1,3 +1,4 @@
-bottle==0.12.8
+bottle==0.12.9
 lxml==3.4.4
 numpy==1.10.1
+pymongo==3.3.0

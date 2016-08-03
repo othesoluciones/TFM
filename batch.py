@@ -54,7 +54,7 @@ def envioMail():
 
 
 #scheduler.add_job(timed_job, 'interval', seconds=5)
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-fri', hour=20, minute=02)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-fri', hour=20, minute=05)
 
 scheduler.start()
 

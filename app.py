@@ -1,7 +1,7 @@
 import os
+import base64
 import datetime
 import string
-import base64
 from bottle import route, default_app, template, run, static_file, error, post, get, redirect, view, request
 from lxml import etree
 from pymongo import MongoClient as Connection
@@ -59,7 +59,8 @@ def notificaciones(page=0):
             'prev_page': prev_page,
             'next_page': next_page,
             }	
-	
+
+# para PRO hay que ponerle 2 horas +
 @post('/notifica')
 def notifica():
  notif = {'email': request.POST['email'],
@@ -69,10 +70,9 @@ def notifica():
  db.coleccion_notificaciones.insert(notif)
  redirect('/notificaciones')
 
-
 cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
-#cadenaCon= 'mongodb://othesoluciones:othesoluciones@ds029635.mlab.com:29635/othesoluciones1'
 MONGODB_URI =cadenaCon
+#MONGODB_URI = 'mongodb://othesoluciones:othesoluciones@ds029635.mlab.com:29635/othesoluciones1'
 
 db = Connection(MONGODB_URI).othesoluciones1
 

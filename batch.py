@@ -136,7 +136,7 @@ def actualiza_calidad_aire():
     df=pd.DataFrame(lista3,columns=columnas)
     df['Estacion'] = estaciones
     
-    #Día actual
+    #Dia actual
     dia = time.strftime("%d/%m/%Y")
     df['Dia']=dia
     df['Hora']=hora

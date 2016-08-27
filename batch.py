@@ -19,6 +19,7 @@ def envioMail():
  mailServer.starttls()
  mailServer.ehlo()
  password = base64.b64decode("Q29uc3RhbmNpYTIx")
+ print password
  mailServer.login("othesoluciones@gmail.com",password)
  # Construimos un mensaje Multipart, con un texto y una imagen adjunta
 
@@ -158,7 +159,7 @@ def actualiza_calidad_aire():
 #Hay que poner 2 horas menos de las que son en realidad debido a problemas en heroku de horas
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 #realmente se ejecuta a las 13:42
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=12, minute=20)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=12, minute=26)
 scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=12, minute=22)
 scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=12, minute=24)
 #realmente se ejecuta a las 13:42

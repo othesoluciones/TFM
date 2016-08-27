@@ -13,11 +13,26 @@ def index():
     muni=doc.findall("municipio")
     return template("index.tpl", mun=muni)
 	
-@route('/hoy')
-def hoy():
-	doc=etree.parse("sevilla.xml")
-	muni=doc.findall("municipio")
-	return template("p_hoy.tpl", mun=muni)
+
+@get(['/hoy', '/hoy/:page#\d+#'])
+@view('p_hoy')
+def hoy(page=0):
+    ''' List messages. '''
+    PAGE_SIZE = 15
+    page = int(page)
+    prev_page = None
+    if page > 0:
+        prev_page = page - 1
+    next_page = None
+    if db.calidad_aire_23082016_I.count() > (page + 1) * PAGE_SIZE:
+        next_page = page + 1
+    calidad_aire_23082016_I = (db.calidad_aire_23082016_I.find()
+                .sort('Estacion')
+                .limit(PAGE_SIZE).skip(page * PAGE_SIZE))
+    return {'calidad_aire_23082016_I': calidad_aire_23082016_I,
+            'prev_page': prev_page,
+            'next_page': next_page,
+            }	
 	
 @route('/reporte')
 def reporte():
@@ -53,7 +68,7 @@ def notificaciones(page=0):
     if db.coleccion_notificaciones.count() > (page + 1) * PAGE_SIZE:
         next_page = page + 1
     coleccion_notificaciones = (db.coleccion_notificaciones.find()
-                .sort('date', DESCENDING)
+                .sort('realizada', DESCENDING)
                 .limit(PAGE_SIZE).skip(page * PAGE_SIZE))
     return {'coleccion_notificaciones': coleccion_notificaciones,
             'prev_page': prev_page,

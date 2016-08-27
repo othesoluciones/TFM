@@ -51,11 +51,118 @@ def envioMail():
  # Cierre de la conexion
  mailServer.close()
  print "Enviado"
+ 
+def actualiza_calidad_aire():
+
+
+ # Para todas las localidades
+ import time
+ import json
+ import urllib
+ import pandas as pd
+ import numpy as np
+ from bs4 import BeautifulSoup
+
+ #Conectamos a la base de datos
+ import base64
+ from pymongo import MongoClient as Connection
+ cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
+ MONGODB_URI =cadenaCon
+ #MONGODB_URI = 'mongodb://othesoluciones:othesoluciones@ds029635.mlab.com:29635/othesoluciones1'
+# db = Connection(MONGODB_URI).othesoluciones1 
+ conexion = Connection(MONGODB_URI)
+ db = conexion.othesoluciones1
+
+ print type(db)
+ #calidadAire = {}
+ primeraVez = True
+
+ #for i in range (2,8):
+ for i in range (2,8):
+    link ="http://gestiona.madrid.org/azul_internet/html/web/DatosZonaAccion.icm?ESTADO_MENU=2&idZona="
+    link+=`i`
+    url = urllib.urlopen(link)
+    myfile = url.read()
+    soup = BeautifulSoup(myfile)
+    
+    #HORA
+    if primeraVez:
+        horas = soup.find_all("td", class_="txt08gr3", id="fondoVainilla")
+        horas[0].text
+        start =horas[0].text.find('(')+1
+        end = horas[0].text.find(')',start)
+        hora = horas[0].text[start:end]
+     
+        primeraVez = False
+    
+    valores = []
+    
+    #ESTACIONES
+    estaciones =[]
+    for est in soup.find_all("a", class_="txt06roj"):
+        start =est.text.find('idEstacion=')+11
+        end = est.text.find('"',start)
+        estacion = est.text[start:end].strip()
+        estaciones.append(estacion)
+    estaciones=filter(None, estaciones)
+    estaciones = sorted(set(estaciones))
+
+    #COLUMNAS
+    metricas = soup.find_all("td", class_="txt07neg",id="fondoGris")
+    columnas=[]
+    for k in range(len(metricas)):
+        columnas.append(metricas[k].strong.a['title'])
+    
+    for tabla in soup.findAll("table",align="center"):
+        for dato in tabla.find_all("td", class_="txt07neg", align="right"):
+            valores.append(dato.get_text().strip())
+    j=0
+    numContaminantes = len(soup.find("table",align="center").find_all("td", class_="txt07neg",id="fondoGris"))
+    numParamMeteor = len(columnas) - numContaminantes
+    
+    lista1=[]
+    lista2=[]
+    
+    while j<len(valores):
+        if j< numContaminantes*len(estaciones):
+            lista1.append(valores[j:j+numContaminantes])
+            j+=numContaminantes
+        else:
+            lista2.append(valores[j:j+numParamMeteor])  
+            j+=numParamMeteor
+   
+    lista3 = [a + b for a, b in zip(lista1, lista2)]
+          
+    df=pd.DataFrame(lista3,columns=columnas)
+    df['Estacion'] = estaciones
+    
+    #Día actual
+    dia = time.strftime("%d/%m/%Y")
+    df['Dia']=dia
+    df['Hora']=hora
+    
+    df.rename(columns=lambda x: x.replace('.', ''), inplace=True)
+    df.columns
+    
+    recordsdf = json.loads(df.T.to_json()).values()
+    db.calidad_aire_23082016_I.insert_many(recordsdf)
+    
+    dfFinal = df.set_index('Estacion')
+    
+    
+
+    dfFinal['Dia']=dia
+    dfFinal['Hora']=hora
+ conexion.close() 
 
 
 #scheduler.add_job(timed_job, 'interval', seconds=5)
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-fri', hour=20, minute=05)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=15, minute=35)
 
+
+
+scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=15, minute=35)
+scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=22, minute=35)
 scheduler.start()
 
 

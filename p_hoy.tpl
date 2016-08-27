@@ -12,27 +12,38 @@
 
         <thead>
            <tr>
-             <th scope="col">ESTACIÓN</th>
-             <th scope="col">NIVEL GRAMÍNEAS</th>
-             <th scope="col">OTROS</th>
+             <th scope="col">ESTACION</th>
+             <th scope="col">TEMPERATURA EN ESTACION</th>
+			 <th scope="col">DÍA</th>
+			 <th scope="col">HORA</th>
            </tr>
         </thead>
 
-
+		%for calAir in calidad_aire_23082016_I:
         <tbody>
-           <tr>
-             <th scope="row">Moncloa</th>
-             <td>Muuuuchas</td>
-             <td>Sol</td>
-           </tr>
-        </tbody> 
-        <tbody>
-           <tr>
-             <th scope="row">Arganda del rey</th>
-             <td>Pocas</td>
-             <td>Lluvia</td>
-           </tr>
-        </tbody>
+			<tr>
+				<td>
+					{{calAir['Estacion']}}
+				</td>
+				<td>
+					{{calAir['Temperatura']}}
+				</td>
+				<td>
+					{{calAir['Dia']}}
+				</td>
+				<td>
+					{{calAir['Hora']}}
+				</td>
+			</tr>
+		</tbody>
+		%end
  </table>
-
+	<div>
+      %if prev_page is not None:
+      <a href="/hoy/{{prev_page}}">&lt; Prev</a>
+      %end
+      %if next_page is not None:
+      <a href="/hoy/{{next_page}}">Next &gt;</a>
+      %end
+    </div>
 % include('footer.tpl')

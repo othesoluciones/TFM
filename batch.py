@@ -155,14 +155,16 @@ def actualiza_calidad_aire():
     dfFinal['Hora']=hora
  conexion.close() 
 
-
+#Hay que poner 2 horas menos de las que son en realidad debido a problemas en heroku de horas
 #scheduler.add_job(timed_job, 'interval', seconds=5)
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=15, minute=35)
+#realmente se ejecuta a las 13:42
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=11, minute=42)
 
 
-
-scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=15, minute=35)
-scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=22, minute=35)
+#realmente se ejecuta a las 13:42
+scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=11, minute=42)
+#realmente se ejecuta a las 22:35
+scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=20, minute=35)
 scheduler.start()
 
 

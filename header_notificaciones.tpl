@@ -18,8 +18,8 @@
           <!-- put class="tab_selected" in the li tag for the selected page - to highlight which page you're on -->
           <li><a href="/">Home</a></li>
           <li><a href="/hoy">Niveles del día</a></li>
-		  <li><a href="/reporte">¡Repórtanos!</a></li>
 		  <li><a href="/predicciones">Predicciones</a></li>
+		  <li><a href="/reporte">¡Repórtanos!</a></li>
 		  <li class="tab_selected"><a href="/notificaciones">Notificaciones</a></li>
         </ul>
       </div>

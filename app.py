@@ -6,12 +6,25 @@ from bottle import route, default_app, template, run, static_file, error, post, 
 from lxml import etree
 from pymongo import MongoClient as Connection
 from pymongo import DESCENDING
+import StringIO
+import pandas as pd
+import numpy as np
+import shapefile
+import matplotlib.pyplot as plt
 
-@route('/')
+
+#@route('/')
+@get(['/'])
+@view('index')
 def index():
-    doc=etree.parse("sevilla.xml")
-    muni=doc.findall("municipio")
-    return template("index.tpl", mun=muni)
+    #doc=etree.parse("sevilla.xml")
+    #muni=doc.findall("municipio")
+    #return template("index.tpl", mun=muni)
+	''' List noticias. '''
+	PAGE_SIZE = 10
+	noticias_del_dia = (db.noticias_del_dia.find().sort('Fecha de busqueda', DESCENDING).limit(PAGE_SIZE))
+	print noticias_del_dia
+	return {'noticias_del_dia': noticias_del_dia }	
 	
 
 @get(['/hoy', '/hoy/:page#\d+#'])
@@ -42,10 +55,23 @@ def reporte():
 	
 @route('/predicciones')
 def predicciones():
-	doc=etree.parse("sevilla.xml")
-	muni=doc.findall("municipio")
-	return template("p_predicciones.tpl", mun=muni)
-
+	#doc=etree.parse("sevilla.xml")
+	#muni=doc.findall("municipio")
+	#return template("p_predicciones.tpl", mun=muni)
+	img = StringIO.StringIO()
+	sf = shapefile.Reader("static/Municipios/200001493.shp")
+	plt.figure(figsize=(5,5))
+	for shape in sf.shapeRecords():
+		x= [i[0] for i in shape.shape.points[:]]
+		y= [i[1] for i in shape.shape.points[:]]
+		plt.plot(x,y)
+	plt.axis('off')	
+	plt.savefig(img, format='png')
+	img.seek(0)
+	plot_url = base64.b64encode(img.getvalue())
+	return template("p_predicciones.tpl", plot_url=plot_url)
+	
+	
 @route('/static/<filepath:path>')
 def server_static(filepath):
     return static_file(filepath, root='static')

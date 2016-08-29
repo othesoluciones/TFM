@@ -32,15 +32,12 @@
         <h2>Nuevo sitio web</h2>
         <h3>30 de Julio de 2016</h3>
         <p>2016 nos lleva al estreno de nuestra web. Échale un vistazo y cuentános que opinas<br /><a href="#">Leer más</a></p>
-        <h1>Links Útiles</h1>
+        <h1>Links de interés</h1>
         <ul>
-          <li><a href="#">link 1</a></li>
-          <li><a href="#">link 2</a></li>
-          <li><a href="#">link 3</a></li>
-          <li><a href="#">link 4</a></li>
+          <li><a href="http://www.polenes.com/">Sociedad Española de Alergología (SEAIC)</a></li>
+          <li><a href="http://www.madrid.org/polen">Portal de Salud Comunidad de Madrid</a></li>
+          <li><a href="http://www.laalergia.com/tipos-alergia/polen/">LaAlergia.com</a></li>
         </ul>
-        <h1>Más información</h1>
-        <p>Aquí podemos poner más cosas que puedan ser útiles para el visitante.</p>
       </div>
       <div id="content">
         <!-- insert the page content here -->

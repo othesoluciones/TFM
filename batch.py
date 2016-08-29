@@ -159,9 +159,9 @@ def actualiza_calidad_aire():
 #Hay que poner 2 horas menos de las que son en realidad debido a problemas en heroku de horas
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 #realmente se ejecuta a las 13:42
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=12, minute=32)
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=12, minute=34)
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=12, minute=36)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=06, minute=32)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=06, minute=34)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=06, minute=36)
 #realmente se ejecuta a las 13:42
 scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=11, minute=50)
 #realmente se ejecuta a las 22:35

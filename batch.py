@@ -310,7 +310,7 @@ def NivelesPolenMadrid():
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 
 #realmente se ejecuta a las 08:15
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=06, minute=15)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=06, minute=20)
 
 #realmente se ejecuta a las 08:30
 scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=06, minute=30)

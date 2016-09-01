@@ -1,6 +1,10 @@
 % include('header_hoy.tpl', title='Niveles del día')
-	<h1>Predicción del día</h1>
-
+	<h1>Municipios de Madrid</h1>
+	<ul>
+	% for m in muni:
+		<li><a href="/{{m.attrib["value"][-5:]}}/{{m.text}}">{{m.text}}</a></li>
+	%end
+	</ul>
 	
 	<table border="1">
 
@@ -19,7 +23,7 @@
            </tr>
         </thead>
 
-		%for calAir in calidad_aire_23082016_I:
+		%for calAir in calidad_aire:
         <tbody>
 			<tr>
 				<td>

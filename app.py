@@ -12,6 +12,9 @@ import numpy as np
 import shapefile
 import matplotlib.pyplot as plt
 
+import unicodedata
+def elimina_tildes(s):
+   return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
 
 #@route('/')
 @get(['/'])
@@ -31,26 +34,59 @@ def index():
 @view('p_hoy')
 def hoy(page=0):
     ''' List messages. '''
-    PAGE_SIZE = 15
+    doc=etree.parse("static/Municipios/madrid.xml")
+    muni=doc.findall("municipio")
+    PAGE_SIZE = 3
     page = int(page)
     prev_page = None
     if page > 0:
         prev_page = page - 1
     next_page = None
-    if db.calidad_aire_23082016_I.count() > (page + 1) * PAGE_SIZE:
+    if db.calidad_aire.count() > (page + 1) * PAGE_SIZE:
         next_page = page + 1
-    calidad_aire_23082016_I = (db.calidad_aire_23082016_I.find()
+    calidad_aire = (db.calidad_aire.find()
                 .sort('Estacion')
                 .limit(PAGE_SIZE).skip(page * PAGE_SIZE))
-    return {'calidad_aire_23082016_I': calidad_aire_23082016_I,
+    return {'calidad_aire': calidad_aire,
             'prev_page': prev_page,
             'next_page': next_page,
+            'muni': muni
             }	
+
+
+@route('/<cod>/<name>')
+def hoy_mun(cod,name):
+    doc=etree.parse("http://www.aemet.es/xml/municipios/localidad_"+cod+".xml")
+    p=doc.find("prediccion/dia")
+    max=p.find("temperatura").find("maxima").text
+    min=p.find("temperatura").find("minima").text
+    img = StringIO.StringIO()
+    sf = shapefile.Reader("static/Municipios/200001493.shp")
+    geomet = sf.shapeRecords()
+    plt.figure(figsize=(2,2))
+    i = 0
+    while ((elimina_tildes((sf.record(i)[2]).decode('windows-1252'))!=elimina_tildes(name.decode('utf-8'))) and (i<len(list(sf.iterRecords())))): i=i+1
+    print sf.record(3)[2]
+    first = geomet[i]
+    x= [i[0] for i in first.shape.points[:]]
+    y= [i[1] for i in first.shape.points[:]]
+    plt.plot(x,y)
+    plt.axis('off')	
+    plt.savefig(img, format='png')
+    img.seek(0)
+    plot_url = base64.b64encode(img.getvalue())
+    return template("p_hoy_mun.tpl",name=name,max=max,min=min, plot_url=plot_url)
 	
+#@route('/reporte')
+#def reporte():
+	#return template("p_reporte.tpl")
 @route('/reporte')
 def reporte():
-	return template("p_reporte.tpl")
-	
+    doc=etree.parse("static/Municipios/madrid.xml")
+    muni=doc.findall("municipio")
+    doc=etree.parse("static/Municipios/niveles.xml")
+    nivel=doc.findall("nivel")
+    return template("p_reporte.tpl", muni=muni, nivel=nivel)	
 
 	
 @route('/predicciones')

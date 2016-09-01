@@ -52,6 +52,9 @@ img
 { float: left; 
   border-right: 20px solid #FFF;}
 
+ img#spinner {
+   width: 15px;
+}
 .right
 { float: right; 
   border-left: 20px solid #FFF;}

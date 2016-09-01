@@ -145,7 +145,7 @@ def actualiza_calidad_aire():
     df.columns
     
     recordsdf = json.loads(df.T.to_json()).values()
-    db.calidad_aire_23082016_I.insert_many(recordsdf)
+    db.calidad_aire.insert_many(recordsdf)
     
     dfFinal = df.set_index('Estacion')
     
@@ -309,23 +309,23 @@ def NivelesPolenMadrid():
 #Hay que poner 2 horas menos de las que son en realidad debido a problemas en heroku de horas
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 
-#realmente se ejecuta a las 08:15
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=06, minute=15)
+#realmente se ejecuta a las 08:45
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=06, minute=45)
 
 #realmente se ejecuta a las 08:30
-scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=06, minute=20)
+scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=06, minute=50)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=06, minute=25)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=19, minute=10)
 
 #realmente se ejecuta a las 09:00
-scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=06, minute=30)
+scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=07, minute=00)
 
 #realmente se ejecuta a las 09:30
-scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=06, minute=35)
+scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=07, minute=05)
 
 #realmente se ejecuta a las 20:30
-scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=40)
+scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 
 
 

@@ -30,7 +30,7 @@
            <tr>
              <th scope="row"></th>
              <td>
-				<input value="Realizar suscripción" type="submit" onclick="toggle('spinner');/>
+				<input value="Realizar suscripción" type="submit" onclick="toggle('spinner');"/>
 				<img src="/static/style/spinner.gif" id="spinner" style="display: none;">
 			</td>
            </tr>

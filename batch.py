@@ -4,10 +4,16 @@ import base64
 import smtplib
 from apscheduler.schedulers.blocking import BlockingScheduler
 import logging
+import unicodedata
 
 logging.basicConfig()
 
 scheduler = BlockingScheduler()
+
+def elimina_tildes(s):
+   return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
+   
+   
 def envioMail():
 
  from email.mime.multipart import MIMEMultipart
@@ -222,8 +228,9 @@ def prediccionesAEMET():
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
     db.prediccionesAEMET.drop()
-	
+    a = 0
     for urls in soup.find_all('td'):
+
         localidad = urls.a.text
         url = "http://www.aemet.es"+urls.a['href']
 
@@ -244,9 +251,13 @@ def prediccionesAEMET():
         file.close()
 
         data = xmltodict.parse(data)
+        dictdata = {}
+        dictdata['municipio'] = elimina_tildes(data.items()[0][1].items()[7][1])
+        dictdata[data.items()[0][1].items()[9][0]]=data.items()[0][1].items()[9][1] 
+        db.prediccionesAEMET.insert_one(dictdata)
+        #db.prediccionesAEMET.insert_one(data)
 
-        db.prediccionesAEMET.insert_one(data)
-    conexion.close()  	
+    conexion.close()
 
 	
 def NivelesPolenMadrid():
@@ -316,7 +327,7 @@ scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=06, minute=45)
 scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=06, minute=50)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=19, minute=10)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=17, minute=53)
 
 #realmente se ejecuta a las 09:00
 scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=07, minute=00)

@@ -254,9 +254,9 @@ def prediccionesAEMET():
         dictdata = {}
         dictdata['municipio'] = elimina_tildes(data.items()[0][1].items()[7][1])
         dictdata[data.items()[0][1].items()[9][0]]=data.items()[0][1].items()[9][1] 
-		print dictdata
+        print dictdata
         db.prediccionesAEMET.insert_one(dictdata)
-		time.sleep(5)
+        time.sleep(5)
         #db.prediccionesAEMET.insert_one(data)
 
     conexion.close()
@@ -329,7 +329,7 @@ scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=06, minute=45)
 scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=06, minute=50)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=18, minute=06)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=18, minute=11)
 
 #realmente se ejecuta a las 09:00
 scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=07, minute=00)

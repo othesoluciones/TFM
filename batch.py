@@ -209,6 +209,52 @@ def noticias_del_dia():
     db.noticias_del_dia.insert_many(recordsdf)
     conexion.close()  
 	
+def prediccionAEMET (xmlUrl,municipio,CP):
+    #Crea un diccionario para cada municipio con la información que deseamos almacenar.
+    import urllib
+    import xmltodict
+    file = urllib.urlopen(xmlUrl)
+    data = file.read()
+    file.close()
+
+    data = xmltodict.parse(data)
+
+    diccionario = {}
+    #diccionario['Municipio']=municipio
+    #diccionario['link_xml']=xmlUrl
+    #diccionario['Codigo_Postal']=CP
+    diccionario[municipio]={}
+    for dia in data['root']['prediccion']['dia']:
+        diccionario[municipio][dia['@fecha']]={}
+        tamPrecip = len(dia['prob_precipitacion'])
+        if type(dia['prob_precipitacion']) ==list:
+            for periodo in dia['prob_precipitacion']:
+                if  len(periodo)>1:
+                    diccionario[municipio][dia['@fecha']]['precipitaciones '+periodo['@periodo']]=periodo['#text']          
+        else:
+            diccionario[municipio][dia['@fecha']]['precipitaciones']=dia['prob_precipitacion']
+        tamViento = len(dia['viento'])  
+        if tamViento>2:
+            for viento in dia['viento']:
+                if  len(viento)>1:
+                    diccionario[municipio][dia['@fecha']]['viento '+viento['@periodo']]= viento['velocidad']
+        else:
+            diccionario[municipio][dia['@fecha']]['viento']= viento['velocidad']
+        diccionario[municipio][dia['@fecha']]['Temperatura maxima']= dia['temperatura']['maxima']
+        diccionario[municipio][dia['@fecha']]['Temperatura minima']= dia['temperatura']['minima']
+        tamTemp=len(dia['temperatura'])  
+        if tamTemp>2:
+            for temp in dia['temperatura']['dato']:
+                diccionario[municipio][dia['@fecha']]['Temperatura '+temp['@hora']]= temp['#text'] 
+        diccionario[municipio][dia['@fecha']]['Humedad relativa maxima']= dia['humedad_relativa']['maxima']
+        diccionario[municipio][dia['@fecha']]['Humedad relativa minima']= dia['humedad_relativa']['minima'] 
+        tamHum=len(dia['humedad_relativa'])  
+        if tamHum>2:
+            for temp in dia['humedad_relativa']['dato']:
+                diccionario[municipio][dia['@fecha']]['Humedad relativa '+temp['@hora']]= temp['#text']    
+               
+    return diccionario
+
 def prediccionesAEMET():
     import urllib
     import xmltodict
@@ -228,13 +274,11 @@ def prediccionesAEMET():
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
     db.prediccionesAEMET.drop()
-    a = 0
-    for urls in soup.find_all('td'):
 
+    for urls in soup.find_all('td'):
         localidad = urls.a.text
         url = "http://www.aemet.es"+urls.a['href']
 
-        print localidad
         r = urllib.urlopen(url).read()
 
         soup = BeautifulSoup(r)
@@ -245,22 +289,11 @@ def prediccionesAEMET():
 
         for xml in xmlLink:
             xmlUrl= "http://www.aemet.es"+xml.a['href'] 
-        #prediccionAEMET (xmlUrl)
-        file = urllib.urlopen(xmlUrl)
-        data = file.read()
-        file.close()
+            CP=  xml.a['href'].split('_')[1][:5] 
+        pred=prediccionAEMET (xmlUrl,localidad,CP)
 
-        data = xmltodict.parse(data)
-        dictdata = {}
-        dictdata['municipio'] = elimina_tildes(data.items()[0][1].items()[7][1])
-        dictdata[data.items()[0][1].items()[9][0]]=data.items()[0][1].items()[9][1] 
-        print dictdata
-        db.prediccionesAEMET.insert_one(dictdata)
-        time.sleep(5)
-        #db.prediccionesAEMET.insert_one(data)
-
-    conexion.close()
-
+        db.prediccionesAEMET.insert_one(pred)
+    conexion.close()  
 	
 def NivelesPolenMadrid():
     import pandas as pd
@@ -329,7 +362,7 @@ scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=06, minute=45)
 scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=06, minute=50)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=18, minute=10)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=11, minute=24)
 
 #realmente se ejecuta a las 09:00
 scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=07, minute=00)

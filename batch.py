@@ -210,7 +210,7 @@ def noticias_del_dia():
     conexion.close()  
 	
 def prediccionAEMET (xmlUrl,municipio,CP):
-    #Crea un diccionario para cada municipio con la información que deseamos almacenar.
+    #Crea un diccionario para cada municipio con la informacion que deseamos almacenar.
     import urllib
     import xmltodict
     file = urllib.urlopen(xmlUrl)
@@ -362,7 +362,7 @@ scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=06, minute=45)
 scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=06, minute=50)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=11, minute=23)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=11, minute=26)
 
 #realmente se ejecuta a las 09:00
 scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=07, minute=00)

@@ -294,7 +294,7 @@ def prediccionesAEMET():
         print localidad
         db.prediccionesAEMET.insert_one(pred)
     print "fin"
-	conexion.close()  
+    conexion.close()  
 	
 	
 def NivelesPolenMadrid():
@@ -358,13 +358,13 @@ def NivelesPolenMadrid():
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=11, minute=35)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=11, minute=44)
 
 #realmente se ejecuta a las 08:30
-scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=11, minute=40)
+scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=11, minute=45)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=11, minute=45)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=11, minute=47)
 
 #realmente se ejecuta a las 09:00
 scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=11, minute=55)

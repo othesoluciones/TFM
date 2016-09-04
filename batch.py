@@ -167,6 +167,7 @@ def noticias_del_dia():
     import base64
     import json
     from pymongo import MongoClient as Connection
+    from bs4 import BeautifulSoup
     cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
     MONGODB_URI =cadenaCon
     #MONGODB_URI = 'mongodb://othesoluciones:othesoluciones@ds029635.mlab.com:29635/othesoluciones1'
@@ -198,7 +199,7 @@ def noticias_del_dia():
     fecha = []
     for result in results:
         noticias.append(result["link"])
-        titulo.append(result["htmlTitle"])
+        titulo.append(BeautifulSoup(result["htmlTitle"]).text)
         fecha.append(dia)
 
     df=pd.DataFrame()

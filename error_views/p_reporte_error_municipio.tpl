@@ -1,8 +1,6 @@
 % include('header_reporte.tpl', title='¡Repórtanos!')
 <h1>Repórtanos alertas</h1>
-% if alta==1:
- <h2 id="idverde">Alerta recibida con éxito. Gracias por su colaboración</h2>
-% end
+<h2 id="idrojo">Por favor seleccione un municipio correcto</h2>
 <table border="1">
 	<form action="/reporta" method="post">
 
@@ -18,7 +16,7 @@
              <th scope="row">Municipio</th>
              <td>
 				<select name="municipio">
-					<option value="ninguno" SELECTED>Seleccione un municipio</option>
+					<option value="ninguno" selected="selected">Seleccione un municipio</option>
 					% for m in muni:
 						<option value="{{m.attrib["value"][-5:]}}">{{m.text}}</option>
 					%end
@@ -31,9 +29,9 @@
              <th scope="row">Nivel</th>
              <td>
 				<select name="nivel_de_alerta">
-					<option value="ninguno" SELECTED>Seleccione un nivel de alerta</option>
-					% for n in nivel:
-						<option value="{{n.attrib["value"][-5:]}}">{{n.text}}</option>
+					<option value="ninguno" >Seleccione un nivel de alerta</option>
+					%for n in nivel:
+					      <option value="{{n.attrib["value"][-5:]}}" {{!'selected="selected"' if nivsel == n.attrib['value'] else ""}}>{{n.text}}</option>
 					%end
 				</select>
 			 </td>

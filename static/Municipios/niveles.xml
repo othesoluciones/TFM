@@ -1,5 +1,5 @@
 <root>
-	<nivel value="bajo">Bajo</nivel>
-	<nivel value="medio">Medio</nivel>
-	<nivel value="alto">Alto</nivel>
+	<nivel value="0">Bajo</nivel>
+	<nivel value="1">Medio</nivel>
+	<nivel value="2">Alto</nivel>
 </root>

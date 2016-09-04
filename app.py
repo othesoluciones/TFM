@@ -86,7 +86,35 @@ def reporte():
     muni=doc.findall("municipio")
     doc=etree.parse("static/Municipios/niveles.xml")
     nivel=doc.findall("nivel")
-    return template("p_reporte.tpl", muni=muni, nivel=nivel)	
+    alta = 0
+    return template("p_reporte.tpl", muni=muni, nivel=nivel,alta=alta)	
+
+
+@post('/reporta')
+def notifica():
+ doc=etree.parse("static/Municipios/madrid.xml")
+ muni=doc.findall("municipio")
+ doc=etree.parse("static/Municipios/niveles.xml")
+ nivel=doc.findall("nivel")
+ reporte = {'municipio': request.POST['municipio'],
+               'nivel_de_alerta': request.POST['nivel_de_alerta'],
+               'realizada': datetime.datetime.now()}	
+ print "municipio",  reporte['municipio']
+ if ((reporte['municipio']!='ninguno') and (reporte['nivel_de_alerta']!='ninguno')):	
+    db.coleccion_reportes.insert(reporte)
+    alta = 1
+    return template("p_reporte.tpl", muni=muni, nivel=nivel,alta=alta)	
+    #redirect('/reporte')
+ else:
+    if (reporte['municipio']=='ninguno'):
+      return template("error_views/p_reporte_error_municipio.tpl", muni=muni, nivel=nivel, nivsel=reporte['nivel_de_alerta'])
+    else: 
+      print reporte['municipio']
+      return template("error_views/p_reporte_error_nivel_alerta.tpl", muni=muni, nivel=nivel, munsel=reporte['municipio'])
+
+
+
+
 
 	
 @route('/predicciones')

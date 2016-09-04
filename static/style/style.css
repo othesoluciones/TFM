@@ -278,3 +278,12 @@ table tr td
 { background: #CCCCCC;
   color: #47433F;
   border-top: 1px solid #FFF;}
+  
+
+h2#idverde {
+   color: green; 
+}
+
+h2#idrojo {
+   color: red;
+}

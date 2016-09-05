@@ -365,22 +365,22 @@ def NivelesPolenMadrid():
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 
 #realmente se ejecuta a las 08:45
-#scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=06, minute=25)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=6, minute=25)
 
 #realmente se ejecuta a las 08:30
-#scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=06, minute=27)
+scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=6, minute=27)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=20, minute=20)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=6, minute=30)
 
 #realmente se ejecuta a las 09:00
-#scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=06, minute=40)
+scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=6, minute=40)
 
 #realmente se ejecuta a las 09:30
-#scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=06, minute=45)
+scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=6, minute=45)
 
 #realmente se ejecuta a las 20:30
-#scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
+scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 
 
 

@@ -248,7 +248,8 @@ def prediccionAEMET (xmlUrl,municipio,CP):
         tamTemp=len(dia['temperatura'])  
         if tamTemp>2:
             for temp in dia['temperatura']['dato']:
-                diccionario[municipio][dia['@fecha']]['Temperatura '+temp['@hora']]= #temp['#text'] 
+                print "#############->", temp.text
+                diccionario[municipio][dia['@fecha']]['Temperatura '+temp['@hora']]= temp.text #temp['#text'] 
         diccionario[municipio][dia['@fecha']]['Humedad relativa maxima']= dia['humedad_relativa']['maxima']
         diccionario[municipio][dia['@fecha']]['Humedad relativa minima']= dia['humedad_relativa']['minima'] 
         tamHum=len(dia['humedad_relativa'])  
@@ -368,7 +369,7 @@ def NivelesPolenMadrid():
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=06, minute=27)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=07, minute=12)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=07, minute=14)
 
 #realmente se ejecuta a las 09:00
 #scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=06, minute=40)

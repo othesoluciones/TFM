@@ -296,6 +296,7 @@ def prediccionesAEMET():
         pred=prediccionAEMET (xmlUrl,localidad,CP)
         print "Terminamos -->", localidad
         db.prediccionesAEMET.insert_one(pred)
+        time.sleep(5)
     print "fin"
     conexion.close()  
 	
@@ -367,7 +368,7 @@ def NivelesPolenMadrid():
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=06, minute=27)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=08, minute=11)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=08, minute=18)
 
 #realmente se ejecuta a las 09:00
 #scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=06, minute=40)

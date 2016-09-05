@@ -281,7 +281,7 @@ def prediccionesAEMET():
 
     for urls in soup.find_all('td'):
         localidad = urls.a.text
-        time.sleep(10)
+        time.sleep(2)
         url = "http://www.aemet.es"+urls.a['href']
 
         r = urllib.urlopen(url).read()
@@ -370,7 +370,7 @@ def NivelesPolenMadrid():
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=06, minute=27)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=10, minute=13)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=10, minute=20)
 
 #realmente se ejecuta a las 09:00
 #scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=06, minute=40)

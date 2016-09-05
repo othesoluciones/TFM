@@ -232,7 +232,8 @@ def prediccionAEMET (xmlUrl,municipio,CP):
         if type(dia['prob_precipitacion']) ==list:
             for periodo in dia['prob_precipitacion']:
                 if  len(periodo)>1:
-                    diccionario[municipio][dia['@fecha']]['precipitaciones '+periodo['@periodo']]=periodo['#text']          
+                    print "@@@@@@@@@@@@@---->", periodo.text
+                    diccionario[municipio][dia['@fecha']]['precipitaciones '+periodo['@periodo']]=periodo.text#periodo['#text']          
         else:
             diccionario[municipio][dia['@fecha']]['precipitaciones']=dia['prob_precipitacion']
         tamViento = len(dia['viento'])  
@@ -247,13 +248,13 @@ def prediccionAEMET (xmlUrl,municipio,CP):
         tamTemp=len(dia['temperatura'])  
         if tamTemp>2:
             for temp in dia['temperatura']['dato']:
-                diccionario[municipio][dia['@fecha']]['Temperatura '+temp['@hora']]= temp['#text'] 
+                diccionario[municipio][dia['@fecha']]['Temperatura '+temp['@hora']]= #temp['#text'] 
         diccionario[municipio][dia['@fecha']]['Humedad relativa maxima']= dia['humedad_relativa']['maxima']
         diccionario[municipio][dia['@fecha']]['Humedad relativa minima']= dia['humedad_relativa']['minima'] 
         tamHum=len(dia['humedad_relativa'])  
         if tamHum>2:
             for temp in dia['humedad_relativa']['dato']:
-                diccionario[municipio][dia['@fecha']]['Humedad relativa '+temp['@hora']]= temp['#text']    
+                diccionario[municipio][dia['@fecha']]['Humedad relativa '+temp['@hora']]= temp.text#temp['#text']    
                
     return diccionario
 
@@ -367,7 +368,7 @@ def NivelesPolenMadrid():
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=06, minute=27)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=07, minute=03)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=07, minute=12)
 
 #realmente se ejecuta a las 09:00
 #scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=06, minute=40)

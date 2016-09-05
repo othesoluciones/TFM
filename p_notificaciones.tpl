@@ -16,14 +16,17 @@
         </tbody> 
         <tbody>
            <tr>
-             <th scope="row">Captador</th>
-             <td><input name="captador" type="text" /></td>
+             <th scope="row">Municipio</th>
+             <td><input name="municipio" type="text" /></td>
            </tr>
         </tbody>
         <tbody>
            <tr>
              <th scope="row">Periodicidad</th>
-             <td><input name="periodicidad" type="text" /></td>
+             <td>
+				<input type="radio" name="periodicidad" value="d" checked="checked" /><label for="d">Diaria</label><br/><br/>
+				<input type="radio" name="periodicidad" value="r"/><input type=“datetime” name=“fechahora”>
+			  </td>
            </tr>
         </tbody>
 		<tbody>

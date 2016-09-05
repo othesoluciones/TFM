@@ -225,7 +225,7 @@ def prediccionAEMET (xmlUrl,municipio,CP):
     #diccionario['link_xml']=xmlUrl
     #diccionario['Codigo_Postal']=CP
     diccionario[municipio]={}
-    print "Llegamos hasta aqui o da erro esto"
+    print "Llegamos hasta aqui o da erro estor"
     for dia in data['root']['prediccion']['dia']:
         diccionario[municipio][dia['@fecha']]={}
         tamPrecip = len(dia['prob_precipitacion'])
@@ -367,7 +367,7 @@ def NivelesPolenMadrid():
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=06, minute=27)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=06, minute=58)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=07, minute=03)
 
 #realmente se ejecuta a las 09:00
 #scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=06, minute=40)

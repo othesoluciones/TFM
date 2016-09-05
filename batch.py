@@ -333,7 +333,7 @@ def NivelesPolenMadrid():
     datos.pop(0)
     valores = [s for s in datos if s.isdigit()]
 
-    #Calculamos la posición del primer valor numérico
+    #Calculamos la posicion del primer valor numerico
     ind =0
     primerValor=0
     for s in datos:

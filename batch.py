@@ -222,7 +222,7 @@ def prediccionAEMET (xmlUrl,municipio,CP):
     data = xmltodict.parse(data)
 
     diccionario = {}
-    #diccionario['Municipio']=municipio
+    diccionario['Municipio']=municipio
     #diccionario['link_xml']=xmlUrl
     #diccionario['Codigo_Postal']=CP
     diccionario[municipio]={}
@@ -333,8 +333,9 @@ def NivelesPolenMadrid():
     datos.pop(0)
     valores = [s for s in datos if s.isdigit()]
 
-    #Calculamos la posicion del primer valor numerico
+    #Calculamos la posición del primer valor numérico
     ind =0
+    primerValor=0
     for s in datos:
         ind+=1
         if s.isdigit() and primerValor==0:
@@ -356,8 +357,8 @@ def NivelesPolenMadrid():
 
     df=pd.DataFrame(lista,columns=columnas)
     recordsdf = json.loads(df.T.to_json()).values()
-    db.noticias_del_dia.insert_many(recordsdf)
-    conexion.close()  
+    db.nivelesPolenSEAIC.insert_many(recordsdf)
+    conexion.close()
 
 	
 #Hay que poner 2 horas menos de las que son en realidad debido a problemas en heroku de horas
@@ -370,7 +371,7 @@ def NivelesPolenMadrid():
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=06, minute=27)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=10, minute=22)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=20, minute=20)
 
 #realmente se ejecuta a las 09:00
 #scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=06, minute=40)

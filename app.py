@@ -56,10 +56,22 @@ def hoy(page=0):
 
 @route('/<cod>/<name>')
 def hoy_mun(cod,name):
+    import datetime
+    import time
     doc=etree.parse("http://www.aemet.es/xml/municipios/localidad_"+cod+".xml")
     p=doc.find("prediccion/dia")
     max=p.find("temperatura").find("maxima").text
     min=p.find("temperatura").find("minima").text
+    import base64
+    import json
+    from pymongo import MongoClient as Connection
+    cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
+    MONGODB_URI =cadenaCon
+    conexion = Connection(MONGODB_URI)
+    db = conexion.othesoluciones1
+    collection = db.prediccionesAEMET
+    cursor = collection.find_one({"municipio": name})
+    busquedaAEMET = cursor[time.strftime("%Y-%m-%d")]
     img = StringIO.StringIO()
     sf = shapefile.Reader("static/Municipios/200001493.shp")
     geomet = sf.shapeRecords()
@@ -75,7 +87,7 @@ def hoy_mun(cod,name):
     plt.savefig(img, format='png')
     img.seek(0)
     plot_url = base64.b64encode(img.getvalue())
-    return template("p_hoy_mun.tpl",name=name,max=max,min=min, plot_url=plot_url)
+    return template("p_hoy_mun.tpl",name=name,max=max,min=min, plot_url=plot_url, busquedaAEMET=busquedaAEMET)
 	
 #@route('/reporte')
 #def reporte():

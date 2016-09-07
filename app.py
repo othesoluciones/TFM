@@ -193,7 +193,7 @@ def notifica():
 
 
 
-@route('/images/<filename>')
+@route('/static/<filename>')
 def image(filename):
 	cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
 	MONGODB_URI =cadenaCon

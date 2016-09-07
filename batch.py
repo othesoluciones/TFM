@@ -228,38 +228,50 @@ def prediccionAEMET (xmlUrl,municipio,CP):
     diccionario['Municipio']=municipio
     #diccionario['link_xml']=xmlUrl
     #diccionario['Codigo_Postal']=CP
-    diccionario[municipio]={}
+    #diccionario[municipio]={}
     for dia in data['root']['prediccion']['dia']:
-        diccionario[municipio][dia['@fecha']]={}
+    	diccionario[dia['@fecha']=[]
+        #diccionario[municipio][dia['@fecha']]={}
+        dicFech ={}
         tamPrecip = len(dia['prob_precipitacion'])
         if type(dia['prob_precipitacion']) ==list:
             for periodo in dia['prob_precipitacion']:
                 if  len(periodo)>1:
-                    diccionario[municipio][dia['@fecha']]['precipitaciones '+periodo['@periodo']]=periodo.items()[1][1] #periodo['#text']          
+                	dicFech['precipitaciones '+periodo['@periodo']]=periodo.items()[1][1]
+                    #diccionario[municipio][dia['@fecha']]['precipitaciones '+periodo['@periodo']]=periodo.items()[1][1] #periodo['#text']          
         else:
-            diccionario[municipio][dia['@fecha']]['precipitaciones']=dia['prob_precipitacion']
+            #diccionario[municipio][dia['@fecha']]['precipitaciones']=dia['prob_precipitacion']
+            dicFech['precipitaciones']=dia['prob_precipitacion']
         tamViento = len(dia['viento'])  
         if tamViento>2:
             for viento in dia['viento']:
                 if  len(viento)>1:
-                    diccionario[municipio][dia['@fecha']]['viento '+viento['@periodo']]= viento['velocidad']
+                    #diccionario[municipio][dia['@fecha']]['viento '+viento['@periodo']]= viento['velocidad']
+                    dicFech['viento '+viento['@periodo']]= viento['velocidad']
         else:
-            diccionario[municipio][dia['@fecha']]['viento']= viento['velocidad']
-        diccionario[municipio][dia['@fecha']]['Temperatura maxima']= dia['temperatura']['maxima']
-        diccionario[municipio][dia['@fecha']]['Temperatura minima']= dia['temperatura']['minima']
+            #diccionario[municipio][dia['@fecha']]['viento']= viento['velocidad']
+            dicFech['viento']= viento['velocidad']
+        #diccionario[municipio][dia['@fecha']]['Temperatura maxima']= dia['temperatura']['maxima']
+        #diccionario[municipio][dia['@fecha']]['Temperatura minima']= dia['temperatura']['minima']
+        dicFech['Temperatura maxima']= dia['temperatura']['maxima']
+        dicFech['Temperatura minima']= dia['temperatura']['minima']
         tamTemp=len(dia['temperatura'])  
         if tamTemp>2:
             for temp in dia['temperatura']['dato']:
                 if len(temp)>1:
-                 diccionario[municipio][dia['@fecha']]['Temperatura '+temp['@hora']]= temp.items()[1][1] #temp['#text'] 
-        diccionario[municipio][dia['@fecha']]['Humedad relativa maxima']= dia['humedad_relativa']['maxima']
-        diccionario[municipio][dia['@fecha']]['Humedad relativa minima']= dia['humedad_relativa']['minima'] 
+                 #diccionario[municipio][dia['@fecha']]['Temperatura '+temp['@hora']]= temp.items()[1][1] #temp['#text'] 
+                 dicFech['Temperatura '+temp['@hora']]= temp.items()[1][1]
+        #diccionario[municipio][dia['@fecha']]['Humedad relativa maxima']= dia['humedad_relativa']['maxima']
+        #diccionario[municipio][dia['@fecha']]['Humedad relativa minima']= dia['humedad_relativa']['minima'] 
+        dicFech['Humedad relativa maxima']= dia['humedad_relativa']['maxima']
+        dicFech['Humedad relativa minima']= dia['humedad_relativa']['minima'] 
         tamHum=len(dia['humedad_relativa'])  
         if tamHum>2:
             for temp in dia['humedad_relativa']['dato']:
             	if len(temp)>1:
-                 diccionario[municipio][dia['@fecha']]['Humedad relativa '+temp['@hora']]= temp.items()[1][1]#temp['#text']    
-               
+                 #diccionario[municipio][dia['@fecha']]['Humedad relativa '+temp['@hora']]= temp.items()[1][1]#temp['#text']    
+                 dicFech['Humedad relativa '+temp['@hora']]= temp.items()[1][1]
+        diccionario[dia['@fecha'].append(dicFech)
     return diccionario
 
 def prediccionesAEMET():
@@ -362,7 +374,7 @@ def NivelesPolenMadrid():
     recordsdf = json.loads(df.T.to_json()).values()
     db.nivelesPolenSEAIC.insert_many(recordsdf)
     conexion.close()
-    print "Empezamos metodo nivelespolenmadrid"
+    print "Terminado metodo nivelespolenmadrid"
 
 	
 #Hay que poner 2 horas menos de las que son en realidad debido a problemas en heroku de horas

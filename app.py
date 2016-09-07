@@ -58,10 +58,6 @@ def hoy(page=0):
 def hoy_mun(cod,name):
     import datetime
     import time
-    doc=etree.parse("http://www.aemet.es/xml/municipios/localidad_"+cod+".xml")
-    p=doc.find("prediccion/dia")
-    max=p.find("temperatura").find("maxima").text
-    min=p.find("temperatura").find("minima").text
     import base64
     import json
     from pymongo import MongoClient as Connection
@@ -70,13 +66,7 @@ def hoy_mun(cod,name):
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
     collection = db.prediccionesAEMET
-    print "hola ", name
     cursor = collection.find_one({"Municipio": name})
-    #for c in cursor:
-    #	print c
-    print cursor
-    print 	time.strftime("%Y-%m-%d")
-    print cursor[time.strftime("%Y-%m-%d")]
     busquedaAEMET = cursor[time.strftime("%Y-%m-%d")]
     img = StringIO.StringIO()
     sf = shapefile.Reader("static/Municipios/200001493.shp")
@@ -84,7 +74,6 @@ def hoy_mun(cod,name):
     plt.figure(figsize=(2,2))
     i = 0
     while ((elimina_tildes((sf.record(i)[2]).decode('windows-1252'))!=elimina_tildes(name.decode('utf-8'))) and (i<len(list(sf.iterRecords())))): i=i+1
-    print sf.record(3)[2]
     first = geomet[i]
     x= [i[0] for i in first.shape.points[:]]
     y= [i[1] for i in first.shape.points[:]]
@@ -93,7 +82,7 @@ def hoy_mun(cod,name):
     plt.savefig(img, format='png')
     img.seek(0)
     plot_url = base64.b64encode(img.getvalue())
-    return template("p_hoy_mun.tpl",name=name,max=max,min=min, plot_url=plot_url, busquedaAEMET=busquedaAEMET)
+    return template("p_hoy_mun.tpl",name=name,plot_url=plot_url, busquedaAEMET=busquedaAEMET)
 	
 #@route('/reporte')
 #def reporte():

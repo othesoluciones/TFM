@@ -24,8 +24,8 @@
            <tr>
              <th scope="row">Periodicidad</th>
              <td>
-				<input type="radio" name="periodicidad" value="d" checked="checked" /><label for="d">Diaria</label><br/><br/>
-				<input type="radio" name="periodicidad" value="r"/><input type=“datetime” name=“fechahora”>
+				<input type="radio" name="periodicidad" value="d" id ="d" checked="checked" /><label for="d">Diaria</label><br/><br/>
+				<input type="radio" name="periodicidad" value="r"/><input type="text" name="fechahora"/>
 			  </td>
            </tr>
         </tbody>
@@ -34,7 +34,7 @@
              <th scope="row"></th>
              <td>
 				<input value="Realizar suscripción" type="submit" onclick="toggle('spinner');"/>
-				<img src="/static/style/spinner.gif" id="spinner" style="display: none;">
+				<img src="/static/style/spinner.gif" id="spinner" style="display: none;" alt=""/>
 			</td>
            </tr>
         </tbody>

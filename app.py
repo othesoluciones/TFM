@@ -72,8 +72,9 @@ def hoy_mun(cod,name):
     collection = db.prediccionesAEMET
     print "hola"
     cursor = collection.find_one({"municipio": name})
-    for c in cursor:
-    	print c
+    #for c in cursor:
+    #	print c
+    print cursor
     print 	time.strftime("%Y-%m-%d")
     print cursor[time.strftime("%Y-%m-%d")]
     busquedaAEMET = cursor[time.strftime("%Y-%m-%d")]

@@ -70,6 +70,7 @@ def hoy_mun(cod,name):
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
     collection = db.prediccionesAEMET
+    print "hola"
     cursor = collection.find_one({"municipio": name})
     for c in cursor:
     	print c

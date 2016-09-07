@@ -31,7 +31,7 @@
         <h1>Últimas Noticias</h1>
 		<ul>
 		%for noticia in ndd:
-			<li><a href={{noticia['Noticia']}}>{{noticia['Titulo']}}</li>
+			<li><a href="{{noticia['Noticia']}}">{{noticia['Titulo']}}</li>
 		%end
 		</ul>
 

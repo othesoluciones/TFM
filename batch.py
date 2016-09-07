@@ -230,7 +230,7 @@ def prediccionAEMET (xmlUrl,municipio,CP):
     #diccionario['Codigo_Postal']=CP
     #diccionario[municipio]={}
     for dia in data['root']['prediccion']['dia']:
-        diccionario[dia['@fecha']=[]
+        diccionario[dia['@fecha']]=[]
         #diccionario[municipio][dia['@fecha']]={}
         dicFech ={}
         tamPrecip = len(dia['prob_precipitacion'])
@@ -387,13 +387,13 @@ scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=06, minute=47)
 scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=06, minute=49)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=07, minute=57)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=07, minute=58)
 
 #realmente se ejecuta a las 09:00
 scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=06, minute=59)
 
 #realmente se ejecuta a las 09:30
-scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=07, minute=55)
+scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=07, minute=57)
 
 #realmente se ejecuta a las 20:30
 scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)

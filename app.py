@@ -71,6 +71,10 @@ def hoy_mun(cod,name):
     db = conexion.othesoluciones1
     collection = db.prediccionesAEMET
     cursor = collection.find_one({"municipio": name})
+    for c in cursor:
+    	print c
+    print 	time.strftime("%Y-%m-%d")
+    print cursor[time.strftime("%Y-%m-%d")]
     busquedaAEMET = cursor[time.strftime("%Y-%m-%d")]
     img = StringIO.StringIO()
     sf = shapefile.Reader("static/Municipios/200001493.shp")

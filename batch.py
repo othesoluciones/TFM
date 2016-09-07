@@ -16,7 +16,7 @@ def elimina_tildes(s):
    
    
 def envioMail():
-
+ print "Comenzamos envio mail"
  from email.mime.multipart import MIMEMultipart
  from email.mime.text import MIMEText
  from email.mime.image import MIMEImage
@@ -60,7 +60,7 @@ def envioMail():
  print "Enviado"
  
 def actualiza_calidad_aire():
-
+ print "Empezamos metodo actualiza_calidad_aire()"
 
  # Para todas las localidades
  import time
@@ -161,9 +161,11 @@ def actualiza_calidad_aire():
     dfFinal['Dia']=dia
     dfFinal['Hora']=hora
  conexion.close() 
+ print "Terminado metodo actualiza_calidad_aire"
 
  
 def noticias_del_dia():
+    print "Empezamos metodo noticias_deldia"
     #Conectamos a la base de datos
     import base64
     import json
@@ -210,6 +212,7 @@ def noticias_del_dia():
     recordsdf = json.loads(df.T.to_json()).values()
     db.noticias_del_dia.insert_many(recordsdf)
     conexion.close()  
+    print "Finalizado metodo noticias_deldia"
 	
 def prediccionAEMET (xmlUrl,municipio,CP):
     #Crea un diccionario para cada municipio con la informacion que deseamos almacenar.
@@ -308,7 +311,7 @@ def NivelesPolenMadrid():
     import numpy as np
     import urllib
     from bs4 import BeautifulSoup
-
+    print "Empezamos metodo nivelespolenmadrid"
      #Conectamos a la base de datos
     import base64
     import json
@@ -359,22 +362,23 @@ def NivelesPolenMadrid():
     recordsdf = json.loads(df.T.to_json()).values()
     db.nivelesPolenSEAIC.insert_many(recordsdf)
     conexion.close()
+    print "Empezamos metodo nivelespolenmadrid"
 
 	
 #Hay que poner 2 horas menos de las que son en realidad debido a problemas en heroku de horas
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=6, minute=25)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=06, minute=47)
 
 #realmente se ejecuta a las 08:30
-scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=6, minute=27)
+scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=06, minute=49)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=6, minute=30)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=06, minute=51)
 
 #realmente se ejecuta a las 09:00
-scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=6, minute=40)
+scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=06, minute=59)
 
 #realmente se ejecuta a las 09:30
 scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=6, minute=45)

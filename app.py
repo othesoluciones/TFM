@@ -2,7 +2,7 @@ import os
 import base64
 import datetime
 import string
-from bottle import route, default_app, template, run, static_file, error, post, get, redirect, view, request
+from bottle import route, default_app, template, run, static_file, error, post, get, redirect, view, request, response
 from lxml import etree
 from pymongo import MongoClient as Connection
 from pymongo import DESCENDING
@@ -84,9 +84,11 @@ def hoy_mun(cod,name):
     img.seek(0)
     plot_url = base64.b64encode(img.getvalue())
     collection2 = db.imagenes
-    cursor2 = collection2.find_one({"municipio": name})
-    imgmunicipio = cursor2['img_municipio']
-    imgmunicipio_cam = cursor2['img_municipio_cam']
+    #cursor2 = collection2.find_one({"municipio": name})
+    #imgmunicipio = cursor2['img_municipio']
+    #imgmunicipio_cam = cursor2['img_municipio_cam']
+    imgmunicipio_cam = "Acebeda, La-CAM.png"
+    imgmunicipio = "Acebeda, La.png"
     return template("p_hoy_mun.tpl",name=name,plot_url=plot_url, busquedaAEMET=busquedaAEMET, imgmunicipio=imgmunicipio, imgmunicipio_cam=imgmunicipio_cam)
     
 
@@ -198,6 +200,7 @@ def image(filename):
 	db = Connection(MONGODB_URI).othesoluciones1	
 	fs=gridfs.GridFs(db)
 	gridout = fs.get_last_version(filename=filename)
+	response.content_type="image/png"
 	return gridout
 	 
 	 

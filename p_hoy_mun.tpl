@@ -1,6 +1,8 @@
 % include('header_hoy.tpl', title='Niveles del día')
     <h1>{{name}}</h1>
-		<img src="data:image/png;base64, {{plot_url}}">
+		<img src="data:image/png;base64, {{plot_url}}" alt =""/>
+		<img src="/images/, {{imgmunicipio}}" alt=""/>
+		<img src="/images/, {{imgmunicipio_cam}}" alt=""/>
 		<table border="0" width="100%" cellpadding="5" cellspacing="5">
 		<tr>
 		<td width="50%"> 

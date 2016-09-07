@@ -230,14 +230,14 @@ def prediccionAEMET (xmlUrl,municipio,CP):
     #diccionario['Codigo_Postal']=CP
     #diccionario[municipio]={}
     for dia in data['root']['prediccion']['dia']:
-    	diccionario[dia['@fecha']=[]
+        diccionario[dia['@fecha']=[]
         #diccionario[municipio][dia['@fecha']]={}
         dicFech ={}
         tamPrecip = len(dia['prob_precipitacion'])
         if type(dia['prob_precipitacion']) ==list:
             for periodo in dia['prob_precipitacion']:
                 if  len(periodo)>1:
-                	dicFech['precipitaciones '+periodo['@periodo']]=periodo.items()[1][1]
+                    dicFech['precipitaciones '+periodo['@periodo']]=periodo.items()[1][1]
                     #diccionario[municipio][dia['@fecha']]['precipitaciones '+periodo['@periodo']]=periodo.items()[1][1] #periodo['#text']          
         else:
             #diccionario[municipio][dia['@fecha']]['precipitaciones']=dia['prob_precipitacion']
@@ -268,7 +268,7 @@ def prediccionAEMET (xmlUrl,municipio,CP):
         tamHum=len(dia['humedad_relativa'])  
         if tamHum>2:
             for temp in dia['humedad_relativa']['dato']:
-            	if len(temp)>1:
+              if len(temp)>1:
                  #diccionario[municipio][dia['@fecha']]['Humedad relativa '+temp['@hora']]= temp.items()[1][1]#temp['#text']    
                  dicFech['Humedad relativa '+temp['@hora']]= temp.items()[1][1]
         diccionario[dia['@fecha'].append(dicFech)
@@ -387,13 +387,13 @@ scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=06, minute=47)
 scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=06, minute=49)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=07, minute=56)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=07, minute=57)
 
 #realmente se ejecuta a las 09:00
 scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=06, minute=59)
 
 #realmente se ejecuta a las 09:30
-scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=07, minute=51)
+scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=07, minute=55)
 
 #realmente se ejecuta a las 20:30
 scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)

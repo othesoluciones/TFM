@@ -11,6 +11,7 @@ import pandas as pd
 import numpy as np
 import shapefile
 import matplotlib.pyplot as plt
+import gridfs
 
 import unicodedata
 def elimina_tildes(s):
@@ -82,7 +83,13 @@ def hoy_mun(cod,name):
     plt.savefig(img, format='png')
     img.seek(0)
     plot_url = base64.b64encode(img.getvalue())
-    return template("p_hoy_mun.tpl",name=name,plot_url=plot_url, busquedaAEMET=busquedaAEMET)
+    collection2 = db.imagenes
+    cursor2 = collection2.find_one({"municipio": name})
+    imgmunicipio = cursor2['img_municipio']
+    imgmunicipio_cam = cursor2['img_municipio_cam']
+    return template("p_hoy_mun.tpl",name=name,plot_url=plot_url, busquedaAEMET=busquedaAEMET, imgmunicipio=imgmunicipio, imgmunicipio_cam=imgmunicipio_cam)
+    
+
 	
 #@route('/reporte')
 #def reporte():
@@ -182,9 +189,23 @@ def notifica():
  db.coleccion_notificaciones.insert(notif)
  redirect('/notificaciones')
 
+
+
+@route('/images/<filename>')
+def image(filename):
+	cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
+	MONGODB_URI =cadenaCon
+	db = Connection(MONGODB_URI).othesoluciones1	
+	fs=gridfs.GridFs(db)
+	gridout = fs.get_last_version(filename=filename)
+	return gridout
+	 
+	 
+	 
 cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
 MONGODB_URI =cadenaCon
 #MONGODB_URI = 'mongodb://othesoluciones:othesoluciones@ds029635.mlab.com:29635/othesoluciones1'
+
 
 db = Connection(MONGODB_URI).othesoluciones1
 

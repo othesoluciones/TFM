@@ -194,7 +194,17 @@ def notifica():
 @route('/<cod>/<name>')
 def hoy_mun(cod,name):
  return template("pru.tpl",name=name)
- 
+
+@route('/static/img/gridfs/<filename>')
+    cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
+    MONGODB_URI =cadenaCon
+    conexion = Connection(MONGODB_URI)
+    db = conexion.othesoluciones1
+    fs = gridfs.GridFS(db)
+    thing = fs.get_last_version(filneame=filename)
+    response.content_type = 'image/png'
+    return thing
+    
 cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
 MONGODB_URI =cadenaCon
 #MONGODB_URI = 'mongodb://othesoluciones:othesoluciones@ds029635.mlab.com:29635/othesoluciones1'

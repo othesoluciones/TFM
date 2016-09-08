@@ -202,7 +202,7 @@ def gridfs_img(filename):
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
     fs = gridfs.GridFS(db)
-    thing = fs.get_last_version(filneame=filename)
+    thing = fs.get_last_version(filename=filename)
     response.content_type = 'image/png'
     return thing
     

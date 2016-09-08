@@ -193,7 +193,18 @@ def notifica():
 
 @route('/<cod>/<name>')
 def hoy_mun(cod,name):
- return template("pru.tpl",name=name)
+#   plt.savefig(img, format='png')
+#    img.seek(0)
+#    plot_url = base64.b64encode(img.getvalue())
+ cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
+ MONGODB_URI =cadenaCon
+ conexion = Connection(MONGODB_URI)
+ db = conexion.othesoluciones1
+ collection2='style'
+ ''' Send image or image thumb from file stored in the database. '''
+  f = gridfs.GridFS(db, collection2).get_version("Ajalvir.png")
+  plot_url = base64.b64encode(f.read())
+  return template("pru.tpl", , plot_url=plot_url, name=name)
 
 
 @get('/:collection#(style)#/:filename')

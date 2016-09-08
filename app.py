@@ -201,7 +201,7 @@ def hoy_mun(cod,name):
  conexion = Connection(MONGODB_URI)
  db = conexion.othesoluciones1
  ''' Send image or image thumb from file stored in the database. '''
-  f = gridfs.GridFS(db)
+  f = gridfs.GridFS(db,"images")
   plot_url = base64.b64encode(f.get("57d050717f3c1a120cf8a0b2").read())
   return template("pru.tpl", plot_url=plot_url, name=name)
 

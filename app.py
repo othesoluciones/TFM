@@ -196,6 +196,7 @@ def hoy_mun(cod,name):
  return template("pru.tpl",name=name)
 
 @route('/static/img/gridfs/<filename>')
+def gridfs_img(filename):
     cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
     MONGODB_URI =cadenaCon
     conexion = Connection(MONGODB_URI)

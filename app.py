@@ -191,8 +191,10 @@ def notifica():
  db.coleccion_notificaciones.insert(notif)
  redirect('/notificaciones')
 
-
-	 
+@route('/<cod>/<name>')
+def hoy_mun(cod,name):
+ return template("pru.tpl",name=name)
+ 
 cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
 MONGODB_URI =cadenaCon
 #MONGODB_URI = 'mongodb://othesoluciones:othesoluciones@ds029635.mlab.com:29635/othesoluciones1'

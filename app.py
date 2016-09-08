@@ -195,13 +195,14 @@ def notifica():
 def hoy_mun(cod,name):
  return template("pru.tpl",name=name)
 
-@get('/static/Municipios/:filename')
+
+@get('/:collection#(style)#/:filename')
 def get_database_file(filename):
     cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
     MONGODB_URI =cadenaCon
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
-    collection2='images'
+    #collection2='style'
     ''' Send image or image thumb from file stored in the database. '''
     f = gridfs.GridFS(db, collection2).get_version(filename)
     response.content_type = f.content_type or mimetypes.guess_type(filename)

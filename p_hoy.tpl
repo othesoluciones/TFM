@@ -30,7 +30,7 @@
 					{{calAir['Estacion']}}
 				</td>
 				<td>
-					{{calAir['Temperatura']}}
+					{{calAir['TEMPERATURA']}}
 				</td>
 				<td>
 					{{calAir['Dia']}}

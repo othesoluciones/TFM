@@ -200,10 +200,10 @@ def hoy_mun(cod,name):
  MONGODB_URI =cadenaCon
  conexion = Connection(MONGODB_URI)
  db = conexion.othesoluciones1
- ''' Send image or image thumb from file stored in the database. '''
-  f = gridfs.GridFS(db,"images")
-  plot_url = base64.b64encode(f.get("57d050717f3c1a120cf8a0b2").read())
-  return template("pru.tpl", plot_url=plot_url, name=name)
+ #''' Send image or image thumb from file stored in the database. '''
+ f = gridfs.GridFS(db,"images")
+ plot_url = base64.b64encode(f.get("57d050717f3c1a120cf8a0b2").read())
+ return template("pru.tpl", plot_url=plot_url, name=name)
 
 
 @get('/:collection#(style)#/:filename')

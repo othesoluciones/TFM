@@ -55,41 +55,41 @@ def hoy(page=0):
             }	
 
 
-@route('/<cod>/<name>')
-def hoy_mun(cod,name):
-    import datetime
-    import time
-    import base64
-    import json
-    from pymongo import MongoClient as Connection
-    cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
-    MONGODB_URI =cadenaCon
-    conexion = Connection(MONGODB_URI)
-    db = conexion.othesoluciones1
-    collection = db.prediccionesAEMET
-    cursor = collection.find_one({"Municipio": name})
-    busquedaAEMET = cursor[time.strftime("%Y-%m-%d")]
-    img = StringIO.StringIO()
-    sf = shapefile.Reader("static/Municipios/200001493.shp")
-    geomet = sf.shapeRecords()
-    plt.figure(figsize=(2,2))
-    i = 0
-    while ((elimina_tildes((sf.record(i)[2]).decode('windows-1252'))!=elimina_tildes(name.decode('utf-8'))) and (i<len(list(sf.iterRecords())))): i=i+1
-    first = geomet[i]
-    x= [i[0] for i in first.shape.points[:]]
-    y= [i[1] for i in first.shape.points[:]]
-    plt.plot(x,y)
-    plt.axis('off')	
-    plt.savefig(img, format='png')
-    img.seek(0)
-    plot_url = base64.b64encode(img.getvalue())
-    collection2 = db.imagenes
-    #cursor2 = collection2.find_one({"municipio": name})
-    #imgmunicipio = cursor2['img_municipio']
-    #imgmunicipio_cam = cursor2['img_municipio_cam']
-    imgmunicipio_cam = "Acebeda, La-CAM.png"
-    imgmunicipio = "Acebeda, La.png"
-    return template("p_hoy_mun.tpl",name=name,plot_url=plot_url, busquedaAEMET=busquedaAEMET, imgmunicipio=imgmunicipio, imgmunicipio_cam=imgmunicipio_cam)
+#@route('/<cod>/<name>')
+#def hoy_mun(cod,name):
+#    import datetime
+#    import time
+#    import base64
+#    import json
+#    from pymongo import MongoClient as Connection
+#    cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
+#    MONGODB_URI =cadenaCon
+#    conexion = Connection(MONGODB_URI)
+#    db = conexion.othesoluciones1
+#    collection = db.prediccionesAEMET
+#    cursor = collection.find_one({"Municipio": name})
+#    busquedaAEMET = cursor[time.strftime("%Y-%m-%d")]
+#    img = StringIO.StringIO()
+#    sf = shapefile.Reader("static/Municipios/200001493.shp")
+#    geomet = sf.shapeRecords()
+#    plt.figure(figsize=(2,2))
+#    i = 0
+#    while ((elimina_tildes((sf.record(i)[2]).decode('windows-1252'))!=elimina_tildes(name.decode('utf-8'))) and (i<len(list(sf.iterRecords())))): i=i+1
+#    first = geomet[i]
+#    x= [i[0] for i in first.shape.points[:]]
+#    y= [i[1] for i in first.shape.points[:]]
+#    plt.plot(x,y)
+#    plt.axis('off')	
+#    plt.savefig(img, format='png')
+#    img.seek(0)
+#    plot_url = base64.b64encode(img.getvalue())
+#    collection2 = db.imagenes
+#    #cursor2 = collection2.find_one({"municipio": name})
+#    #imgmunicipio = cursor2['img_municipio']
+#    #imgmunicipio_cam = cursor2['img_municipio_cam']
+#    imgmunicipio_cam = "Acebeda, La-CAM.png"
+#    imgmunicipio = "Acebeda, La.png"
+#    return template("p_hoy_mun.tpl",name=name,plot_url=plot_url, busquedaAEMET=busquedaAEMET, imgmunicipio=imgmunicipio, imgmunicipio_cam=imgmunicipio_cam)
     
 
 	
@@ -192,18 +192,6 @@ def notifica():
  redirect('/notificaciones')
 
 
-
-@route('/static/<filename>')
-def image(filename):
-	cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
-	MONGODB_URI =cadenaCon
-	db = Connection(MONGODB_URI).othesoluciones1	
-	fs=gridfs.GridFs(db)
-	gridout = fs.get_last_version(filename=filename)
-	response.content_type="image/png"
-	return gridout
-	 
-	 
 	 
 cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
 MONGODB_URI =cadenaCon

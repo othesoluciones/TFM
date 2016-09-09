@@ -149,7 +149,7 @@ def notifica():
  if ((reporte['municipio']!='ninguno') and (reporte['nivel_de_alerta']!='ninguno')):	
     db.coleccion_reportes.insert(reporte)
     alta = 1
-    nuevoReporte(muni,nivel)
+    nuevoReporte(reporte['municipio'],reporte['nivel_de_alerta'])
     return template("p_reporte.tpl", muni=muni, nivel=nivel,alta=alta)	
     #redirect('/reporte')
  else:

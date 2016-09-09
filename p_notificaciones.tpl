@@ -1,5 +1,8 @@
 % include('header_notificaciones.tpl', title='Notificaciones')
 <h1>Recibe notificaciones</h1>
+% if alta==1:
+ <h2 id="idverde">Alerta recibida con éxito. Gracias por su colaboración</h2>
+% end
 <form action="/notifica" method="post" enctype="multipart/form-data">
 	<table border="1">
         <colgroup>
@@ -17,9 +20,16 @@
         <tbody>
            <tr>
              <th scope="row">Municipio</th>
-             <td><input name="municipio" type="text" /></td>
+             <td>
+				<select name="municipio">
+					<option value="ninguno" selected="selected">Seleccione un municipio</option>
+					% for m in muni:
+						<option value="{{m.attrib["value"][-5:]}}">{{m.text}}</option>
+					%end
+				</select>
+			 </td>
            </tr>
-        </tbody>
+        </tbody> 
         <tbody>
            <tr>
              <th scope="row">Periodicidad</th>

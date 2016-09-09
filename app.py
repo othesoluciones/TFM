@@ -90,8 +90,9 @@ def hoy_mun(cod,name):
     MONGODB_URI =cadenaCon
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
-    collection1 = db.prediccionesAEMET
-    cursor1 = collection1.find_one({"Municipio": name})
+    collection1 = db.prediccionesAEMET 
+    name2=elimina_tildes(unicode(name))
+    cursor1 = collection1.find_one({"Municipio": name2})
     busquedaAEMET = cursor1[time.strftime("%Y-%m-%d")]
     #img = StringIO.StringIO()
     #sf = shapefile.Reader("static/Municipios/200001493.shp")
@@ -108,7 +109,7 @@ def hoy_mun(cod,name):
     #img.seek(0)
     #plot_url = base64.b64encode(img.getvalue())
     collection2 = db.imagenes
-    cursor2 = collection2.find_one({'municipio':name})
+    cursor2 = collection2.find_one({'municipio':name2})
     print cursor2['filename_img_municipio']
     print cursor2['filename_img_municipio_cam']
     #f1 = gridfs.GridFS(db,"images").get_version("Ajalvir.png")

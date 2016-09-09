@@ -92,7 +92,8 @@ def hoy_mun(cod,name):
     db = conexion.othesoluciones1
     collection1 = db.prediccionesAEMET 
     print elimina_tildes(name.decode('utf-8'))
-    cursor1 = collection1.find_one({"Municipio": name})
+    name2 =  elimina_tildes(name.decode('utf-8'))
+    cursor1 = collection1.find_one({"Municipio": name2})
     busquedaAEMET = cursor1[time.strftime("%Y-%m-%d")]
     #img = StringIO.StringIO()
     #sf = shapefile.Reader("static/Municipios/200001493.shp")
@@ -109,7 +110,7 @@ def hoy_mun(cod,name):
     #img.seek(0)
     #plot_url = base64.b64encode(img.getvalue())
     collection2 = db.imagenes
-    cursor2 = collection2.find_one({'municipio':name})
+    cursor2 = collection2.find_one({'municipio':name2})
     print cursor2['filename_img_municipio']
     print cursor2['filename_img_municipio_cam']
     #f1 = gridfs.GridFS(db,"images").get_version("Ajalvir.png")

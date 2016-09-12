@@ -30,10 +30,14 @@
         </tbody> 
         <tbody>
            <tr>
-             <th scope="row">Periodicidad</th>
+            <th scope="row">Periodicidad</th>
              <td>
-				<input type="radio" name="periodicidad" value="d" id ="d" checked="checked" /><label for="d">Diaria</label><br/><br/>
-				<input type="radio" name="periodicidad" value="r"/><input type="text" name="fechahora"/>
+<label for="fechaDesde">Fecha desde:
+ <input type="text" name="fechaDesde" id="fechaDesde" />
+</label><br/><br/>
+<label for="fechaHasta">Fecha Hasta:
+ <input type="text" name="fechaHasta" id="fechaHasta" />
+</label>
 			  </td>
            </tr>
         </tbody>
@@ -56,10 +60,7 @@
           {{notif['email']}}
         </td>
         <td>
-          {{notif['captador']}}
-        </td>
-        <td>
-          {{notif['periodicidad']}}
+          {{notif['municipio']}}
         </td>
 		<td>
           {{notif['realizada'].strftime('%X %d %b %y')}}

@@ -1,6 +1,6 @@
 % include('header_reporte.tpl', title='¡Repórtanos!')
 <h1>Repórtanos alertas</h1>
-<h2 id="idrojo">Por favor seleccione un municipio correcto</h2>
+<h2 id="idrojo">Por favor, seleccione un municipio correcto</h2>
 <table border="1">
 	<form action="/reporta" method="post">
 

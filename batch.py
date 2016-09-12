@@ -60,6 +60,7 @@ def envioMail():
  print "Enviado"
  
 def actualiza_calidad_aire():
+    print "Empezamos actualiza_calidad_aire"
      # Para todas las localidades
     import time
     import json
@@ -75,7 +76,7 @@ def actualiza_calidad_aire():
     MONGODB_URI =cadenaCon
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
-
+    #db = Connection().othesoluciones1
     primeraVez = True
 
     for i in range (2,8):
@@ -150,10 +151,11 @@ def actualiza_calidad_aire():
         db.calidad_aire.insert_many(recordsdf)
         
     conexion.close() 
+    print "Finalizado actualiza_calidad_aire"
 
  
 def noticias_del_dia():
-    print "Empezamos metodo noticias_deldia"
+    print "Empezamos  noticias_del_dia"
     #Conectamos a la base de datos
     import base64
     import json
@@ -162,10 +164,10 @@ def noticias_del_dia():
     cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
     MONGODB_URI =cadenaCon
     #MONGODB_URI = 'mongodb://othesoluciones:othesoluciones@ds029635.mlab.com:29635/othesoluciones1'
-    # db = Connection(MONGODB_URI).othesoluciones1 
+    db = Connection(MONGODB_URI).othesoluciones1 
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
-
+    #db = Connection().othesoluciones1
     
     from googleapiclient.discovery import build
     import time
@@ -200,7 +202,7 @@ def noticias_del_dia():
     recordsdf = json.loads(df.T.to_json()).values()
     db.noticias_del_dia.insert_many(recordsdf)
     conexion.close()  
-    print "Finalizado metodo noticias_deldia"
+    print "Finalizado noticias_del_dia"
 	
 def prediccionAEMET (xmlUrl,municipio,CP):
     #Crea un diccionario para cada municipio con la informacion que deseamos almacenar.
@@ -263,6 +265,7 @@ def prediccionAEMET (xmlUrl,municipio,CP):
     return diccionario
 
 def prediccionesAEMET():
+    print "Empezamos prediccionesAEMET"
     import urllib
     import xmltodict
     from bs4 import BeautifulSoup
@@ -280,6 +283,7 @@ def prediccionesAEMET():
     MONGODB_URI =cadenaCon
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
+    #db = Connection().othesoluciones1
     db.prediccionesAEMET.drop()
 
     for urls in soup.find_all('td'):
@@ -302,7 +306,7 @@ def prediccionesAEMET():
         print "Terminamos -->", localidad
         db.prediccionesAEMET.insert_one(pred)
         #time.sleep(10)
-    print "fin"
+    print "Finalizado prediccionesAEMET"
     conexion.close()  
 	
 	
@@ -311,7 +315,8 @@ def NivelesPolenMadrid():
     import numpy as np
     import urllib
     from bs4 import BeautifulSoup
-    print "Empezamos metodo nivelespolenmadrid"
+    import datetime
+    
      #Conectamos a la base de datos
     import base64
     import json
@@ -320,7 +325,8 @@ def NivelesPolenMadrid():
     MONGODB_URI =cadenaCon
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
-
+    #db = Connection().othesoluciones1
+    
     link ="http://polenes.com/graficos/jsp/ImgGrafico.jsp?chkSelTodos=on&chkPolenes=CUPRE&chkPolenes=PALMA&chkPolenes=RUMEX&chkPolenes=MERCU&chkPolenes=MORUS&chkPolenes=URTIC&chkPolenes=ALNUS&chkPolenes=BETUL&chkPolenes=CAREX&chkPolenes=FRAXI&chkPolenes=QUERC&chkPolenes=OLEA&chkPolenes=PINUS&chkPolenes=ULMUS&chkPolenes=CASTA&chkPolenes=POPUL&chkPolenes=GRAMI&chkPolenes=QUEAM&chkPolenes=PLATA&chkPolenes=PLANT&chkPolenes=ARTEM&chkPolenes=ALTER&selEstacion=MAD&selAnioTrimes=&selPeriodo=USE&txtFDesde=01%2F01%2F2010&txtFHasta=12%2F08%2F2016&prov=MAD&hidPolen=%26polen%3DCUPRE%26polen%3DPALMA%26polen%3DRUMEX%26polen%3DMERCU%26polen%3DMORUS%26polen%3DURTIC%26polen%3DALNUS%26polen%3DBETUL%26polen%3DCAREX%26polen%3DFRAXI%26polen%3DQUERC%26polen%3DOLEA%26polen%3DPINUS%26polen%3DULMUS%26polen%3DCASTA%26polen%3DPOPUL%26polen%3DGRAMI%26polen%3DQUEAM%26polen%3DPLATA%26polen%3DPLANT%26polen%3DARTEM%26polen%3DALTER&hidCheckSel=&mostrarGraf=S&hidPolenSolo=N&idio=ES&numPolenesSeleccionados=22&hidAniosEstacion=&primero=trueutm_source=twitter&utm_medium=twitter&utm_campaign=twitter"
     f = urllib.urlopen(link)
     myfile = f.read()
@@ -331,10 +337,9 @@ def NivelesPolenMadrid():
     datos = []
 
     for dato in tabla.find_all("td"):
-        datos.append(dato.get_text().strip())
+        datos.append(elimina_tildes(dato.get_text().strip()))
 
     datos.pop(0)
-    valores = [s for s in datos if s.isdigit()]
 
     #Calculamos la posicion del primer valor numerico
     ind =0
@@ -355,16 +360,48 @@ def NivelesPolenMadrid():
     k=primerValor-2
     lista = []
     while k<len(datos):
+   
         lista.append(datos[k:k+tamColumnas])
         k+=tamColumnas
-
-    df=pd.DataFrame(lista,columns=columnas)
+  
+    listaAux=[]
+    for j in range(len(lista)):
+        fila=[]
+        for l in range(len(lista[j])):
+            if lista[j][l].isdigit():
+                fila.append(int(lista[j][l]))
+            else:
+                fila.append(lista[j][l])
+        listaAux.append(fila)    
+    listaAux
+    df=pd.DataFrame(listaAux,columns=columnas)
+    
+    columnas.pop(0)
+    columnas
+    #Calculamos el numero de la semana del anyo
+    semana= datetime.date.today().isocalendar()[1]
+    df['Media']=df[columnas].mean(axis=1)
+    nivel=[]
+   
+    for n in df['Media']:
+        if n <=200:
+            nivel.append(0)
+        else:
+            if n>200 and n<1000:
+                nivel.append(1)
+            else:
+                nivel.append(2)
+    df['Nivel']=nivel
+    df['Semana']=semana
+    
     recordsdf = json.loads(df.T.to_json()).values()
     db.nivelesPolenSEAIC.insert_many(recordsdf)
-    conexion.close()
-    print "Terminado metodo nivelespolenmadrid"
+    conexion.close()  
+    print "Finalizado NivelesPolenMadrid"
 
 def algoritmoPredictivo():
+    print "Empezamos algoritmoPredictivo"
+    import pandas as pd
     #Lee de la base de datos
     import base64
     import json
@@ -377,14 +414,13 @@ def algoritmoPredictivo():
     MONGODB_URI =cadenaCon
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
-
+    #db = Connection().othesoluciones1
     #Calculamos el mes y la semana actual
     mes = datetime.date.today().month
     semana = datetime.date.today().isocalendar()[1]
 
     #Obtenemos el nivel inicial
     NivelBase=db.calendarioPolen.find_one({"Mes": mes})['Nivel']
-
     #Obtenemos el nivel proporcionado por el nivel de polen
     NivelPolen =db.nivelesPolenSEAIC.find_one({"$and": [{"Polen/Fecha":"Gramineas"},{"Semana": semana}]})["Nivel"]
 
@@ -539,30 +575,32 @@ def algoritmoPredictivo():
     dfFinal
     
     db.PrediccionOTHE.drop()
+
     recordsdf = json.loads(dfFinal.T.to_json()).values()
     db.PrediccionOTHE.insert_many(recordsdf)
+    print "Finalizado algoritmoPredictivo"
     conexion.close()
 	
 #Hay que poner 2 horas menos de las que son en realidad debido a problemas en heroku de horas
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=6, minute=45)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=12, minute=33)
 
 #realmente se ejecuta a las 08:46
-scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=6, minute=46)
+scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=12, minute=34)
 
-#realmente se ejecuta a las 08:47
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=6, minute=47)
+#realmente se ejecuta a las 08:47. Este tarda
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=12, minute=35)
 
 #realmente se ejecuta a las 08:55
-scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=6, minute=55)
+scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=13, minute=13)
 
 #realmente se ejecuta a las 09:10
-scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=7, minute=10)
+scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=12, minute=44)
 
 #realmente se ejecuta a las 09:12
-scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=7, minute=12)
+scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=13, minute=19)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

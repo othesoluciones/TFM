@@ -7,10 +7,10 @@ from lxml import etree
 from pymongo import MongoClient as Connection
 from pymongo import DESCENDING
 import StringIO
-import pandas as pd
+#import pandas as pd
 import numpy as np
 import shapefile
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import gridfs
 import urllib
 
@@ -30,7 +30,7 @@ def nuevoReporte(municipio, nivel_alerta):
     MONGODB_URI =cadenaCon
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
-    
+    #db = Connection().othesoluciones1
     hoy = datetime.date.today().strftime('%d-%m-%Y')
   
     nivelViejo = db.PrediccionOTHE.find_one({"Codigo": municipio})['Nivel '+str(hoy)] 
@@ -90,6 +90,7 @@ def hoy_mun(cod,name):
     MONGODB_URI =cadenaCon
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
+    #db = Connection().othesoluciones1
     collection1 = db.prediccionesAEMET 
     print elimina_tildes(name.decode('utf-8'))
     name2 =  elimina_tildes(name.decode('utf-8'))
@@ -149,7 +150,12 @@ def notifica():
  if ((reporte['municipio']!='ninguno') and (reporte['nivel_de_alerta']!='ninguno')):	
     db.coleccion_reportes.insert(reporte)
     alta = 1
-    nuevoReporte(reporte['municipio'],reporte['nivel_de_alerta'])
+    varmun = str(reporte['municipio'])
+    print type(varmun), "<---", type(reporte['municipio'])
+    varniv = int(reporte['nivel_de_alerta'])
+    print type(varniv), "<---", type(reporte['nivel_de_alerta'])
+    #nuevoReporte(reporte['municipio'],reporte['nivel_de_alerta'])
+    nuevoReporte(varmun,varniv)
     return template("p_reporte.tpl", muni=muni, nivel=nivel,alta=alta)	
     #redirect('/reporte')
  else:
@@ -169,18 +175,18 @@ def predicciones():
 	#doc=etree.parse("sevilla.xml")
 	#muni=doc.findall("municipio")
 	#return template("p_predicciones.tpl", mun=muni)
-	img = StringIO.StringIO()
-	sf = shapefile.Reader("static/Municipios/200001493.shp")
-	plt.figure(figsize=(5,5))
-	for shape in sf.shapeRecords():
-		x= [i[0] for i in shape.shape.points[:]]
-		y= [i[1] for i in shape.shape.points[:]]
-		plt.plot(x,y)
-	plt.axis('off')	
-	plt.savefig(img, format='png')
-	img.seek(0)
-	plot_url = base64.b64encode(img.getvalue())
-	return template("p_predicciones.tpl", plot_url=plot_url)
+	#img = StringIO.StringIO()
+	#sf = shapefile.Reader("static/Municipios/200001493.shp")
+	#plt.figure(figsize=(5,5))
+	#for shape in sf.shapeRecords():
+	#	x= [i[0] for i in shape.shape.points[:]]
+	#	y= [i[1] for i in shape.shape.points[:]]
+	#	plt.plot(x,y)
+	#plt.axis('off')	
+	#plt.savefig(img, format='png')
+	#img.seek(0)
+	#plot_url = base64.b64encode(img.getvalue())
+	return template("p_predicciones.tpl")#, plot_url=plot_url)
 	
 	
 @route('/static/<filepath:path>')
@@ -195,6 +201,9 @@ def error404(error):
 @get(['/notificaciones', '/notificaciones/:page#\d+#'])
 @view('p_notificaciones')
 def notificaciones(page=0):
+    doc=etree.parse("static/Municipios/madrid.xml")
+    muni=doc.findall("municipio")
+    alta=0
     ''' List messages. '''
     PAGE_SIZE = 5
     page = int(page)
@@ -209,25 +218,79 @@ def notificaciones(page=0):
                 .limit(PAGE_SIZE).skip(page * PAGE_SIZE))
     return {'coleccion_notificaciones': coleccion_notificaciones,
             'prev_page': prev_page,
-            'next_page': next_page,
+            'next_page': next_page, 'alta':alta, 'muni':muni
             }	
 
 # para PRO hay que ponerle 2 horas +
 @post('/notifica')
-def notifica():
- notif = {'email': request.POST['email'],
-               'captador': request.POST['captador'],
-               'periodicidad': request.POST['periodicidad'],
+def notifica(page=0):
+ PAGE_SIZE = 5
+ page = int(page)
+ prev_page = None
+ if page > 0:
+        prev_page = page - 1
+ next_page = None
+ if db.coleccion_notificaciones.count() > (page + 1) * PAGE_SIZE:
+        next_page = page + 1
+ coleccion_notificaciones = (db.coleccion_notificaciones.find()
+                .sort('realizada', DESCENDING)
+                .limit(PAGE_SIZE).skip(page * PAGE_SIZE))
+
+ notif = {'email': request.POST['email'], 'fdesde':request.POST['fechaDesde'], 'fhasta':request.POST['fechaHasta'],
+               'municipio': request.POST['municipio'],
                'realizada': datetime.datetime.now()}
- db.coleccion_notificaciones.insert(notif)
- redirect('/notificaciones')
+			   
+ listaErrores=[]			   
+ #Chequeamos el email
+ import re
+ email_address = request.POST['email']
+ #Step 1: Check email
+ #Check using Regex that an email meets minimum requirements, throw an error if not
+ addressToVerify = email_address
+ match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', addressToVerify)
+ 
+ if match == None:
+    #print('Bad Syntax in ' + addressToVerify)
+    mail_OK=False
+    mailSel=""
+ else:
+    mail_OK=True
+    mailSel=email_address
+ print mail_OK
+ listaErrores.append(mail_OK)	
+ #Chequeamos el municipio	
+ doc=etree.parse("static/Municipios/madrid.xml")
+ muni=doc.findall("municipio")
+ if (notif['municipio']=='ninguno'):
+  municipio_OK=False
+ else:
+  municipio_OK=True
+ listaErrores.append(municipio_OK)
+ 
+ if ((notif['fdesde']=='')or(notif['fdesde']=='')):
+  fechas_OK=False
+ else:
+  fechas_OK=True
+  
+ listaErrores.append(fechas_OK) 
+ cuentaErrores= listaErrores.count(False)
+ print cuentaErrores
+ if(cuentaErrores==0):
+     alta=1
+     db.coleccion_notificaciones.insert(notif)
+     return template("p_notificaciones.tpl", muni=muni, alta=alta, coleccion_notificaciones=coleccion_notificaciones, prev_page=prev_page, next_page=next_page )	
+ else:
+  return template("error_views/p_notificaciones_error.tpl", muni=muni, errores=listaErrores, coleccion_notificaciones=coleccion_notificaciones, prev_page=prev_page, next_page=next_page, munsel=notif['municipio'], mailSel=mailSel )			
+    
+ #db.coleccion_notificaciones.insert(notif)
+ #redirect('/notificaciones')
 
 
 
 	 
 cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
 MONGODB_URI =cadenaCon
-#MONGODB_URI = 'mongodb://othesoluciones:othesoluciones@ds029635.mlab.com:29635/othesoluciones1'
+MONGODB_URI = 'mongodb://othesoluciones:othesoluciones@ds029635.mlab.com:29635/othesoluciones1'
 
 
 db = Connection(MONGODB_URI).othesoluciones1

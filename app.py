@@ -147,6 +147,7 @@ def notifica():
                'nivel_de_alerta': request.POST['nivel_de_alerta'],
                'realizada': datetime.datetime.now()}	
  print "municipio",  reporte['municipio']
+ 
  if ((reporte['municipio']!='ninguno') and (reporte['nivel_de_alerta']!='ninguno')):	
     db.coleccion_reportes.insert(reporte)
     alta = 1
@@ -159,11 +160,22 @@ def notifica():
     return template("p_reporte.tpl", muni=muni, nivel=nivel,alta=alta)	
     #redirect('/reporte')
  else:
+    listaErrores=[]
     if (reporte['municipio']=='ninguno'):
-      return template("error_views/p_reporte_error_municipio.tpl", muni=muni, nivel=nivel, nivsel=reporte['nivel_de_alerta'])
-    else: 
-      print reporte['municipio']
-      return template("error_views/p_reporte_error_nivel_alerta.tpl", muni=muni, nivel=nivel, munsel=reporte['municipio'])
+       municipio_OK=False
+    else:
+	   municipio_OK=True
+    listaErrores.append(municipio_OK)
+    if (reporte['nivel_de_alerta']=='ninguno'):
+	    alerta_OK=False
+    else:
+		alerta_OK=True
+    listaErrores.append(alerta_OK)
+      #return template("error_views/p_reporte_error_municipio.tpl", muni=muni, nivel=nivel, nivsel=reporte['nivel_de_alerta'])
+    return template("error_views/p_reporte_error.tpl", muni=muni, nivel=nivel, nivsel=reporte['nivel_de_alerta'], munsel=reporte['municipio'], errores=listaErrores)
+#    else: 
+#      print reporte['municipio']
+#      return template("error_views/p_reporte_error_nivel_alerta.tpl", muni=muni, nivel=nivel, munsel=reporte['municipio'])
 
 
 
@@ -201,6 +213,7 @@ def error404(error):
 @get(['/notificaciones', '/notificaciones/:page#\d+#'])
 @view('p_notificaciones')
 def notificaciones(page=0):
+    manana = (datetime.date.today()+datetime.timedelta(days=1)).strftime('%d-%m-%Y')
     doc=etree.parse("static/Municipios/madrid.xml")
     muni=doc.findall("municipio")
     alta=0
@@ -218,12 +231,13 @@ def notificaciones(page=0):
                 .limit(PAGE_SIZE).skip(page * PAGE_SIZE))
     return {'coleccion_notificaciones': coleccion_notificaciones,
             'prev_page': prev_page,
-            'next_page': next_page, 'alta':alta, 'muni':muni
+            'next_page': next_page, 'alta':alta, 'muni':muni, 'fdesde':manana, 'fhasta':manana
             }	
 
 # para PRO hay que ponerle 2 horas +
 @post('/notifica')
 def notifica(page=0):
+ manana = (datetime.date.today()+datetime.timedelta(days=1)).strftime('%d-%m-%Y')
  PAGE_SIZE = 5
  page = int(page)
  prev_page = None
@@ -235,11 +249,15 @@ def notifica(page=0):
  coleccion_notificaciones = (db.coleccion_notificaciones.find()
                 .sort('realizada', DESCENDING)
                 .limit(PAGE_SIZE).skip(page * PAGE_SIZE))
-
- notif = {'email': request.POST['email'], 'fdesde':request.POST['fechaDesde'], 'fhasta':request.POST['fechaHasta'],
+ print request.POST['fechaHasta']
+ fechaHastaIns= datetime.datetime.strptime(request.POST['fechaHasta'],'%d-%m-%Y')
+ fechaDesdeIns= datetime.datetime.strptime(request.POST['fechaDesde'],'%d-%m-%Y')
+ #notif = {'email': request.POST['email'], 'fdesde':request.POST['fechaDesde'], 'fhasta':request.POST['fechaHasta'],
+ #              'municipio': request.POST['municipio'],
+ #              'realizada': datetime.datetime.now()}
+ notif = {'email': request.POST['email'], 'fdesde':fechaDesdeIns, 'fhasta':fechaHastaIns,
                'municipio': request.POST['municipio'],
-               'realizada': datetime.datetime.now()}
-			   
+               'realizada': datetime.datetime.now()}			   
  listaErrores=[]			   
  #Chequeamos el email
  import re
@@ -278,9 +296,9 @@ def notifica(page=0):
  if(cuentaErrores==0):
      alta=1
      db.coleccion_notificaciones.insert(notif)
-     return template("p_notificaciones.tpl", muni=muni, alta=alta, coleccion_notificaciones=coleccion_notificaciones, prev_page=prev_page, next_page=next_page )	
+     return template("p_notificaciones.tpl", muni=muni, alta=alta, coleccion_notificaciones=coleccion_notificaciones, prev_page=prev_page, next_page=next_page, fdesde=manana, fhasta=manana )	
  else:
-  return template("error_views/p_notificaciones_error.tpl", muni=muni, errores=listaErrores, coleccion_notificaciones=coleccion_notificaciones, prev_page=prev_page, next_page=next_page, munsel=notif['municipio'], mailSel=mailSel )			
+  return template("error_views/p_notificaciones_error.tpl", muni=muni, errores=listaErrores, coleccion_notificaciones=coleccion_notificaciones, prev_page=prev_page, next_page=next_page, munsel=notif['municipio'], mailSel=mailSel, fdesde=notif['fdesde'], fhasta=notif['fhasta'] )			
     
  #db.coleccion_notificaciones.insert(notif)
  #redirect('/notificaciones')

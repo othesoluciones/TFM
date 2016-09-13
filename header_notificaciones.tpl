@@ -27,7 +27,7 @@
  dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
  dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sá'],
  weekHeader: 'Sem',
- dateFormat: 'dd/mm/yy',
+ dateFormat: 'dd-mm-yy',
  firstDay: 1,
  isRTL: false,
  showMonthAfterYear: false,
@@ -41,44 +41,13 @@
 		  minDate:1,
 		  onClose: function (selectedDate) {
 			$("#fechaHasta").datepicker("option", "minDate", selectedDate);
-			$("#fechaHasta").attr("disabled", false);
 		  }
-		}),
+		});
 		
-		$("#fechaHasta").datepicker().attr("disabled",true);
+		$("#fechaHasta").datepicker({minDate:$("#fechaDesde").val()});
 	
 	});
-	$(function () {
-		$("#fechaHasta").datepicker();
-	});
-
  </script>
-<!--<script type="text/javascript">
-jQuery.validator.addMethod("isValid", function (value, element) {
-    var startDate = $('#fechaDesde').val();
-    var finDate = $('#fechaHasta').val();
-    return Date.parse(startDate) < Date.parse(finDate);
-}, "* End date must be after start date");
-$(function () {
-    $('#fechaDesde,#fechaHasta').datepicker()
-
-    $('#custom').validate({
-        rules: {
-            'fechaL': { required: true, date: true },
-            'fechaS': { required: true, date: true, isValid: true }
-        }, messages: {
-            'fechaL': { required: 'date required msj!',
-                date: 'invalid date format msj'
-            },
-            'fechaS': { required: 'date required msj!',
-                date: 'invalid date format msj',
-                isValid: 'End date must be after start date'
-            }
-        }
-    });
-
-});
-</script>-->
 </head>
 
 <body>

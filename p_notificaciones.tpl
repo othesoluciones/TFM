@@ -35,10 +35,10 @@
              <th scope="row">Periodicidad</th>
              <td>
 <label for="fechaDesde">Fecha desde:
- <input type="text" name="fechaDesde" id="fechaDesde" />
+ <input type="text" name="fechaDesde" id="fechaDesde" value={{fdesde}} readonly/>
 </label><br/><br/>
 <label for="fechaHasta">Fecha Hasta:
- <input type="text" name="fechaHasta" id="fechaHasta" />
+ <input type="text" name="fechaHasta" id="fechaHasta" value={{fhasta}} readonly/>
 </label>
 			  </td>
            </tr>

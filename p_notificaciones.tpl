@@ -67,6 +67,12 @@
 		<td>
           {{notif['realizada'].strftime('%X %d %b %y')}}
         </td>
+		<td>
+          {{notif['fdesde']}}
+        </td>
+		<td>
+          {{notif['fhasta']}}
+        </td>
       </tr>
     %end
     </table>

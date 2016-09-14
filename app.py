@@ -213,7 +213,7 @@ def error404(error):
 @get(['/notificaciones', '/notificaciones/:page#\d+#'])
 @view('p_notificaciones')
 def notificaciones(page=0):
-    manana = (datetime.date.today()+datetime.timedelta(days=1)).strftime('%d-%m-%Y')
+    manana = (datetime.date.today()+datetime.timedelta(days=1)).strftime('%d/%m/%Y')
     doc=etree.parse("static/Municipios/madrid.xml")
     muni=doc.findall("municipio")
     alta=0
@@ -237,7 +237,7 @@ def notificaciones(page=0):
 # para PRO hay que ponerle 2 horas +
 @post('/notifica')
 def notifica(page=0):
- manana = (datetime.date.today()+datetime.timedelta(days=1)).strftime('%d-%m-%Y')
+ manana = (datetime.date.today()+datetime.timedelta(days=1)).strftime('%d/%m/%Y')
  PAGE_SIZE = 5
  page = int(page)
  prev_page = None
@@ -250,14 +250,14 @@ def notifica(page=0):
                 .sort('realizada', DESCENDING)
                 .limit(PAGE_SIZE).skip(page * PAGE_SIZE))
  print request.POST['fechaHasta']
- fechaHastaIns= datetime.datetime.strptime(request.POST['fechaHasta'],'%d-%m-%Y')
- fechaDesdeIns= datetime.datetime.strptime(request.POST['fechaDesde'],'%d-%m-%Y')
- #notif = {'email': request.POST['email'], 'fdesde':request.POST['fechaDesde'], 'fhasta':request.POST['fechaHasta'],
- #              'municipio': request.POST['municipio'],
- #              'realizada': datetime.datetime.now()}
- notif = {'email': request.POST['email'], 'fdesde':fechaDesdeIns, 'fhasta':fechaHastaIns,
+ fechaHastaIns= datetime.datetime.strptime(request.POST['fechaHasta'],'%d/%m/%Y')
+ fechaDesdeIns= datetime.datetime.strptime(request.POST['fechaDesde'],'%d/%m/%Y')
+ notif = {'email': request.POST['email'], 'fdesde':request.POST['fechaDesde'], 'fhasta':request.POST['fechaHasta'],
                'municipio': request.POST['municipio'],
-               'realizada': datetime.datetime.now()}			   
+               'realizada': datetime.datetime.now()}
+ #notif = {'email': request.POST['email'], 'fdesde':fechaDesdeIns, 'fhasta':fechaHastaIns,
+ #              'municipio': request.POST['municipio'],
+ #              'realizada': datetime.datetime.now()}			   
  listaErrores=[]			   
  #Chequeamos el email
  import re

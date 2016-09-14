@@ -36,16 +36,42 @@ def envioMail():
  mensaje['To']=cuentaPara
  mensaje['Subject']="Tienes un correo"
 
+
+#Envio personalizado Prueba Ajalvir"
+db = Connection().othesoluciones1
+name='Ajalvir'
+collection1 = db.prediccionesAEMET 
+print elimina_tildes(name.decode('utf-8'))
+name2 =  elimina_tildes(name.decode('utf-8'))
+cursor1 = collection1.find_one({"Municipio": name2})
+busquedaAEMET = cursor1[time.strftime("%Y-%m-%d")]
+texto = str("<p>La Temperatura Maxima de " + name2 + " es: " + busquedaAEMET[0]['Temperatura maxima'] + " C</p>")
 # Adjuntamos el texto
- html = """\
+html_inic = """\
  <html>
   <head></head>
   <body>
       <p>Hola,</p>
       <p>Este es el cuerpo del correo. Y sale el logo!</p>
-      <p>---</p>
-      <img src="cid:logo" alt="Othe Soluciones" height="52" width="52"></img>
+      <p>---</p>"""
+
+for i in range(0,2):
+   texto=texto+texto
+   
+html_fin="""\
+ <img src="cid:logo" alt="Othe Soluciones" height="52" width="52"></img>
  </html>"""
+html=str(html_inic+texto+html_fin)
+# Adjuntamos el texto
+# html = """\
+# <html>
+#  <head></head>
+#  <body>
+#      <p>Hola,</p>
+#      <p>Este es el cuerpo del correo. Y sale el logo!</p>
+#      <p>---</p>
+#      <img src="cid:logo" alt="Othe Soluciones" height="52" width="52"></img>
+# </html>"""
 
  mensaje.attach(MIMEText(html,'html'))
  # Adjuntamos la imagen
@@ -585,13 +611,13 @@ def algoritmoPredictivo():
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=12, minute=33)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=11, minute=30)
 
 #realmente se ejecuta a las 08:46
 scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=12, minute=34)
 
 #realmente se ejecuta a las 08:47. Este tarda
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=12, minute=35)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=11, minute=21)
 
 #realmente se ejecuta a las 08:55
 scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=13, minute=13)

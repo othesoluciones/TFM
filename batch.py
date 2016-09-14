@@ -75,7 +75,7 @@ def envioMail():
 
     from lxml import etree
     import time
-    doc=etree.parse("Municipios/madrid.xml")
+    doc=etree.parse("static/Municipios/madrid.xml")
     muni=doc.findall("municipio")
 
     print dfmm
@@ -749,7 +749,7 @@ def algoritmoPredictivo():
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=16, minute=55)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=16, minute=59)
 
 #realmente se ejecuta a las 08:46
 scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=11, minute=51)

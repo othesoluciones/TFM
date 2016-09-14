@@ -121,107 +121,7 @@ def envioMail():
 		print "Enviado"
     else:
 		print "No existen notificaciones que enviar para el dia de hoy"
-    print "Comenzamos envio mail"
-    import base64
-    from email.mime.multipart import MIMEMultipart
-    from email.mime.text import MIMEText
-    from email.mime.image import MIMEImage
-    # Establecemos conexion con el servidor smtp de gmail
-    mailServer = smtplib.SMTP('smtp.gmail.com',587)
-    mailServer.ehlo()
-    mailServer.starttls()
-    mailServer.ehlo()
-    password = base64.b64decode("Q29uc3RhbmNpYTIx")
-    mailServer.login("othesoluciones@gmail.com",password)
-    # Construimos un mensaje Multipart, con un texto y una imagen adjunta
-    cuentaDesde = "othesoluciones@gmail.com"
-    #cuentaPara = "cesarhernandez@campusciff.net"
-    mensaje = MIMEMultipart()
-    mensaje['From']=cuentaDesde
-    #mensaje['To']=cuentaPara
-    mensaje['Subject']="Tienes un correo"
-
-
-    from pymongo import MongoClient as Connection
-    from pymongo import DESCENDING
-
-
-    cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
-    MONGODB_URI =cadenaCon
-    MONGODB_URI = 'mongodb://othesoluciones:othesoluciones@ds029635.mlab.com:29635/othesoluciones1'
-    import unicodedata
-    def elimina_tildes(s):
-       return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
-
-    db = Connection(MONGODB_URI).othesoluciones1
-
-    #Para ejecutar con BBDD local 
-    #db = Connection().othesoluciones1
-    #db.coleccion_notificaciones.drop()
-    import datetime
-    import numpy as np
-    import pandas as pd
-    fecha = (datetime.date.today()+datetime.timedelta(days=1)).strftime('%d/%m/%Y')
-    fecha = datetime.datetime.strptime(fecha,'%d/%m/%Y')
-    print "Fecha supuesta de hoy-->", fecha
-    dfmm = pd.DataFrame()
-
-    for doc in db.coleccion_notificaciones.find():#{\"$and\":[{'fdesde': {'$lte': man}},{'fhasta': {'$gte':man}}]}):\n",
-        if ((datetime.datetime.strptime(doc['fdesde'],'%d/%m/%Y')<= fecha) and (fecha <= datetime.datetime.strptime(doc['fhasta'],'%d/%m/%Y'))):
-
-            df_aux=pd.DataFrame([doc['email'],doc['municipio']])
-
-            dfmm= dfmm.append(df_aux.T, ignore_index=True)
-            #print doc
-
-    print "****************************************************************"
-
-    #df_index = dfmm.set_index(0)
-
-    from lxml import etree
-    import time
-    doc=etree.parse("Municipios/madrid.xml")
-    muni=doc.findall("municipio")
-
-    print dfmm
-    for j in dfmm[0].unique():
-        texto=""
-
-        for i in range(0, len(dfmm)):                 
-            if (dfmm.ix[i,0]==j):
-                for k in range(0,len(muni)):
-                    if (muni[k].attrib["value"][-5:]==dfmm.ix[i,1]):
-                        collection1 = db.prediccionesAEMET 
-                        name2 =  elimina_tildes(unicode(muni[k].text[:]))
-                        cursor1 = collection1.find_one({"Municipio": name2})
-                        busquedaAEMET = cursor1[time.strftime("%Y-%m-%d")]
-                        texto = texto+str("<p>Email para el usuario: "+j+". La Temperatura Maxima de " + name2 + " es: " + busquedaAEMET[0]['Temperatura maxima'] + " C</p>")
-        print texto
-        cuentaPara=j
-        html_inic = """\
-            <html>
-                <head></head>
-                <body>
-                <p>Hola,</p>
-                <p>Este es el cuerpo del correo. Y sale el logo!</p>
-                <p>Estas son las notificaciones que ha solicitado</p>"""  
-        html_fin="""\
-            <img src="cid:logo" alt="Othe Soluciones" height="52" width="52"></img>
-            </html>"""
-        html=str(html_inic+texto+html_fin)
-        mensaje.attach(MIMEText(html,'html'))
-        # Adjuntamos la imagen
-        file = open("logo.jpg", "rb")
-        contenido = MIMEImage(file.read())
-        contenido.add_header('Content-ID', '<logo>')
-        mensaje.attach(contenido)
-        #print mensaje.as_string()
-        print "Envio mail"
-        # Enviamos el correo, con los campos from y to.
-        mailServer.sendmail(cuentaDesde, cuentaPara, mensaje.as_string())
-    # Cierre de la conexion
-    mailServer.close()
-    print "Enviado"
+		mailServer.close()
  
 def actualiza_calidad_aire():
     print "Empezamos actualiza_calidad_aire"
@@ -749,7 +649,7 @@ def algoritmoPredictivo():
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=16, minute=59)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=19, minute=17)
 
 #realmente se ejecuta a las 08:46
 scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=11, minute=51)

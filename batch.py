@@ -38,7 +38,13 @@ def envioMail():
 
 
 #Envio personalizado Prueba Ajalvir"
- db = Connection().othesoluciones1
+    #Conectamos a la base de datos
+ import base64
+ from pymongo import MongoClient as Connection
+ cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
+ MONGODB_URI =cadenaCon
+ conexion = Connection(MONGODB_URI)
+ db = conexion.othesoluciones1
  name='Ajalvir'
  collection1 = db.prediccionesAEMET 
  print elimina_tildes(name.decode('utf-8'))
@@ -617,7 +623,7 @@ scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=11, minute=31)
 scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=12, minute=34)
 
 #realmente se ejecuta a las 08:47. Este tarda
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=11, minute=23)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=11, minute=35)
 
 #realmente se ejecuta a las 08:55
 scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=13, minute=13)

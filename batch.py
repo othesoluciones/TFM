@@ -92,7 +92,7 @@ def envioMail():
 							name2 =  elimina_tildes(unicode(muni[k].text[:]))
 							cursor1 = collection1.find_one({"Municipio": name2})
 							busquedaAEMET = cursor1[time.strftime("%Y-%m-%d")]
-							texto = texto+str("<p>Email para el usuario: "+j+". La Temperatura Maxima de " + name2 + " es: " + busquedaAEMET[0]['Temperatura maxima'] + " C</p>")
+							texto = texto+str("<p>Email para el usuario: "+j+". La Temperatura Maxima de " + name2 + " es: " + busquedaAEMET[0]['Temperatura maxima'] + " C. Codigo Postal: "+dfmm.ix[i,1] +"</p>")
 			print texto
 			cuentaPara=j
 			html_inic = """\
@@ -464,7 +464,6 @@ def NivelesPolenMadrid():
     print "Finalizado NivelesPolenMadrid"
 
 def algoritmoPredictivo():
-    print "Empezamos algoritmoPredictivo"
     import pandas as pd
     #Lee de la base de datos
     import base64
@@ -478,13 +477,14 @@ def algoritmoPredictivo():
     MONGODB_URI =cadenaCon
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
-    #db = Connection().othesoluciones1
+
     #Calculamos el mes y la semana actual
     mes = datetime.date.today().month
     semana = datetime.date.today().isocalendar()[1]
-
+    print "Comienza algoritmo", semana, " ",mes
     #Obtenemos el nivel inicial
     NivelBase=db.calendarioPolen.find_one({"Mes": mes})['Nivel']
+
     #Obtenemos el nivel proporcionado por el nivel de polen
     NivelPolen =db.nivelesPolenSEAIC.find_one({"$and": [{"Polen/Fecha":"Gramineas"},{"Semana": semana}]})["Nivel"]
 
@@ -558,7 +558,7 @@ def algoritmoPredictivo():
     dfMEDIA=dfNivel.groupby(by='ZONA').mean()
     #Leemos del xml de Madrid para asociar a cada municipio con su zona.
 
-    doc=etree.parse("static/Municipios/madrid.xml")
+    doc = etree.parse("static/Municipios/madrid.xml")
     muni=doc.findall("municipio")
     municipio=[]
     zona=[]
@@ -572,7 +572,7 @@ def algoritmoPredictivo():
     dfMun['Zona']=zona
     dfMun['Codigo']=codigo
 
-    #Anyadimos los datos de predicciones AEMET al modelo
+    #Incluimos los datos de predicciones AEMET al modelo
     Municipios=[]
     Zona=[]
     nivelCalidad=[]
@@ -592,7 +592,7 @@ def algoritmoPredictivo():
     for pred in db.prediccionesAEMET.find():
         Municipios.append(pred['Municipio'])
         valZona = string.join(dfMun[dfMun.Municipio.isin([pred['Municipio']])]['Zona'].values)
-
+       
         nivelCalidad.append(dfMEDIA.ix[int(valZona)]['NIVEL'])
         codigoP.append(string.join(dfMun[dfMun.Municipio.isin([pred['Municipio']])]['Codigo'].values))
         Zona.append(valZona)
@@ -600,19 +600,36 @@ def algoritmoPredictivo():
         for indice in range(len(dias)):
             nivelAEMETDia=0
             for predaux in pred[dias[indice]]:
-
-                if predaux['viento 00-24']>30:
-                    nivelAEMETDia+=0.3
-                if predaux['precipitaciones 00-24']>30:
-                    nivelAEMETDia-=0.2
-                if predaux['Humedad relativa minima']>40:
-                    nivelAEMETDia-=0.1
-                if predaux['Humedad relativa maxima']>70:
-                    nivelAEMETDia-=0.1
-                if predaux['Temperatura minima']>20:
-                    nivelAEMETDia+=0.1
-                if predaux['Temperatura maxima']>30:
-                    nivelAEMETDia+=0.1
+                if 'viento 00-24' in predaux:
+                    if predaux['viento 00-24']>30:
+                        nivelAEMETDia+=0.3
+                else: 
+					print "No existe **viento 00-24**"
+                if 'precipitaciones 00-24' in predaux:
+                    if predaux['precipitaciones 00-24']>30:
+                        nivelAEMETDia-=0.2
+                else:
+					print "No existe **precipitaciones 00-24**"
+                if 'Humedad relativa minima' in predaux:
+                    if predaux['Humedad relativa minima']>40:
+                        nivelAEMETDia-=0.1
+                else:
+					print "No existe **Humedad relativa minima**"
+                if 'Humedad relativa maxima' in predaux:
+                    if predaux['Humedad relativa maxima']>70:
+                        nivelAEMETDia-=0.1
+                else:
+					print "No existe **Humedad relativa maxima**"
+                if 'Temperatura minima' in predaux:
+                    if predaux['Temperatura minima']>20:
+                        nivelAEMETDia+=0.1
+                else:
+					print "No existe **Temperatura minima**"						
+                if 'Temperatura maxima' in predaux:
+                    if predaux['Temperatura maxima']>30:
+                        nivelAEMETDia+=0.1
+                else:
+					print "No existe **Temperatura maxima**"
             if indice==0:
                 nivelesAEMET1.append(nivelAEMETDia)
             else:
@@ -639,9 +656,9 @@ def algoritmoPredictivo():
     dfFinal
     
     db.PrediccionOTHE.drop()
-
     recordsdf = json.loads(dfFinal.T.to_json()).values()
     db.PrediccionOTHE.insert_many(recordsdf)
+    
     print "Finalizado algoritmoPredictivo"
     conexion.close()
 	
@@ -649,22 +666,24 @@ def algoritmoPredictivo():
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=17, minute=28)
-
-#realmente se ejecuta a las 08:46
-scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=11, minute=51)
-
-#realmente se ejecuta a las 08:47. Este tarda
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=11, minute=39)
-
-#realmente se ejecuta a las 08:55
-scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=11, minute=55)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=08, minute=31)
 
 #realmente se ejecuta a las 09:10
-scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=11, minute=56)
+scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=08, minute=32)
+
+#realmente se ejecuta a las 08:46
+scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=08, minute=33)
+
+#realmente se ejecuta a las 08:47. Este tarda
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=08, minute=34)
+
+#realmente se ejecuta a las 08:55
+scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=08, minute=41)
+
+
 
 #realmente se ejecuta a las 09:12
-scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=11, minute=59)
+scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=08, minute=43)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

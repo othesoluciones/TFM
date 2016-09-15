@@ -31,10 +31,10 @@ def envioMail():
     # Construimos un mensaje Multipart, con un texto y una imagen adjunta
     cuentaDesde = "othesoluciones@gmail.com"
     #cuentaPara = "cesarhernandez@campusciff.net"
-    mensaje = MIMEMultipart()
-    mensaje['From']=cuentaDesde
+    #mensaje = MIMEMultipart()
+    #mensaje['From']=cuentaDesde
     #mensaje['To']=cuentaPara
-    mensaje['Subject']="Tienes un correo"
+    #mensaje['Subject']="Tienes un correo"
 
 
     from pymongo import MongoClient as Connection
@@ -83,7 +83,11 @@ def envioMail():
 		print "Existen notificaciones que enviar"
 		for j in dfmm[0].unique():
 			texto=""
-
+			mensaje = MIMEMultipart()
+			mensaje['From']=cuentaDesde
+			mensaje['Subject']="Tienes un correo"
+			cuentaPara=j
+			mensaje['To']=cuentaPara
 			for i in range(0, len(dfmm)):                 
 				if (dfmm.ix[i,0]==j):
 					for k in range(0,len(muni)):
@@ -92,9 +96,8 @@ def envioMail():
 							name2 =  elimina_tildes(unicode(muni[k].text[:]))
 							cursor1 = collection1.find_one({"Municipio": name2})
 							busquedaAEMET = cursor1[time.strftime("%Y-%m-%d")]
-							texto = texto+str("<p>Email para el usuario: "+j+". La Temperatura Maxima de " + name2 + " es: " + busquedaAEMET[0]['Temperatura maxima'] + " C. Codigo Postal: "+dfmm.ix[i,1] +"</p>")
+							texto = texto+str("<p>Email para el usuario: "+cuentaPara+". La Temperatura Maxima de " + name2 + " es: " + busquedaAEMET[0]['Temperatura maxima'] + " C. Codigo Postal: "+dfmm.ix[i,1] +"</p>")
 			print texto
-			cuentaPara=j
 			html_inic = """\
 				<html>
 					<head></head>
@@ -666,7 +669,7 @@ def algoritmoPredictivo():
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=6, minute=37)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=8, minute=19)
 
 #realmente se ejecuta a las 09:10
 scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=6, minute=38)

@@ -101,10 +101,9 @@ def envioMail():
 							predHoy = cursor1[str("Nivel "+hoy)]
 							predManana= cursor1[str("Nivel "+manana)]
 							predPasadoManana=cursor1[str("Nivel "+pasadomanana)]
-							texto = texto+("<h3>"+name2+"<h3>")
+							texto = texto+str("<h3>"+name2+"<h3>")
 							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +hoy+" es: <b>"+predHoy+"</b><p></br>")
 							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +manana+" es: <b>"+predManana+"</b><p></br>")
-							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +pasadomanana+" es: <b>"+predPasadoManana+"</b><p></br>")
 							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +pasadomanana+" es: <b>"+predPasadoManana+"</b><p></br>")
 							texto = texto+str("<hr>")
 							#collection1 = db.prediccionesAEMET 
@@ -724,7 +723,7 @@ def algoritmoPredictivo():
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=12, minute=30)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=12, minute=34)
 
 #realmente se ejecuta a las 09:10
 scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=10, minute=53)

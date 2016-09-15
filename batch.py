@@ -608,6 +608,7 @@ def algoritmoPredictivo():
     dfMun['Municipio']=municipio
     dfMun['Zona']=zona
     dfMun['Codigo']=codigo
+    print dfMun
 
     #Incluimos los datos de predicciones AEMET al modelo
     Municipios=[]
@@ -629,8 +630,11 @@ def algoritmoPredictivo():
     for pred in db.prediccionesAEMET.find():
         Municipios.append(pred['Municipio'])
         valZona = string.join(dfMun[dfMun.Municipio.isin([pred['Municipio']])]['Zona'].values)
-        print "DEBERIA FALLAR DESDE AQUI"
-        print "VALOR DE VALZONA -->", valZona, "<--"
+        if (valZona==''):
+        	
+        	print "DEBERIA FALLAR AQUI"
+        	print "VALOR DE VALZONA -->", valZona, "<--"
+        	print "El municipio del que no se esta recuperando la zona", pred['Municipio'],"******"
         nivelCalidad.append(dfMEDIA.ix[int(valZona)]['NIVEL'])
         codigoP.append(string.join(dfMun[dfMun.Municipio.isin([pred['Municipio']])]['Codigo'].values))
         Zona.append(valZona)
@@ -721,7 +725,7 @@ scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=6, min
 
 
 #realmente se ejecuta a las 09:12
-scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=9, minute=22)
+scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=9, minute=30)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

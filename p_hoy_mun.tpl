@@ -24,30 +24,7 @@
 					<td>{{b['Temperatura maxima']}}</td>
 				</tr>
 			</tbody> 
-			<tbody>
-				<tr>
-					<th scope="row">Humedad relativa máxima</th>
-					<td>{{b['Humedad relativa maxima']}}</td>
-				</tr>
-			</tbody> 
-			<tbody>
-				<tr>
-					<th scope="row">Humedad relativa mínima</th>
-					<td>{{b['Humedad relativa minima']}}</td>
-				</tr>
-			</tbody> 
-			<tbody>
-				<tr>
-					<th scope="row">% Precipitaciones</th>
-					<td>{{b['precipitaciones 00-24']}}</td>
-				</tr>
-			</tbody> 
-			<tbody>
-			<tr>
-				<th scope="row">Velocidad del Viento</th>
-				<td>{{b['viento 00-24']}}</td>
-           </tr>
-        </tbody>
+
 	     % end
  </table>
  </td>

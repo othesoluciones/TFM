@@ -515,28 +515,62 @@ def algoritmoPredictivo():
         nivel=0
         colEst.append(cursor['Estacion'])
         colZona.append(cursor['Zona'])
+        ## DIOXIDO DE NITROGENO
         colNO2.append(cursor['DIOXIDO DE NITROGENO'])
-        if cursor['DIOXIDO DE NITROGENO'].isdigit() and float(cursor['DIOXIDO DE NITROGENO'])>200:
-            nivel+=0.1
+        if(cursor['DIOXIDO DE NITROGENO']!=""):
+        	if cursor['DIOXIDO DE NITROGENO'].isdigit() and int(cursor['DIOXIDO DE NITROGENO'])>200:
+            		nivel+=0.1
+        else:
+        	print "DIOXIDO DE NITROGENO VACIO"
+        
+        ## PARTICULAS EN SUSPENSION < PM10
         colPM10.append(cursor['PARTICULAS EN SUSPENSION < PM10'])
-        if cursor['PARTICULAS EN SUSPENSION < PM10'].isdigit() and float(cursor['PARTICULAS EN SUSPENSION < PM10'])>50:
-            nivel+=0.1
+        if(cursor['PARTICULAS EN SUSPENSION < PM10']!=''):
+        	if cursor['PARTICULAS EN SUSPENSION < PM10'].isdigit() and int(cursor['PARTICULAS EN SUSPENSION < PM10'])>50:
+            		nivel+=0.1
+        else:
+        	print "PARTICULAS EN SUSPENSION < PM10 - VACIO"
+        
+        ## PARTICULAS EN SUSPENSION < PM2,5
         colPM25.append(cursor['PARTICULAS EN SUSPENSION < PM2,5'])
-        if cursor['PARTICULAS EN SUSPENSION < PM2,5'].isdigit() and float(cursor['PARTICULAS EN SUSPENSION < PM2,5'])>25:
-            nivel+=0.1
+        if (cursor['PARTICULAS EN SUSPENSION < PM2,5']!=''):
+        	if cursor['PARTICULAS EN SUSPENSION < PM2,5'].isdigit() and int(cursor['PARTICULAS EN SUSPENSION < PM2,5'])>25:
+            		nivel+=0.1
+        else: 
+        	print "PARTICULAS EN SUSPENSION < PM2,5 - VACIO"
+        
+        ## MONOXIDO DE CARBONO
         colCO.append(cursor['MONOXIDO DE CARBONO'])
-        if cursor['MONOXIDO DE CARBONO'].isdigit() and float(cursor['MONOXIDO DE CARBONO'])>10:
-            nivel+=0.1
+        if (cursor['MONOXIDO DE CARBONO']!=''):
+        	if cursor['MONOXIDO DE CARBONO'].isdigit() and int(cursor['MONOXIDO DE CARBONO'])>10:
+            		nivel+=0.1
+        else:
+        	print "MONOXIDO DE CARBONO - VACIO"
+        	
+        ## CONCENTRACION DE OZONO
         colO3.append(cursor['CONCENTRACION DE OZONO'])
-        if cursor['CONCENTRACION DE OZONO'].isdigit() and float(cursor['CONCENTRACION DE OZONO'])>120:
-            nivel+=0.1
+        if (cursor['CONCENTRACION DE OZONO']!=''):
+        	if cursor['CONCENTRACION DE OZONO'].isdigit() and int(cursor['CONCENTRACION DE OZONO'])>120:
+            		nivel+=0.1
+        else:
+        	print "CONCENTRACION DE OZONO - VACIO"
+         
+        ## DIOXIDO DE AZUFRE
         colSO2.append(cursor['DIOXIDO DE AZUFRE'])
-        if cursor['DIOXIDO DE AZUFRE'].isdigit() and float(cursor['DIOXIDO DE AZUFRE'])>350:
-            nivel+=0.1
-        colNO.append(cursor['MONOXIDO DE NITROGENO'])
-        if cursor['MONOXIDO DE NITROGENO'].isdigit() and float(cursor['MONOXIDO DE NITROGENO'])>30:
-            nivel+=0.1
+        if (cursor['DIOXIDO DE AZUFRE']!=''): 
+        	if cursor['DIOXIDO DE AZUFRE'].isdigit() and int(cursor['DIOXIDO DE AZUFRE'])>350:
+        		nivel+=0.1
+        else:
+        	print "DIOXIDO DE AZUFRE - VACIO"
+        
+        ## MONOXIDO DE NITROGENO
 
+        colNO.append(cursor['MONOXIDO DE NITROGENO'])
+        if (cursor['MONOXIDO DE NITROGENO']!=''):
+        	if cursor['MONOXIDO DE NITROGENO'].isdigit() and int(cursor['MONOXIDO DE NITROGENO'])>30:
+            		nivel+=0.1
+	else:
+		print "MONOXIDO DE NITROGENO - VACIO"
         colNIVEL.append(nivel)
 
     dfCalidadAire=pd.DataFrame()
@@ -686,7 +720,7 @@ scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=6, min
 
 
 #realmente se ejecuta a las 09:12
-scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=8, minute=01)
+scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=8, minute=23)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

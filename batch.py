@@ -557,18 +557,18 @@ def algoritmoPredictivo():
          
         ## DIOXIDO DE AZUFRE
         colSO2.append(cursor['DIOXIDO DE AZUFRE'])
-        if (cursor['DIOXIDO DE AZUFRE']!=''): 
-        	if cursor['DIOXIDO DE AZUFRE'].isdigit() and int(cursor['DIOXIDO DE AZUFRE'])>350:
-        		nivel+=0.1
-        else:
-        	print "DIOXIDO DE AZUFRE - VACIO"
+	if (cursor['DIOXIDO DE AZUFRE']!=''): 
+		if cursor['DIOXIDO DE AZUFRE'].isdigit() and int(cursor['DIOXIDO DE AZUFRE'])>350:
+			nivel+=0.1
+	else:
+		print "DIOXIDO DE AZUFRE - VACIO"
         
         ## MONOXIDO DE NITROGENO
 
-        colNO.append(cursor['MONOXIDO DE NITROGENO'])
-        if (cursor['MONOXIDO DE NITROGENO']!=''):
-        	if cursor['MONOXIDO DE NITROGENO'].isdigit() and int(cursor['MONOXIDO DE NITROGENO'])>30:
-            		nivel+=0.1
+	colNO.append(cursor['MONOXIDO DE NITROGENO'])
+	if (cursor['MONOXIDO DE NITROGENO']!=''):
+		if cursor['MONOXIDO DE NITROGENO'].isdigit() and int(cursor['MONOXIDO DE NITROGENO'])>30:
+			nivel+=0.1
 	else:
 		print "MONOXIDO DE NITROGENO - VACIO"
         colNIVEL.append(nivel)
@@ -720,7 +720,7 @@ scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=6, min
 
 
 #realmente se ejecuta a las 09:12
-scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=8, minute=23)
+scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=8, minute=33)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

@@ -92,12 +92,27 @@ def envioMail():
 				if (dfmm.ix[i,0]==j):
 					for k in range(0,len(muni)):
 						if (muni[k].attrib["value"][-5:]==dfmm.ix[i,1]):
-							collection1 = db.prediccionesAEMET 
+							hoy = (datetime.date.today()+datetime.timedelta(days=0)).strftime('%d-%m-%Y')
+							manana=(datetime.date.today()+datetime.timedelta(days=1)).strftime('%d-%m-%Y')
+							pasadomanana=(datetime.date.today()+datetime.timedelta(days=2)).strftime('%d-%m-%Y')
+							collection1 = db.PrediccionOTHE
 							name2 =  elimina_tildes(unicode(muni[k].text[:]))
 							cursor1 = collection1.find_one({"Municipio": name2})
-							busquedaAEMET = cursor1[time.strftime("%Y-%m-%d")]
-							texto = texto+str("<p>Email para el usuario: "+cuentaPara+". La Temperatura Maxima de " + name2 + " es: " + busquedaAEMET[0]['Temperatura maxima'] + " C. Codigo Postal: "+dfmm.ix[i,1] +"</p>")
-			print texto
+							predHoy = cursor1[str("Nivel "+hoy)]
+							predManana= cursor1[str("Nivel "+manana)]
+							predPasadoManana=cursor1[str("Nivel "+pasadomanana)]
+							texto = texto+("<h3>"+name2+"<h3>")
+							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +hoy+" es: <b>"+predHoy+"</b><p></br>")
+							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +manana+" es: <b>"+predManana+"</b><p></br>")
+							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +pasadomanana+" es: <b>"+predPasadoManana+"</b><p></br>")
+							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +pasadomanana+" es: <b>"+predPasadoManana+"</b><p></br>")
+							texto = texto+str("<hr>")
+							#collection1 = db.prediccionesAEMET 
+							#name2 =  elimina_tildes(unicode(muni[k].text[:]))
+							#cursor1 = collection1.find_one({"Municipio": name2})
+							#busquedaAEMET = cursor1[time.strftime("%Y-%m-%d")]
+							#texto = texto+str("<p>Email para el usuario: "+cuentaPara+". La Temperatura Maxima de " + name2 + " es: " + busquedaAEMET[0]['Temperatura maxima'] + " C. Codigo Postal: "+dfmm.ix[i,1] +"</p>")
+			#print texto
 			html_inic = """\
 				<html>
 					<head></head>
@@ -709,7 +724,7 @@ def algoritmoPredictivo():
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=7, minute=23)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=12, minute=30)
 
 #realmente se ejecuta a las 09:10
 scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=10, minute=53)

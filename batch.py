@@ -715,18 +715,18 @@ scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=7, minute=23)
 scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=6, minute=38)
 
 #realmente se ejecuta a las 08:46
-scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=6, minute=39)
+scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=10, minute=21)
 
 #realmente se ejecuta a las 08:47. Este tarda
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=6, minute=40)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=10, minute=22)
 
 #realmente se ejecuta a las 08:55
-scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=6, minute=46)
+scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=10, minute=28)
 
 
 
 #realmente se ejecuta a las 09:12
-scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=10, minute=02)
+scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=10, minute=29)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

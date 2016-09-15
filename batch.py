@@ -630,8 +630,7 @@ def algoritmoPredictivo():
         Municipios.append(pred['Municipio'])
         valZona = string.join(dfMun[dfMun.Municipio.isin([pred['Municipio']])]['Zona'].values)
         print "DEBERIA FALLAR DESDE AQUI"
-        print valZona
-        print dfMEDIA
+        print "VALOR DE VALZONA -->", valZona, "<--"
         nivelCalidad.append(dfMEDIA.ix[int(valZona)]['NIVEL'])
         codigoP.append(string.join(dfMun[dfMun.Municipio.isin([pred['Municipio']])]['Codigo'].values))
         Zona.append(valZona)
@@ -722,7 +721,7 @@ scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=6, min
 
 
 #realmente se ejecuta a las 09:12
-scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=9, minute=18)
+scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=9, minute=22)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

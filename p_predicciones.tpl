@@ -1,7 +1,7 @@
 % include('header_predicciones.tpl', title='Predicciones')
 	<h1>Predicciones futuras</h1>
 
-	<img src="data:image/png;base64, {{plot_url}}" alt=""/>
+	<img src="data:image/png;base64, {{plot_url}}" alt="" id="municipio-cam" />
 	
 	<table border="1">
 

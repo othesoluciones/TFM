@@ -15,11 +15,83 @@ import gridfs
 import urllib
 
 
-
 import unicodedata
 def elimina_tildes(s):
    return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
 
+def dibujaMunicipiosErrores(first,micolor,finrango1, finrango2, fin, ax):
+    import matplotlib.pyplot as plt
+    import numpy as np
+    from matplotlib.path import Path
+    import matplotlib.patches as patches
+    dibuja= True
+    if micolor==0:
+        micolor2='green'
+    elif (micolor==1): 
+        micolor2='yellow'
+    else:
+        micolor2='red'
+
+    for i in range(1,4):
+        if (i==1):
+            dibuja= True
+            initrango=0
+            finrango=finrango1
+        if (i==2):
+            if(finrango1==finrango2):
+             dibuja=False
+            else:    
+             dibuja= True
+             initrango=finrango1+1
+             finrango=finrango2
+        if (i==3):
+            dibuja= True
+            initrango=finrango2+1
+            finrango=fin   
+            
+        if (dibuja==True):    
+         x= [i[0] for i in first.shape.points[initrango:finrango]]
+         y= [i[1] for i in first.shape.points[initrango:finrango]]
+         npx = np.array(x)
+         npy = np.array(y)
+         npxy = np.vstack((npx,npy)).T
+         verts = npxy
+
+         l = [Path.LINETO] * len(first.shape.points[initrango:finrango])
+         l[0]=Path.MOVETO
+         l[-1]=Path.CLOSEPOLY
+         codes = l
+         path = Path(verts, codes, closed=False)
+         patch = patches.PathPatch(path, facecolor=micolor2, lw=1)
+         ax.add_patch(patch)
+
+def dibujaMunicipios(first,micolor, ax):
+    import matplotlib.pyplot as plt
+    import numpy as np
+    from matplotlib.path import Path
+    import matplotlib.patches as patches
+    if micolor==0:
+        micolor2='green'
+    elif (micolor==1): 
+        micolor2='yellow'
+    else:
+        micolor2='red'
+    x= [i[0] for i in first.shape.points[:]]
+    y= [i[1] for i in first.shape.points[:]]
+    npx = np.array(x)
+    npy = np.array(y)
+    npxy = np.vstack((npx,npy)).T
+    verts = npxy
+
+    l = [Path.LINETO] * len(first.shape.points[:])
+    l[0]=Path.MOVETO
+    l[-1]=Path.CLOSEPOLY
+    codes = l
+    path = Path(verts, codes, closed=False)
+    patch = patches.PathPatch(path, facecolor=micolor2, lw=1)
+    ax.add_patch(patch)
+	
+   
 def nuevoReporte(municipio, nivel_alerta):
     #Conectamos a la base de datos
     import base64
@@ -182,8 +254,8 @@ def notifica():
 
 
 	
-@route('/predicciones')
-def predicciones():
+#@route('/predicciones')
+#def predicciones():
 	#doc=etree.parse("sevilla.xml")
 	#muni=doc.findall("municipio")
 	#return template("p_predicciones.tpl", mun=muni)
@@ -198,7 +270,88 @@ def predicciones():
 	#plt.savefig(img, format='png')
 	#img.seek(0)
 	#plot_url = base64.b64encode(img.getvalue())
-	return template("p_predicciones.tpl")#, plot_url=plot_url)
+#	return template("p_predicciones.tpl")#, plot_url=plot_url)
+
+@route('/predicciones')
+def predicciones():
+    from time import time
+    tiempo_inicial=time()
+    import shapefile
+    import numpy as np
+    import matplotlib.pyplot as plt
+    from matplotlib.path import Path
+    import matplotlib.patches as patches
+    import base64
+    import datetime
+    from pymongo import MongoClient as Connection
+    ##Conexion a MongoDB
+    cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
+    MONGODB_URI =cadenaCon 
+    conexion = Connection(MONGODB_URI)
+    db = conexion.othesoluciones1
+    #########################
+    #Diccionario creado a mano para dibujar de forma distinta los municipios
+    # que tienen terrenos que no estan unidos entre si
+    diccionarioMunicipiosErroneos = {}
+    diccionarioMunicipiosErroneos['Mostoles']={'finrango1':1532 , 'finrango2':1532}
+    diccionarioMunicipiosErroneos['Becerril de la Sierra']= {'finrango1':307 , 'finrango2':408}
+    diccionarioMunicipiosErroneos['Boalo, El']= {'finrango1':342 , 'finrango2':756 }
+    diccionarioMunicipiosErroneos['Manzanares El Real']= {'finrango1':705 , 'finrango2':819 }
+    diccionarioMunicipiosErroneos['Moralzarzal']= {'finrango1':558 , 'finrango2':558 }
+    diccionarioMunicipiosErroneos['Mostoles']= {'finrango1':1532 , 'finrango2':1532 }
+    diccionarioMunicipiosErroneos['Navacerrada']= {'finrango1':446 , 'finrango2':446 }
+    diccionarioMunicipiosErroneos['Santa Maria de la Alameda']= {'finrango1':6740 , 'finrango2':6740 }
+    diccionarioMunicipiosErroneos['Serranillos del Valle']= {'finrango1':931 , 'finrango2':931 }
+    diccionarioMunicipiosErroneos['Valdepielagos']= {'finrango1':909 , 'finrango2':909 }
+
+    #########################
+    #Dibujamos el mapa de Madrid en 3 colores en funcion del nivel de alerta en el que se encuentre cada municipio
+    from lxml import etree
+    doc=etree.parse("static/Municipios/madrid.xml")
+    muni=doc.findall("municipio")
+    sf = shapefile.Reader("static/Municipios/200001493.shp")
+    shapes =sf.shapeRecords()
+
+    img = StringIO.StringIO()
+    fig = plt.figure(figsize=(11,11))
+    ax = fig.add_subplot(111)
+    
+    hoy = (datetime.date.today()+datetime.timedelta(days=0)).strftime('%d-%m-%Y')
+
+
+    for shape in sf.shapeRecords():
+        nombreMunicipio = elimina_tildes((shape.record[2]).decode('windows-1252'))
+        name2=nombreMunicipio
+        if(name2=="Manzanares El Real"):
+            name2="Manzanares el Real"
+        collection1=db.PrediccionOTHE
+        cursor1=collection1.find_one({"Municipio": name2})
+        predHoy = cursor1["Nivel "+hoy]
+        color=int(predHoy)
+        if (nombreMunicipio in diccionarioMunicipiosErroneos):
+            finrango1= diccionarioMunicipiosErroneos[nombreMunicipio]['finrango1']
+            finrango2= diccionarioMunicipiosErroneos[nombreMunicipio]['finrango2']
+            dibujaMunicipiosErrores(shape,int(color),finrango1,finrango2,len(shape.shape.points), ax)
+        else:
+            dibujaMunicipios(shape,int(color), ax)
+
+
+
+    ax.autoscale_view()
+
+
+    plt.axis('off')
+    plt.savefig(img, format='png')
+    img.seek(0)
+    plot_url = base64.b64encode(img.getvalue())
+    conexion.close()
+    tiempo_final = time() 
+ 
+    tiempo_ejecucion = tiempo_final - tiempo_inicial
+ 
+    print 'El tiempo de ejecucion fue:',tiempo_ejecucion #En segundos
+    return template("p_predicciones.tpl", plot_url=plot_url)
+
 	
 	
 @route('/static/<filepath:path>')

@@ -666,24 +666,24 @@ def algoritmoPredictivo():
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=8, minute=34)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=6, minute=37)
 
 #realmente se ejecuta a las 09:10
-scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=8, minute=35)
+scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=6, minute=38)
 
 #realmente se ejecuta a las 08:46
-scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=8, minute=36)
+scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=6, minute=39)
 
 #realmente se ejecuta a las 08:47. Este tarda
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=8, minute=37)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=6, minute=40)
 
 #realmente se ejecuta a las 08:55
-scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=8, minute=44)
+scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=6, minute=46)
 
 
 
 #realmente se ejecuta a las 09:12
-scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=8, minute=45)
+scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=6, minute=47)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

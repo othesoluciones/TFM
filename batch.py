@@ -85,7 +85,7 @@ def envioMail():
 			texto=""
 			mensaje = MIMEMultipart()
 			mensaje['From']=cuentaDesde
-			mensaje['Subject']="Tienes un correo"
+			mensaje['Subject']="Suscripcion a Notificaciones de OtheSoluciones"
 			cuentaPara=j
 			mensaje['To']=cuentaPara
 			for i in range(0, len(dfmm)):                 
@@ -103,10 +103,10 @@ def envioMail():
 							predManana= cursor1["Nivel "+manana]
 							predPasadoManana=cursor1["Nivel "+pasadomanana]
 							print "Llego a escribir el texto"
-							texto = texto+str("<h3>"+name2+"<h3>")
-							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +hoy+" es: <b>"+str(predHoy)+"</b><p></br>")
-							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +manana+" es: <b>"+str(predManana)+"</b><p></br>")
-							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +pasadomanana+" es: <b>"+str(predPasadoManana)+"</b><p></br>")
+							texto = texto+str("<h3>"+name2+"</h3>")
+							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +hoy+" es: <b>"+str(int(predHoy))+"</b><p></br>")
+							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +manana+" es: <b>"+str(int(predManana))+"</b><p></br>")
+							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +pasadomanana+" es: <b>"+str(int(predPasadoManana))+"</b><p></br>")
 							texto = texto+str("<hr>")
 							#collection1 = db.prediccionesAEMET 
 							#name2 =  elimina_tildes(unicode(muni[k].text[:]))
@@ -118,9 +118,8 @@ def envioMail():
 				<html>
 					<head></head>
 					<body>
-					<p>Hola,</p>
-					<p>Este es el cuerpo del correo. Y sale el logo!</p>
-					<p>Estas son las notificaciones que ha solicitado</p>"""  
+					<p>Buenos dias,</p>
+					<p>Estas son las notificaciones que ha solicitado:</p>"""  
 			html_fin="""\
 				<img src="cid:logo" alt="Othe Soluciones" height="52" width="52"></img>
 				</html>"""
@@ -725,7 +724,7 @@ def algoritmoPredictivo():
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=12, minute=50)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=12, minute=57)
 
 #realmente se ejecuta a las 09:10
 scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=10, minute=53)

@@ -669,7 +669,7 @@ def algoritmoPredictivo():
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=8, minute=19)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=7, minute=23)
 
 #realmente se ejecuta a las 09:10
 scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=6, minute=38)

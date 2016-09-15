@@ -630,6 +630,7 @@ def algoritmoPredictivo():
     for pred in db.prediccionesAEMET.find():
         Municipios.append(pred['Municipio'])
         valZona = string.join(dfMun[dfMun.Municipio.isin([pred['Municipio']])]['Zona'].values)
+        print pred
         if (valZona==''):
         	
         	print "DEBERIA FALLAR AQUI"
@@ -725,7 +726,7 @@ scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=6, min
 
 
 #realmente se ejecuta a las 09:12
-scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=9, minute=30)
+scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=9, minute=37)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

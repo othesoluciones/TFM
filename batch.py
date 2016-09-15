@@ -634,7 +634,7 @@ def algoritmoPredictivo():
         valZona = string.join(dfMun[dfMun.Municipio.isin([pred['Municipio']])]['Zona'].values)
         
         if (valZona==''):
-        	print pred
+        	print pred['Municipio']
         	print "DEBERIA FALLAR AQUI"
         	print "VALOR DE VALZONA -->", valZona, "<--"
         	print "El municipio del que no se esta recuperando la zona", pred['Municipio'],"******"
@@ -728,7 +728,7 @@ scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=6, min
 
 
 #realmente se ejecuta a las 09:12
-scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=9, minute=48)
+scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=9, minute=59)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

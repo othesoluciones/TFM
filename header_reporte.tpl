@@ -5,6 +5,12 @@
   <title>{{title}}</title>
   <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" type="text/css" href="/static/style/style.css" />
+  <script type="text/javascript">
+      function toggle(id) {
+        var el = document.getElementById(id);
+        el.style.display = (el.style.display != 'none' ? 'none' : '' );
+   }
+  </script>
 </head>
 
 <body>

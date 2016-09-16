@@ -118,11 +118,21 @@ def index():
     #doc=etree.parse("sevilla.xml")
     #muni=doc.findall("municipio")
     #return template("index.tpl", mun=muni)
+	from pymongo import MongoClient as Connection
+	conn = Connection()
+	db = conn.othesoluciones1
+	import gridfs
+    #fs = gridfs.GridFS(db,"fs").get_version(["ALERTAS.png"])	
+    #plot_url_img   = base64.b64encode(fs.read())
+	fs = gridfs.GridFS(db)
+	#print list(db.fs.files.find())
+	gridout = fs.get_last_version("ALERTAS.png")
+	plot_url_img = base64.b64encode(gridout.read())
 	''' List noticias. '''
 	PAGE_SIZE = 10
 	noticias_del_dia = (db.noticias_del_dia.find().sort('Fecha de busqueda', DESCENDING).limit(PAGE_SIZE))
 	print noticias_del_dia
-	return {'noticias_del_dia': noticias_del_dia }	
+	return {'noticias_del_dia': noticias_del_dia, 'plot_url_img':plot_url_img }		
 	
 
 @get(['/hoy', '/hoy/:page#\d+#'])

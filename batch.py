@@ -779,7 +779,8 @@ def algoritmoPredictivo():
     for localidad in muni:
         zona.append(localidad.get('zona'))
         municipio.append(elimina_tildes(unicode(localidad.text)))
-        codigo.append(localidad.get('value').split('id')[1])
+        #codigo.append(localidad.get('value').split('id')[1])
+        codigo.append(localidad.attrib["value"][-5:])
     dfMun=pd.DataFrame()
     dfMun['Municipio']=municipio
     dfMun['Zona']=zona
@@ -888,7 +889,7 @@ def algoritmoPredictivo():
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=11, minute=03)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=11, minute=31)
 
 #realmente se ejecuta a las 09:10
 scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=11, minute=04)
@@ -905,7 +906,7 @@ scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=11, mi
 
 
 #realmente se ejecuta a las 09:12
-scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=11, minute=11)
+scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=11, minute=29)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

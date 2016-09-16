@@ -25,12 +25,13 @@ def dibujaMunicipiosErrores(first,micolor,finrango1, finrango2, fin, ax):
     from matplotlib.path import Path
     import matplotlib.patches as patches
     dibuja= True
-    if micolor==0:
+    if ((0<=micolor) and (micolor<1)):
         micolor2='green'
-    elif (micolor==1): 
-        micolor2='yellow'
     else:
-        micolor2='red'
+    	if ((1<=micolor)and(micolor<2)): 
+        	micolor2='yellow'
+    	else:
+        	micolor2='red'
 
     for i in range(1,4):
         if (i==1):
@@ -70,12 +71,13 @@ def dibujaMunicipios(first,micolor, ax):
     import numpy as np
     from matplotlib.path import Path
     import matplotlib.patches as patches
-    if micolor==0:
+    if ((0<=micolor) and (micolor<1)):
         micolor2='green'
-    elif (micolor==1): 
-        micolor2='yellow'
     else:
-        micolor2='red'
+    	if ((1<=micolor)and(micolor<2)): 
+        	micolor2='yellow'
+    	else:
+        	micolor2='red'
     x= [i[0] for i in first.shape.points[:]]
     y= [i[1] for i in first.shape.points[:]]
     npx = np.array(x)

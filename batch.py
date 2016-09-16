@@ -908,7 +908,7 @@ scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=11, mi
 
 
 #realmente se ejecuta a las 09:12
-scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=11, minute=29)
+scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=11, minute=44)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

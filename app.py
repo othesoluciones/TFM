@@ -119,8 +119,10 @@ def index():
     #muni=doc.findall("municipio")
     #return template("index.tpl", mun=muni)
 	from pymongo import MongoClient as Connection
-	conn = Connection()
-	db = conn.othesoluciones1
+	cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
+	MONGODB_URI =cadenaCon
+	conexion = Connection(MONGODB_URI)
+	db = conexion.othesoluciones1
 	import gridfs
     #fs = gridfs.GridFS(db,"fs").get_version(["ALERTAS.png"])	
     #plot_url_img   = base64.b64encode(fs.read())

@@ -1,4 +1,4 @@
-% include('header_notificaciones.tpl', title='Notificaciones')
+% include('header_notificaciones.tpl', title='Notificaciones', ndd=noticias_del_dia)
 <h1>Recibe notificaciones</h1>
 % if alta==1:
  <h2 id="idverde">Alerta recibida con éxito. Gracias por su colaboración</h2>

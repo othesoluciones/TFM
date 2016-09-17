@@ -1,4 +1,4 @@
-% include('header_reporte.tpl', title='¡Repórtanos!')
+% include('header_reporte.tpl', title='¡Repórtanos!', ndd=noticias_del_dia)
 <h1>Repórtanos alertas</h1>
 % if errores[0]==False:
 <h2 id="idrojo">Por favor, seleccione un municipio correcto</h2>

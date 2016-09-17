@@ -1,12 +1,13 @@
-% include('header_hoy.tpl', title='Niveles del día')
+% include('header_hoy.tpl', title='Niveles del día', ndd=noticias_del_dia)
     <h1>{{name}}</h1>
 		<img src="data:image/png;base64, {{plot_url_img}}" id="municipio" alt =""/>
 		<img src="data:image/png;base64, {{plot_url_img_cam}}" id="municipio-cam" alt =""/>
 		<table border="0" width="100%" cellpadding="5" cellspacing="5">
 		<tr>
 		<td width="50%"> 
-		% for b in busquedaAEMET:
+
 		<table border="1">
+		% for b in busquedaAEMET:
 			<caption><h2>Datos Meteorológicos</h2></caption>
 			<colgroup>
 				<col />
@@ -24,7 +25,30 @@
 					<td>{{b['Temperatura maxima']}}</td>
 				</tr>
 			</tbody> 
-
+			<tbody>
+				<tr>
+					<th scope="row">Humedad relativa máxima</th>
+					<td>{{b['Humedad relativa maxima']}}</td>
+				</tr>
+			</tbody> 
+			<tbody>
+				<tr>
+					<th scope="row">Humedad relativa mínima</th>
+					<td>{{b['Humedad relativa minima']}}</td>
+				</tr>
+			</tbody> 
+			<tbody>
+				<tr>
+					<th scope="row">% Precipitaciones</th>
+					<td>{{b['precipitaciones 00-24']}}</td>
+				</tr>
+			</tbody> 
+			<tbody>
+				<tr>
+					<th scope="row">Velocidad del Viento</th>
+					<td>{{b['viento 00-24']}}</td>
+				</tr>
+			</tbody> 
 	     % end
  </table>
  </td>
@@ -37,32 +61,44 @@
 			</colgroup>
 			<tbody>
 				<tr>
-					<th scope="row">CO</th>
-					<td></td>
+					<th scope="row">Dióxido de Nitrógeno</th>
+					<td>{{cursor3['DIOXIDO DE NITROGENO']}}</td>
 				</tr>
 			</tbody> 
 			<tbody>
 				<tr>
-					<th scope="row">HO</th>
-					<td></td>
+					<th scope="row">Partículas en Suspensión < PM10</th>
+					<td>{{cursor3['PARTICULAS EN SUSPENSION < PM10']}}</td>
+				</tr>
+			</tbody> 	
+			<tbody>
+				<tr>
+					<th scope="row">Partículas en Suspensión < PM2,5</th>
+					<td>{{cursor3['PARTICULAS EN SUSPENSION < PM2,5']}}</td>
+				</tr>
+			</tbody>
+			<tbody>
+				<tr>
+					<th scope="row">Monóxido de Carbono</th>
+					<td>{{cursor3['MONOXIDO DE CARBONO']}}</td>
 				</tr>
 			</tbody> 
 			<tbody>
 				<tr>
-					<th scope="row">HO2</th>
-					<td></td>
+					<th scope="row">Concentración de Ozono</th>
+					<td>{{cursor3['CONCENTRACION DE OZONO']}}</td>
 				</tr>
 			</tbody> 
 			<tbody>
 				<tr>
-					<th scope="row">Hidrocarburos</th>
-					<td></td>
+					<th scope="row">Dióxido de Azufre</th>
+					<td>{{cursor3['DIOXIDO DE AZUFRE']}}</td>
 				</tr>
 			</tbody> 
 			<tbody>
 				<tr>
-					<th scope="row">Ozono</th>
-					<td></td>
+					<th scope="row">Monóxido de Nitrogeno</th>
+					<td>{{cursor3['MONOXIDO DE NITROGENO']}}</td>
 				</tr>
 			</tbody> 
  </table>

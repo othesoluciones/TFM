@@ -1,4 +1,4 @@
-% include('header_notificaciones.tpl', title='Notificaciones')
+% include('header_notificaciones.tpl', title='Notificaciones', ndd=noticias_del_dia)
 <h1>Recibe notificaciones</h1>
 % if errores[0]==False:
  <h2 id="idrojo">Por favor, introduzca una dirección de correo electrónico correcta</h2>

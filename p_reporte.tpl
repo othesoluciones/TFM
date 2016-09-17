@@ -1,4 +1,4 @@
-% include('header_reporte.tpl', title='¡Repórtanos!')
+% include('header_reporte.tpl', title='¡Repórtanos!', ndd=noticias_del_dia)
 <h1>Repórtanos alertas</h1>
 % if alta==1:
  <h2 id="idverde">Alerta recibida con éxito. Gracias por su colaboración</h2>

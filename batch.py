@@ -146,7 +146,7 @@ def dibuja_mapa_alertas():
         predHoy = cursor1["Nivel "+hoy]
         #import random
         #predHoy= random.randint(0,2)
-        color=int(predHoy)
+        color=round(predHoy)
         if (nombreMunicipio in diccionarioMunicipiosErroneos):
             finrango1= diccionarioMunicipiosErroneos[nombreMunicipio]['finrango1']
             finrango2= diccionarioMunicipiosErroneos[nombreMunicipio]['finrango2']
@@ -696,59 +696,60 @@ def algoritmoPredictivo():
         ## DIOXIDO DE NITROGENO
         colNO2.append(cursor['DIOXIDO DE NITROGENO'])
         if(cursor['DIOXIDO DE NITROGENO']!=""):
-        	if cursor['DIOXIDO DE NITROGENO'].isdigit() and int(cursor['DIOXIDO DE NITROGENO'])>200:
-            		nivel+=0.1
+            if cursor['DIOXIDO DE NITROGENO'].isdigit() and int(cursor['DIOXIDO DE NITROGENO'])>200:
+                nivel+=0.1
         else:
-        	print "DIOXIDO DE NITROGENO VACIO"
+            print "DIOXIDO DE NITROGENO VACIO"
         
         ## PARTICULAS EN SUSPENSION < PM10
         colPM10.append(cursor['PARTICULAS EN SUSPENSION < PM10'])
         if(cursor['PARTICULAS EN SUSPENSION < PM10']!=''):
-        	if cursor['PARTICULAS EN SUSPENSION < PM10'].isdigit() and int(cursor['PARTICULAS EN SUSPENSION < PM10'])>50:
-            		nivel+=0.1
+            if cursor['PARTICULAS EN SUSPENSION < PM10'].isdigit() and int(cursor['PARTICULAS EN SUSPENSION < PM10'])>50:
+                nivel+=0.1
         else:
-        	print "PARTICULAS EN SUSPENSION < PM10 - VACIO"
+            print "PARTICULAS EN SUSPENSION < PM10 - VACIO"
         
         ## PARTICULAS EN SUSPENSION < PM2,5
         colPM25.append(cursor['PARTICULAS EN SUSPENSION < PM2,5'])
         if (cursor['PARTICULAS EN SUSPENSION < PM2,5']!=''):
-        	if cursor['PARTICULAS EN SUSPENSION < PM2,5'].isdigit() and int(cursor['PARTICULAS EN SUSPENSION < PM2,5'])>25:
-            		nivel+=0.1
+            if cursor['PARTICULAS EN SUSPENSION < PM2,5'].isdigit() and int(cursor['PARTICULAS EN SUSPENSION < PM2,5'])>25:
+                nivel+=0.1
         else: 
-        	print "PARTICULAS EN SUSPENSION < PM2,5 - VACIO"
+            print "PARTICULAS EN SUSPENSION < PM2,5 - VACIO"
         
         ## MONOXIDO DE CARBONO
         colCO.append(cursor['MONOXIDO DE CARBONO'])
         if (cursor['MONOXIDO DE CARBONO']!=''):
-        	if cursor['MONOXIDO DE CARBONO'].isdigit() and int(cursor['MONOXIDO DE CARBONO'])>10:
-            		nivel+=0.1
+            if cursor['MONOXIDO DE CARBONO'].isdigit() and int(cursor['MONOXIDO DE CARBONO'])>10:
+                nivel+=0.1
         else:
-        	print "MONOXIDO DE CARBONO - VACIO"
-        	
+            print "MONOXIDO DE CARBONO - VACIO"
+        
         ## CONCENTRACION DE OZONO
         colO3.append(cursor['CONCENTRACION DE OZONO'])
         if (cursor['CONCENTRACION DE OZONO']!=''):
-        	if cursor['CONCENTRACION DE OZONO'].isdigit() and int(cursor['CONCENTRACION DE OZONO'])>120:
-            		nivel+=0.1
+            if cursor['CONCENTRACION DE OZONO'].isdigit() and int(cursor['CONCENTRACION DE OZONO'])>120:
+                nivel+=0.1
         else:
-        	print "CONCENTRACION DE OZONO - VACIO"
+            print "CONCENTRACION DE OZONO - VACIO"
          
         ## DIOXIDO DE AZUFRE
         colSO2.append(cursor['DIOXIDO DE AZUFRE'])
-	if (cursor['DIOXIDO DE AZUFRE']!=''): 
-		if cursor['DIOXIDO DE AZUFRE'].isdigit() and int(cursor['DIOXIDO DE AZUFRE'])>350:
-			nivel+=0.1
-	else:
-		print "DIOXIDO DE AZUFRE - VACIO"
+        if (cursor['DIOXIDO DE AZUFRE']!=''): 
+            if cursor['DIOXIDO DE AZUFRE'].isdigit() and int(cursor['DIOXIDO DE AZUFRE'])>350:
+                nivel+=0.1
+        else:
+            print "DIOXIDO DE AZUFRE - VACIO"
         
         ## MONOXIDO DE NITROGENO
 
-	colNO.append(cursor['MONOXIDO DE NITROGENO'])
-	if (cursor['MONOXIDO DE NITROGENO']!=''):
-		if cursor['MONOXIDO DE NITROGENO'].isdigit() and int(cursor['MONOXIDO DE NITROGENO'])>30:
-			nivel+=0.1
-	else:
-		print "MONOXIDO DE NITROGENO - VACIO"
+        colNO.append(cursor['MONOXIDO DE NITROGENO'])
+        if (cursor['MONOXIDO DE NITROGENO']!=''):
+            if cursor['MONOXIDO DE NITROGENO'].isdigit() and int(cursor['MONOXIDO DE NITROGENO'])>30:
+                nivel+=0.1
+        else:
+            print "MONOXIDO DE NITROGENO - VACIO"
+
         colNIVEL.append(nivel)
 
     dfCalidadAire=pd.DataFrame()
@@ -774,15 +775,50 @@ def algoritmoPredictivo():
     #Leemos del xml de Madrid para asociar a cada municipio con su zona.
 
     doc = etree.parse("static/Municipios/madrid.xml")
+    #doc = etree.parse("C:/Users/soterod/TFM/static/Municipios/madrid.xml")
     muni=doc.findall("municipio")
     municipio=[]
     zona=[]
     codigo=[]
+    
+    dfCalAire = dfCalidadAire[['ZONA','NO2','PM10','PM25','CO','O3','SO2','NO','NIVEL']].apply(pd.to_numeric, errors='coerce')
+    dfMEDIACalAire=dfCalAire.groupby(by='ZONA').mean()
+
+    dfMunicipios=pd.DataFrame(columns = ['Municipio','Zona','NO2','PM10','PM25','CO','O3','SO2','NO','NIVEL'])
+    tamMunicipios =1;
     for localidad in muni:
-        zona.append(localidad.get('zona'))
-        municipio.append(elimina_tildes(unicode(localidad.text)))
-        #codigo.append(localidad.get('value').split('id')[1])
+        zonaXML = localidad.get('zona')
+        municipioXML = elimina_tildes(unicode(localidad.text))
+        zona.append(zonaXML)
+        intZona = int(zonaXML)
+        municipio.append(municipioXML)
         codigo.append(localidad.attrib["value"][-5:])
+        if municipioXML not in ['Madrid']:
+            cno2= round(dfMEDIACalAire['NO2'][intZona],2)
+            cpm10=round(dfMEDIACalAire['PM10'][intZona],2)
+            cpm25 = round(dfMEDIACalAire['PM25'][intZona],2)
+            cco = round(dfMEDIACalAire['CO'][intZona],2)
+            co3 = round(dfMEDIACalAire['O3'][intZona],2)
+            cso2 = round(dfMEDIACalAire['SO2'][intZona],2)
+            cno =round(dfMEDIACalAire['NO'][intZona],2)
+            cnivel = round(dfMEDIACalAire['NIVEL'][intZona],2)
+            dfMunicipios.loc[tamMunicipios] = [municipioXML,intZona,cno2,cpm10,cpm25,cco,co3,cso2,cno,cnivel]
+            tamMunicipios+=1
+    nivMax = dfMunicipios['NIVEL'].max()
+    no2Max = dfMunicipios['NO2'].max()
+    pm10Max = dfMunicipios['PM10'].max()
+    pm25Max = dfMunicipios['PM25'].max()
+    coMax = dfMunicipios['CO'].max()
+    o3Max = dfMunicipios['O3'].max()
+    so2Max = dfMunicipios['SO2'].max()
+    noMax = dfMunicipios['NO'].max()
+    dfMunicipios.loc[tamMunicipios] = ['Madrid',1,no2Max,pm10Max,pm25Max,coMax,o3Max,so2Max,noMax,nivMax]
+
+    #Insertamos los valores de calidad de aire por municipio en un coleccion.
+    db.calidad_aire_por_municipio.drop()
+    recordsdf = json.loads(dfMunicipios.T.to_json()).values()
+    db.calidad_aire_por_municipio.insert_many(recordsdf)  
+    
     dfMun=pd.DataFrame()
     dfMun['Municipio']=municipio
     dfMun['Zona']=zona
@@ -811,10 +847,10 @@ def algoritmoPredictivo():
         valZona = string.join(dfMun[dfMun.Municipio.isin([pred['Municipio']])]['Zona'].values)
         
         if (valZona==''):
-        	print pred['Municipio']
-        	print "DEBERIA FALLAR AQUI"
-        	print "VALOR DE VALZONA -->", valZona, "<--"
-        	print "El municipio del que no se esta recuperando la zona", pred['Municipio'],"******"
+            print pred['Municipio']
+            print "DEBERIA FALLAR AQUI"
+            print "VALOR DE VALZONA -->", valZona, "<--"
+            print "El municipio del que no se esta recuperando la zona", pred['Municipio'],"******"
         nivelCalidad.append(dfMEDIA.ix[int(valZona)]['NIVEL'])
         codigoP.append(string.join(dfMun[dfMun.Municipio.isin([pred['Municipio']])]['Codigo'].values))
         Zona.append(valZona)
@@ -826,32 +862,32 @@ def algoritmoPredictivo():
                     if predaux['viento 00-24']>30:
                         nivelAEMETDia+=0.3
                 else: 
-					print "No existe **viento 00-24**"
+                    print "No existe **viento 00-24**"
                 if 'precipitaciones 00-24' in predaux:
                     if predaux['precipitaciones 00-24']>30:
                         nivelAEMETDia-=0.2
                 else:
-					print "No existe **precipitaciones 00-24**"
+                    print "No existe **precipitaciones 00-24**"
                 if 'Humedad relativa minima' in predaux:
                     if predaux['Humedad relativa minima']>40:
                         nivelAEMETDia-=0.1
                 else:
-					print "No existe **Humedad relativa minima**"
+                    print "No existe **Humedad relativa minima**"
                 if 'Humedad relativa maxima' in predaux:
                     if predaux['Humedad relativa maxima']>70:
                         nivelAEMETDia-=0.1
                 else:
-					print "No existe **Humedad relativa maxima**"
+                    print "No existe **Humedad relativa maxima**"
                 if 'Temperatura minima' in predaux:
                     if predaux['Temperatura minima']>20:
                         nivelAEMETDia+=0.1
                 else:
-					print "No existe **Temperatura minima**"						
+                    print "No existe **Temperatura minima**"
                 if 'Temperatura maxima' in predaux:
                     if predaux['Temperatura maxima']>30:
                         nivelAEMETDia+=0.1
                 else:
-					print "No existe **Temperatura maxima**"
+                    print "No existe **Temperatura maxima**"
             if indice==0:
                 nivelesAEMET1.append(nivelAEMETDia)
             else:
@@ -875,8 +911,37 @@ def algoritmoPredictivo():
 
     dfPredAEMET
     dfFinal = dfPredAEMET[['Municipio','Codigo','Nivel '+str(dia1F),'Nivel '+str(dia2F),'Nivel '+str(dia3F)]]
-    dfFinal
-    
+    alerta1 = []
+    alerta2 = []
+    alerta3 = []
+    for index, row in dfFinal.iterrows():
+        if round(row['Nivel '+str(dia1F)])<1:
+            alerta1.append('Bajo')
+        else:
+            if round(row['Nivel '+str(dia1F)])<2:
+                alerta1.append('Medio')
+            else:
+                alerta1.append('Alto')
+                
+        if round(row['Nivel '+str(dia2F)])<1:
+            alerta2.append('Bajo')
+        else:
+            if round(row['Nivel '+str(dia2F)])<2:
+                alerta2.append('Medio')
+            else:
+                alerta2.append('Alto')
+                
+        if round(row['Nivel '+str(dia3F)])<1:
+            alerta3.append('Bajo')
+        else:
+            if round(row['Nivel '+str(dia3F)])<2:
+                alerta3.append('Medio')
+            else:
+                alerta3.append('Alto')
+    dfFinal['Alerta '+str(dia1F)]=alerta1
+    dfFinal['Alerta '+str(dia2F)]=alerta2
+    dfFinal['Alerta '+str(dia3F)]=alerta3
+
     db.PrediccionOTHE.drop()
     recordsdf = json.loads(dfFinal.T.to_json()).values()
     db.PrediccionOTHE.insert_many(recordsdf)
@@ -890,25 +955,27 @@ def algoritmoPredictivo():
 #Hay que poner 2 horas menos de las que son en realidad debido a problemas en heroku de horas
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 
-#realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=11, minute=31)
+
 
 #realmente se ejecuta a las 09:10
-scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=11, minute=04)
+scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=10, minute=52)
 
 #realmente se ejecuta a las 08:46
-scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=11, minute=05)
+scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=10, minute=53)
 
 #realmente se ejecuta a las 08:47. Este tarda
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=11, minute=06)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=10, minute=54)
 
 #realmente se ejecuta a las 08:55
-scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=11, minute=10)
+scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=11, minute=7)
 
 
 
 #realmente se ejecuta a las 09:12
-scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=11, minute=44)
+scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=11, minute=8)
+
+#realmente se ejecuta a las 08:45
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=11, minute=10)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

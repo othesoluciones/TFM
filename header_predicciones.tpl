@@ -11,7 +11,7 @@
   <div id="main">
     <div id="header">
       <div id="logo">
-        <h1>Alergias <span class="alternate_colour">Madrid</span></h1>
+        <h1>Gramíneas <span class="alternate_colour">Madrid</span></h1>
       </div>
       <div id="menubar">
         <ul id="menu">
@@ -25,20 +25,22 @@
       </div>
     </div>
     <div id="site_content">
-      <div id="panel"><img src="/static/style/panel4.jpg" alt="tree tops" /></div>
+      <div id="panel"><img src="/static/style/panel.jpg" alt="tree tops" /></div>
       <div class="sidebar">
         <!-- insert your sidebar items here -->
-        <h1>Últimas Noticias</h1>
-        <h2>Nuevo sitio web</h2>
-        <h3>30 de Julio de 2016</h3>
-        <p>2016 nos lleva al estreno de nuestra web. Échale un vistazo y cuentános que opinas<br /><a href="#">Leer más</a></p>
         <h1>Links de interés</h1>
         <ul>
           <li><a href="http://www.polenes.com/">Sociedad Española de Alergología (SEAIC)</a></li>
-          <li><a href="http://www.madrid.org/polen">Portal de Salud Comunidad de Madrid</a></li>
+          <li><a href="http://www.madrid.org/polen">Portal de Salud Comunidad de Madriddd</a></li>
           <li><a href="http://www.laalergia.com/tipos-alergia/polen/">LaAlergia.com</a></li>
 		  <li><a href="http://alergiaalpolen.com/niveles-de-polen/">AlergiaAlPolen.com</a></li>
         </ul>
-      </div>
+        <h1>Últimas Noticias</h1>
+		<ul>
+		%for noticia in ndd:
+			<li><a href="{{noticia['Noticia']}}">{{noticia['Titulo']}}</a></li>
+		%end
+		</ul>
+      </div>	
       <div id="content">
         <!-- insert the page content here -->

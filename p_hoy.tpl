@@ -1,4 +1,4 @@
-% include('header_hoy.tpl', title='Niveles del día')
+% include('header_hoy.tpl', title='Niveles del día', ndd=noticias_del_dia)
 	<h1>Municipios de Madrid</h1>
 	<ul>
 	% for m in muni:

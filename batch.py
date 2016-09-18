@@ -158,9 +158,14 @@ def dibuja_mapa_alertas():
 
     ax.autoscale_view()
 
+    red_patch = patches.Patch(color='red', label='Alto')
+    yel_patch = patches.Patch(color='yellow', label='Medio')
+    gre_patch = patches.Patch(color='green', label='Bajo')
+    plt.legend(handles=[red_patch,yel_patch, gre_patch], fontsize=29, loc='upper left')
+	
 
     plt.axis('off')
-    nomMapaAlerta="static/Municipios//ALERTAS.png"
+    nomMapaAlerta="static/Municipios/ALERTAS.png"
     plt.savefig(nomMapaAlerta, bbox_inches='tight')
     
     tiempo_final = time() 
@@ -958,24 +963,24 @@ def algoritmoPredictivo():
 
 
 #realmente se ejecuta a las 09:10
-scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=7, minute=44)
+scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=4, minute=45)
 
 #realmente se ejecuta a las 08:46
-scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=7, minute=45)
+scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=4, minute=46)
 
 #realmente se ejecuta a las 08:47. Este tarda
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=7, minute=46)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=4, minute=47)
 
 #realmente se ejecuta a las 08:55
-scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=7, minute=55)
+scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=4, minute=55)
 
 
 
 #realmente se ejecuta a las 09:12
-scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=7, minute=57)
+scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=4, minute=56)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=7, minute=59)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=4, minute=59)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

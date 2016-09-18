@@ -173,7 +173,11 @@ def dibuja_mapa_alertas():
 
 
     ax.autoscale_view()
-
+	
+    red_patch = patches.Patch(color='red', label='Alto')
+    yel_patch = patches.Patch(color='yellow', label='Medio')
+    gre_patch = patches.Patch(color='green', label='Bajo')
+    plt.legend(handles=[red_patch,yel_patch, gre_patch], fontsize=29, loc='upper left')
 
     plt.axis('off')
     nomMapaAlerta="static/Municipios/ALERTAS.png"
@@ -306,38 +310,28 @@ def hoy_mun(cod,name):
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
     #db = Connection().othesoluciones1
+	
+	#Busqueda de datos en coleccion: prediccionesAEMET
     collection1 = db.prediccionesAEMET 
     print elimina_tildes(name.decode('utf-8'))
     name2 =  elimina_tildes(name.decode('utf-8'))
-    cursor1 = collection1.find_one({"Municipio": name2})
-    busquedaAEMET = cursor1[time.strftime("%Y-%m-%d")]
-    #img = StringIO.StringIO()
-    #sf = shapefile.Reader("static/Municipios/200001493.shp")
-    #geomet = sf.shapeRecords()
-    #plt.figure(figsize=(2,2))
-    #i = 0
-    #while ((elimina_tildes((sf.record(i)[2]).decode('windows-1252'))!=elimina_tildes(name.decode('utf-8'))) and (i<len(list(sf.iterRecords())))): i=i+1
-    #first = geomet[i]
-    #x= [i[0] for i in first.shape.points[:]]
-    #y= [i[1] for i in first.shape.points[:]]
-    #plt.plot(x,y)
-    #plt.axis('off')	
-    #plt.savefig(img, format='png')
-    #img.seek(0)
-    #plot_url = base64.b64encode(img.getvalue())
+    cursorHoyM1 = collection1.find_one({"Municipio": name2})
+    busquedaAEMET = cursorHoyM1[time.strftime("%Y-%m-%d")]
+	#Carga de imagenes del municipio
     collection2 = db.imagenes
-    cursor2 = collection2.find_one({'municipio':name2})
-    print cursor2['filename_img_municipio']
-    print cursor2['filename_img_municipio_cam']
-    #f1 = gridfs.GridFS(db,"images").get_version("Ajalvir.png")
-    f1 = gridfs.GridFS(db,"images").get_version(cursor2['filename_img_municipio'])
+    cursorHoyM2 = collection2.find_one({'municipio':name2})
+    print cursorHoyM2['filename_img_municipio']
+    print cursorHoyM2['filename_img_municipio_cam']
+    f1 = gridfs.GridFS(db,"images").get_version(cursorHoyM2['filename_img_municipio'])
     plot_url_img = base64.b64encode(f1.read())
-    #f2 = gridfs.GridFS(db,"images").get_version("Ajalvir.png")
-    f2 = gridfs.GridFS(db,"images").get_version(cursor2['filename_img_municipio_cam'])
+    f2 = gridfs.GridFS(db,"images").get_version(cursorHoyM2['filename_img_municipio_cam'])
     plot_url_img_cam = base64.b64encode(f2.read())
-    #return template("p_hoy_mun.tpl",name=name,plot_url=plot_url, busquedaAEMET=busquedaAEMET,plot_url_img=plot_url_img, plot_url_img_cam=plot_url_img_cam)
+	#Busqueda de datos en coleccion:calidad_aire_por_municipio 
+    collection3= db.calidad_aire_por_municipio
+    cursor3 = collection3.find_one({'Municipio':name2})
+	#Carga de las noticias del dia
     noticias_del_dia=cargaNoticias()
-    return template("p_hoy_mun.tpl",name=name, busquedaAEMET=busquedaAEMET,plot_url_img=plot_url_img, plot_url_img_cam=plot_url_img_cam, noticias_del_dia=noticias_del_dia)
+    return template("p_hoy_mun.tpl",name=name, busquedaAEMET=busquedaAEMET,plot_url_img=plot_url_img, plot_url_img_cam=plot_url_img_cam, noticias_del_dia=noticias_del_dia, cursor3=cursor3)
 
 	
 #@route('/reporte')
@@ -389,11 +383,9 @@ def reporta():
 		alerta_OK=True
     listaErrores.append(alerta_OK)
     
-      #return template("error_views/p_reporte_error_municipio.tpl", muni=muni, nivel=nivel, nivsel=reporte['nivel_de_alerta'])
+      
     return template("error_views/p_reporte_error.tpl", muni=muni, nivel=nivel, nivsel=reporte['nivel_de_alerta'], munsel=reporte['municipio'], errores=listaErrores, noticias_del_dia=noticias_del_dia)
-#    else: 
-#      print reporte['municipio']
-#      return template("error_views/p_reporte_error_nivel_alerta.tpl", muni=muni, nivel=nivel, munsel=reporte['municipio'])
+
 
 
 @route('/predicciones')
@@ -463,6 +455,7 @@ def error404(error):
 @get(['/notificaciones', '/notificaciones/:page#\d+#'])
 @view('p_notificaciones')
 def notificaciones(page=0):
+    print "ENTRO POR AQUI"
     manana = (datetime.date.today()+datetime.timedelta(days=1)).strftime('%d/%m/%Y')
     doc=etree.parse("static/Municipios/madrid.xml")
     muni=doc.findall("municipio")
@@ -487,10 +480,10 @@ def notificaciones(page=0):
 
 # para PRO hay que ponerle 2 horas +
 @post('/notifica')
-def notifica(page=0):
+def notifica():
  manana = (datetime.date.today()+datetime.timedelta(days=1)).strftime('%d/%m/%Y')
  PAGE_SIZE = 5
- page = int(page)
+ page = int(0)
  prev_page = None
  if page > 0:
         prev_page = page - 1
@@ -547,7 +540,7 @@ def notifica(page=0):
  if(cuentaErrores==0):
      alta=1
      db.coleccion_notificaciones.insert(notif)
-     return template("p_notificaciones.tpl", muni=muni, alta=alta, coleccion_notificaciones=coleccion_notificaciones, prev_page=prev_page, next_page=next_page, fdesde=manana, fhasta=manana, noticias_del_dia=noticias_del_dia )	
+     return template("p_notificaciones.tpl", muni=muni, alta=alta, coleccion_notificaciones=coleccion_notificaciones, prev_page=prev_page, next_page=next_page, fdesde=manana, fhasta=manana, noticias_del_dia=noticias_del_dia)	
  else:
   return template("error_views/p_notificaciones_error.tpl", muni=muni, errores=listaErrores, coleccion_notificaciones=coleccion_notificaciones, prev_page=prev_page, next_page=next_page, munsel=notif['municipio'], mailSel=mailSel, fdesde=notif['fdesde'], fhasta=notif['fhasta'], noticias_del_dia=noticias_del_dia )			
     
@@ -565,28 +558,54 @@ def prediccion_muni():
     listaPredicciones=[]
     hoy = (datetime.date.today()+datetime.timedelta(days=0)).strftime('%d-%m-%Y')
     listaStrings.append(hoy)
-    stringHoy = 'Nivel '+hoy
+    #stringHoy = 'Nivel '+hoy
+    stringHoy = 'Alerta '+hoy
     listaStrings.append(stringHoy)
     prediccionHoy = (db.PrediccionOTHE.find_one({'Codigo':codigo}))
     listaPredicciones.append(prediccionHoy)
     manana=(datetime.date.today()+datetime.timedelta(days=1)).strftime('%d-%m-%Y')
     listaStrings.append(manana)
-    stringManana = 'Nivel '+manana
+    #stringManana = 'Nivel '+manana
+    stringManana = 'Alerta '+manana
     listaStrings.append(stringManana)
     prediccionManana = (db.PrediccionOTHE.find_one({'Codigo':codigo}))
     listaPredicciones.append(prediccionManana)
     pasadomanana=(datetime.date.today()+datetime.timedelta(days=2)).strftime('%d-%m-%Y')
     listaStrings.append(pasadomanana)
-    stringPasadoManana = 'Nivel '+pasadomanana
+    #stringPasadoManana = 'Nivel '+pasadomanana
+    stringPasadoManana = 'Alerta '+pasadomanana
     listaStrings.append(stringPasadoManana)
     prediccionPasadoManana = (db.PrediccionOTHE.find_one({'Codigo':codigo}))
     listaPredicciones.append(prediccionPasadoManana)
+	#Carga de imagenes del municipio
+    collection2 = db.imagenes
+    name2 =  elimina_tildes(name.decode('utf-8'))
+    cursor2 = collection2.find_one({'municipio':name2})
+    
+    print prediccionHoy[stringHoy]
+    if (prediccionHoy[stringHoy]=='Bajo'):
+      f1 = gridfs.GridFS(db,"images").get_version(cursor2['filename_img_municipio_bajo']) 
+      plot_url_img = base64.b64encode(f1.read())
+      f2 = gridfs.GridFS(db,"images").get_version(cursor2['filename_img_municipio_cam_bajo']) 
+      plot_url_img_cam = base64.b64encode(f2.read())		
+    elif (prediccionHoy[stringHoy]=='Medio'):
+           f1 = gridfs.GridFS(db,"images").get_version(cursor2['filename_img_municipio_medio']) 
+           plot_url_img = base64.b64encode(f1.read())
+           f2 = gridfs.GridFS(db,"images").get_version(cursor2['filename_img_municipio_cam_medio']) 
+           plot_url_img_cam = base64.b64encode(f2.read())
+    else:
+           f1 = gridfs.GridFS(db,"images").get_version(cursor2['filename_img_municipio_alto']) 
+           plot_url_img = base64.b64encode(f1.read())
+           f2 = gridfs.GridFS(db,"images").get_version(cursor2['filename_img_municipio_cam_alto']) 
+           plot_url_img_cam = base64.b64encode(f2.read())	
 
+		
+		
     doc=etree.parse("static/Municipios/madrid.xml")
     muni=doc.findall("municipio")
     noticias_del_dia=cargaNoticias()
     conexion.close()
-    return template("p_predicciones_mun.tpl", name=name, noticias_del_dia=noticias_del_dia, listaPredicciones=listaPredicciones, listaStrings=listaStrings, muni=muni)	
+    return template("p_predicciones_mun.tpl", name=name, noticias_del_dia=noticias_del_dia, listaPredicciones=listaPredicciones, listaStrings=listaStrings, plot_url_img=plot_url_img, plot_url_img_cam=plot_url_img_cam, muni=muni)	
 
 	
 cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'

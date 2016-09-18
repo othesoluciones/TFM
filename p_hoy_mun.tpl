@@ -62,43 +62,43 @@
 			<tbody>
 				<tr>
 					<th scope="row">Dióxido de Nitrógeno</th>
-					<td>{{cursor3['DIOXIDO DE NITROGENO']}}</td>
+					<td>{{cursor3['NO2']}}</td>
 				</tr>
 			</tbody> 
 			<tbody>
 				<tr>
 					<th scope="row">Partículas en Suspensión < PM10</th>
-					<td>{{cursor3['PARTICULAS EN SUSPENSION < PM10']}}</td>
+					<td>{{cursor3['PM10']}}</td>
 				</tr>
 			</tbody> 	
 			<tbody>
 				<tr>
 					<th scope="row">Partículas en Suspensión < PM2,5</th>
-					<td>{{cursor3['PARTICULAS EN SUSPENSION < PM2,5']}}</td>
+					<td>{{cursor3['PM25']}}</td>
 				</tr>
 			</tbody>
 			<tbody>
 				<tr>
 					<th scope="row">Monóxido de Carbono</th>
-					<td>{{cursor3['MONOXIDO DE CARBONO']}}</td>
+					<td>{{cursor3['CO']}}</td>
 				</tr>
 			</tbody> 
 			<tbody>
 				<tr>
 					<th scope="row">Concentración de Ozono</th>
-					<td>{{cursor3['CONCENTRACION DE OZONO']}}</td>
+					<td>{{cursor3['O3']}}</td>
 				</tr>
 			</tbody> 
 			<tbody>
 				<tr>
 					<th scope="row">Dióxido de Azufre</th>
-					<td>{{cursor3['DIOXIDO DE AZUFRE']}}</td>
+					<td>{{cursor3['SO2']}}</td>
 				</tr>
 			</tbody> 
 			<tbody>
 				<tr>
 					<th scope="row">Monóxido de Nitrogeno</th>
-					<td>{{cursor3['MONOXIDO DE NITROGENO']}}</td>
+					<td>{{cursor3['NO']}}</td>
 				</tr>
 			</tbody> 
  </table>

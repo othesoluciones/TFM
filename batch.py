@@ -566,7 +566,7 @@ def NivelesPolenMadrid():
     import urllib
     from bs4 import BeautifulSoup
     import datetime
-    
+    print "Empezamos NivelesPolenMadrid"
      #Conectamos a la base de datos
     import base64
     import json
@@ -576,46 +576,68 @@ def NivelesPolenMadrid():
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
     #db = Connection().othesoluciones1
-    
     link ="http://polenes.com/graficos/jsp/ImgGrafico.jsp?chkSelTodos=on&chkPolenes=CUPRE&chkPolenes=PALMA&chkPolenes=RUMEX&chkPolenes=MERCU&chkPolenes=MORUS&chkPolenes=URTIC&chkPolenes=ALNUS&chkPolenes=BETUL&chkPolenes=CAREX&chkPolenes=FRAXI&chkPolenes=QUERC&chkPolenes=OLEA&chkPolenes=PINUS&chkPolenes=ULMUS&chkPolenes=CASTA&chkPolenes=POPUL&chkPolenes=GRAMI&chkPolenes=QUEAM&chkPolenes=PLATA&chkPolenes=PLANT&chkPolenes=ARTEM&chkPolenes=ALTER&selEstacion=MAD&selAnioTrimes=&selPeriodo=USE&txtFDesde=01%2F01%2F2010&txtFHasta=12%2F08%2F2016&prov=MAD&hidPolen=%26polen%3DCUPRE%26polen%3DPALMA%26polen%3DRUMEX%26polen%3DMERCU%26polen%3DMORUS%26polen%3DURTIC%26polen%3DALNUS%26polen%3DBETUL%26polen%3DCAREX%26polen%3DFRAXI%26polen%3DQUERC%26polen%3DOLEA%26polen%3DPINUS%26polen%3DULMUS%26polen%3DCASTA%26polen%3DPOPUL%26polen%3DGRAMI%26polen%3DQUEAM%26polen%3DPLATA%26polen%3DPLANT%26polen%3DARTEM%26polen%3DALTER&hidCheckSel=&mostrarGraf=S&hidPolenSolo=N&idio=ES&numPolenesSeleccionados=22&hidAniosEstacion=&primero=trueutm_source=twitter&utm_medium=twitter&utm_campaign=twitter"
+    
     f = urllib.urlopen(link)
     myfile = f.read()
 
     soup = BeautifulSoup(myfile)
-
     tabla = soup.findAll("table")[1]
     datos = []
-
-    for dato in tabla.find_all("td"):
+    #print tabla
+    print len(tabla.find_all("td"))
+    if (len(tabla.find_all("td"))==1):
+       listaColumnas=[]
+       listaColumnas.append("Polen/Fecha")
+       from datetime import date, timedelta
+       i=7
+       while (i>0):
+         dia = date.today() - datetime.timedelta(days=i)
+         diaStr = dia.strftime('%d/%m/%Y')
+         print diaStr
+         listaColumnas.append(diaStr)
+         i=i-1
+       listaColumnas.append("Media")
+       listaColumnas.append("Nivel")
+       listaColumnas.append("Semana")
+       a = np.zeros(shape=(1,11))
+       df= pd.DataFrame(a,columns=listaColumnas)
+       df.loc[0,'Polen/Fecha']="Gramineas"
+       df.loc[0, 'Semana']=datetime.date.today().isocalendar()[1]
+       print df
+	
+    else:	
+     for dato in tabla.find_all("td"):
         datos.append(elimina_tildes(dato.get_text().strip()))
 
-    datos.pop(0)
 
-    #Calculamos la posicion del primer valor numerico
-    ind =0
-    primerValor=0
-    for s in datos:
+     datos.pop(0)
+
+     #Calculamos la posicion del primer valor numerico
+     ind =0
+     primerValor=0
+     for s in datos:
         ind+=1
         if s.isdigit() and primerValor==0:
             primerValor=ind
 
-    columnas =[]
-    for i in range(primerValor-2):
+     columnas =[]
+     for i in range(primerValor-2):
         if len(datos[i].split("\n"))>1:
             columnas.append(datos[i].split("\n")[1])
         else:
             columnas.append(datos[i])
 
-    tamColumnas = len(columnas)
-    k=primerValor-2
-    lista = []
-    while k<len(datos):
+     tamColumnas = len(columnas)
+     k=primerValor-2
+     lista = []
+     while k<len(datos):
    
         lista.append(datos[k:k+tamColumnas])
         k+=tamColumnas
   
-    listaAux=[]
-    for j in range(len(lista)):
+     listaAux=[]
+     for j in range(len(lista)):
         fila=[]
         for l in range(len(lista[j])):
             if lista[j][l].isdigit():
@@ -623,17 +645,18 @@ def NivelesPolenMadrid():
             else:
                 fila.append(lista[j][l])
         listaAux.append(fila)    
-    listaAux
-    df=pd.DataFrame(listaAux,columns=columnas)
+     listaAux
+     print listaAux
+     df=pd.DataFrame(listaAux,columns=columnas)
     
-    columnas.pop(0)
-    columnas
-    #Calculamos el numero de la semana del anyo
-    semana= datetime.date.today().isocalendar()[1]
-    df['Media']=df[columnas].mean(axis=1)
-    nivel=[]
+     columnas.pop(0)
+     columnas
+     #Calculamos el numero de la semana del anyo
+     semana= datetime.date.today().isocalendar()[1]
+     df['Media']=df[columnas].mean(axis=1)
+     nivel=[]
    
-    for n in df['Media']:
+     for n in df['Media']:
         if n <=200:
             nivel.append(0)
         else:
@@ -641,12 +664,17 @@ def NivelesPolenMadrid():
                 nivel.append(1)
             else:
                 nivel.append(2)
-    df['Nivel']=nivel
-    df['Semana']=semana
-    
+     df['Nivel']=nivel
+     df['Semana']=semana
+     if (any(df["Polen/Fecha"]=="Gramineas")==False):
+       df= pd.DataFrame(a,columns=listaColumnas)
+       df.loc[0,'Polen/Fecha']="Gramineas"
+       df.loc[0, 'Semana']=datetime.date.today().isocalendar()[1]
+     print df
     recordsdf = json.loads(df.T.to_json()).values()
     db.nivelesPolenSEAIC.insert_many(recordsdf)
     conexion.close()  
+    #print recordsdf
     print "Finalizado NivelesPolenMadrid"
 
 def algoritmoPredictivo():
@@ -975,16 +1003,16 @@ scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=6,
 
 
 #realmente se ejecuta a las 08:55
-scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=7, minute=06)
+scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=10, minute=39)
 
 #realmente se ejecuta a las 09:10
 scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=7, minute=10)
 
 #realmente se ejecuta a las 09:12
-scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=7, minute=13)
+scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=10, minute=40)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=7, minute=20)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=10, minute=43)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

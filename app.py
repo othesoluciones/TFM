@@ -310,12 +310,14 @@ def hoy_mun(cod,name):
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
     #db = Connection().othesoluciones1
+
 	
 	#Busqueda de datos en coleccion: prediccionesAEMET
     collection1 = db.prediccionesAEMET 
     print elimina_tildes(name.decode('utf-8'))
     name2 =  elimina_tildes(name.decode('utf-8'))
     print name2
+    print cod
     cursorHoyM1 = collection1.find_one({"Municipio": name2})
     print time.strftime("%Y-%m-%d")
     busquedaAEMET = cursorHoyM1[time.strftime("%Y-%m-%d")]

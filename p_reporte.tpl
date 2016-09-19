@@ -67,17 +67,17 @@
            </tr>
         </thead>
 
-		%for calAir in calidad_aire:
+		%for colRep in coleccion_reportes:
         <tbody>
 			<tr>
 				<td>
-					{{calAir['Estacion']}}
+					{{colRep['municipio']}}
 				</td>
 				<td>
-					{{calAir['TEMPERATURA']}}
+					{{calAir['nivel_de_alerta']}}
 				</td>
 				<td>
-					{{calAir['Dia']}}
+					{{calAir['realizada']}}
 				</td>
 			</tr>
 		</tbody>

@@ -343,14 +343,30 @@ def hoy_mun(cod,name):
 #def reporte():
 	#return template("p_reporte.tpl")
 @route('/reporte')
-def reporte():
+def reporte(page=0):
     doc=etree.parse("static/Municipios/madrid.xml")
     muni=doc.findall("municipio")
     doc=etree.parse("static/Municipios/niveles.xml")
     nivel=doc.findall("nivel")
     alta = 0
     noticias_del_dia=cargaNoticias()
-    return template("p_reporte.tpl", muni=muni, nivel=nivel,alta=alta, noticias_del_dia=noticias_del_dia)	
+    conexion = conexion_bbdd()
+    db = conexion.othesoluciones1   
+   ''' List messages. '''
+    PAGE_SIZE = 5
+    page = int(page)
+    prev_page = None
+    if page > 0:
+        prev_page = page - 1
+    next_page = None
+    hoy=datetime.datetime.now().strftime('%d-%m-%Y')
+    if db.coleccion_reportes.count() > (page + 1) * PAGE_SIZE:
+        next_page = page + 1
+    coleccion_reportes = (db.coleccion_reportes.find({'realizada':hoy)
+                .sort('realizada', DESCENDING)
+                .limit(PAGE_SIZE).skip(page * PAGE_SIZE)) 
+    
+    return template("p_reporte.tpl", muni=muni, nivel=nivel,alta=alta, noticias_del_dia=noticias_del_dia, prev_page=prev_page, next_page=next_page, coleccion_reportes=coleccion_reportes)	
 
 
 @post('/reporta')
@@ -361,7 +377,7 @@ def reporta():
  nivel=doc.findall("nivel")
  reporte = {'municipio': request.POST['municipio'],
                'nivel_de_alerta': request.POST['nivel_de_alerta'],
-               'realizada': datetime.datetime.now()}	
+               'realizada': datetime.datetime.now().strftime('%d-%m-%Y')}	
  print "municipio",  reporte['municipio']
  noticias_del_dia=cargaNoticias()
  if ((reporte['municipio']!='ninguno') and (reporte['nivel_de_alerta']!='ninguno')):	

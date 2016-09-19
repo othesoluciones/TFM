@@ -311,7 +311,7 @@ def hoy_mun(cod,name):
     db = conexion.othesoluciones1
     #db = Connection().othesoluciones1
 
-    if (cod=='notificaciones')
+    if (cod=='notificaciones'):
       return notificaciones(name)
 	#Busqueda de datos en coleccion: prediccionesAEMET
     collection1 = db.prediccionesAEMET 

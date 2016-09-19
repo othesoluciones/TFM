@@ -972,15 +972,15 @@ scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=4,
 scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=4, minute=47)
 
 #realmente se ejecuta a las 08:55
-scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=4, minute=55)
+scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=5, minute=58)
 
 
 
 #realmente se ejecuta a las 09:12
-scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=4, minute=56)
+scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=5, minute=59)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=4, minute=59)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=6, minute=00)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

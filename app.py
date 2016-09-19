@@ -315,7 +315,9 @@ def hoy_mun(cod,name):
     collection1 = db.prediccionesAEMET 
     print elimina_tildes(name.decode('utf-8'))
     name2 =  elimina_tildes(name.decode('utf-8'))
+    print name2
     cursorHoyM1 = collection1.find_one({"Municipio": name2})
+    print time.strftime("%Y-%m-%d")
     busquedaAEMET = cursorHoyM1[time.strftime("%Y-%m-%d")]
 	#Carga de imagenes del municipio
     collection2 = db.imagenes

@@ -352,7 +352,7 @@ def reporte(page=0):
     noticias_del_dia=cargaNoticias()
     conexion = conexion_bbdd()
     db = conexion.othesoluciones1   
-   ''' List messages. '''
+    ''' List messages. '''
     PAGE_SIZE = 5
     page = int(page)
     prev_page = None

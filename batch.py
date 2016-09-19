@@ -968,7 +968,7 @@ def algoritmoPredictivo():
 
 
 #realmente se ejecuta a las 08:47. Este tarda
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=6, minute=16)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=6, minute=21)
 
 
 #realmente se ejecuta a las 08:46

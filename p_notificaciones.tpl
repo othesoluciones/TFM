@@ -77,10 +77,10 @@
     %end
     </table>
 	<div>
-      %if prev_page is not None:
+      %if prev_pageN is not None:
       <a href="/notificaciones/{{prev_pageN}}">&lt; Prev</a>
       %end
-      %if next_page is not None:
+      %if next_pageN is not None:
       <a href="/notificaciones/{{next_pageN}}">Next &gt;</a>
       %end
     </div>

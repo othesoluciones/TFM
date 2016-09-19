@@ -78,10 +78,10 @@
     </table>
 	<div>
       %if prev_page is not None:
-      <a href="/notificaciones/{{prev_page}}">&lt; Prev</a>
+      <a href="/notificaciones/{{prev_pageN}}">&lt; Prev</a>
       %end
       %if next_page is not None:
-      <a href="/notificaciones/{{next_page}}">Next &gt;</a>
+      <a href="/notificaciones/{{next_pageN}}">Next &gt;</a>
       %end
     </div>
 % include('footer.tpl')

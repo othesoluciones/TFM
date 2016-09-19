@@ -296,3 +296,16 @@ h2#idverde {
 h2#idrojo {
    color: red;
 }
+
+td#idblanco{
+  text-align: center;
+  background: white;	
+}
+
+td#centro{
+ text-align: center;
+  background: #3B3B3B;
+  color: #FFF;
+  padding: 7px 4px;	
+	
+}

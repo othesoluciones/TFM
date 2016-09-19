@@ -311,8 +311,8 @@ def hoy_mun(cod,name):
     db = conexion.othesoluciones1
     #db = Connection().othesoluciones1
 
-    if (cod=='notificaciones'):
-      return notificaciones(name)
+    if (cod=='reporte'):
+      return reporte(name)
 	#Busqueda de datos en coleccion: prediccionesAEMET
     collection1 = db.prediccionesAEMET 
     print elimina_tildes(name.decode('utf-8'))
@@ -360,10 +360,10 @@ def reporte(page=0):
         prev_page = page - 1
     next_page = None
     hoy=datetime.datetime.now().strftime('%d-%m-%Y')
-    if db.coleccion_reportes.count() > (page + 1) * PAGE_SIZE:
+    if db.coleccion_reportes.find({'realizada':hoy}).count() > (page + 1) * PAGE_SIZE:
         next_page = page + 1
-    coleccion_reportes = (db.coleccion_reportes.find({'realizada':hoy)
-                .sort('realizada', DESCENDING)
+    coleccion_reportes = (db.coleccion_reportes.find({'realizada':hoy})
+                .sort('hora', DESCENDING)
                 .limit(PAGE_SIZE).skip(page * PAGE_SIZE)) 
     
     return template("p_reporte.tpl", muni=muni, nivel=nivel,alta=alta, noticias_del_dia=noticias_del_dia, prev_page=prev_page, next_page=next_page, coleccion_reportes=coleccion_reportes)	
@@ -375,12 +375,36 @@ def reporta():
  muni=doc.findall("municipio")
  doc=etree.parse("static/Municipios/niveles.xml")
  nivel=doc.findall("nivel")
- reporte = {'municipio': request.POST['municipio'],
+ if (request.POST['nivel_de_alerta']=='0'):
+    labelAlerta='Bajo'
+ elif (request.POST['nivel_de_alerta']=='1'):
+     labelAlerta='Medio'
+ else:
+     labelAlerta='Alto'
+ 
+ i=0
+ encontrado=False  
+ indice=0
+ while( (i<len(muni)) and (encontrado==False)):
+    if (muni[i].attrib["value"][-5:]==request.POST['municipio']):
+        encontrado=True
+        indice=i
+    i=i+1
+ from datetime import timedelta
+ hora=(datetime.datetime.now() + timedelta(hours=2)).strftime('%H:%M:%S')
+	 
+ reporte = {'municipio': request.POST['municipio'], 'municipio_label':muni[indice].text,
                'nivel_de_alerta': request.POST['nivel_de_alerta'],
-               'realizada': datetime.datetime.now().strftime('%d-%m-%Y')}	
+			   'labelAlerta':labelAlerta,
+               'realizada': datetime.datetime.now().strftime('%d-%m-%Y'), 'hora': hora}	
  print "municipio",  reporte['municipio']
  noticias_del_dia=cargaNoticias()
+ 
+ 
  if ((reporte['municipio']!='ninguno') and (reporte['nivel_de_alerta']!='ninguno')):	
+ 
+    conexion = conexion_bbdd()
+    db = conexion.othesoluciones1 
     db.coleccion_reportes.insert(reporte)
     alta = 1
     varmun = str(reporte['municipio'])
@@ -388,8 +412,22 @@ def reporta():
     varniv = int(reporte['nivel_de_alerta'])
     print type(varniv), "<---", type(reporte['nivel_de_alerta'])
     #nuevoReporte(reporte['municipio'],reporte['nivel_de_alerta'])
-    nuevoReporte(varmun,varniv)
-    return template("p_reporte.tpl", muni=muni, nivel=nivel,alta=alta, noticias_del_dia=noticias_del_dia)	
+    nuevoReporte(varmun,varniv)	
+  
+    ''' List messages. '''
+    PAGE_SIZE = 5
+    prev_page = None
+    page=0
+    if page > 0:
+        prev_page = page - 1
+    next_page = None
+    hoy=datetime.datetime.now().strftime('%d-%m-%Y')
+    if db.coleccion_reportes.find({'realizada':hoy}).count() > (page + 1) * PAGE_SIZE:
+        next_page = page + 1
+    coleccion_reportes = (db.coleccion_reportes.find({'realizada':hoy})
+                .sort('hora', DESCENDING)
+                .limit(PAGE_SIZE).skip(page * PAGE_SIZE))
+    return template("p_reporte.tpl", muni=muni, nivel=nivel,alta=alta, noticias_del_dia=noticias_del_dia, prev_page=prev_page, next_page=next_page, coleccion_reportes=coleccion_reportes)		
     #redirect('/reporte')
  else:
     listaErrores=[]

@@ -71,13 +71,13 @@
         <tbody>
 			<tr>
 				<td>
-					{{colRep['municipio']}}
+					{{colRep['municipio_label']}}
 				</td>
 				<td>
-					{{calAir['nivel_de_alerta']}}
+					{{colRep['labelAlerta']}}
 				</td>
 				<td>
-					{{calAir['realizada']}}
+					{{colRep['hora']}}
 				</td>
 			</tr>
 		</tbody>

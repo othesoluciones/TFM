@@ -51,6 +51,46 @@
         </tbody>
 	</form>			
  </table>
+<h2>Alertas notificadas por nuestros usuarios durante el día</h2>
+	<table border="1">
 
+        <colgroup>
+           <col />
+           <col />
+           <col />
+        </colgroup>
+
+        <thead>
+           <tr>
+             <th scope="col">Municipio</th>
+             <th scope="col">Nivel de Alerta Reportada</th>
+			 <th scope="col">Hora</th>
+           </tr>
+        </thead>
+
+		%for colRep in coleccion_reportes:
+        <tbody>
+			<tr>
+				<td>
+					{{colRep['municipio_label']}}
+				</td>
+				<td>
+					{{colRep['labelAlerta']}}
+				</td>
+				<td>
+					{{colRep['hora']}}
+				</td>
+			</tr>
+		</tbody>
+		%end
+ </table>
+	<div>
+      %if prev_page is not None:
+      <a href="/reporte/{{prev_page}}">&lt; Prev</a>
+      %end
+      %if next_page is not None:
+      <a href="/reporte/{{next_page}}">Next &gt;</a>
+      %end
+    </div>
 
 % include('footer.tpl')

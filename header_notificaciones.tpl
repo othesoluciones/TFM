@@ -7,9 +7,9 @@
   <!--<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />-->
   <meta charset="iso-8859-1">
   <link rel="stylesheet" type="text/css" href="/static/style/style.css" />
-  <link rel="stylesheet" href="/static/style/jquery-ui.css" />
-  <script src="/static/style/jquery-1.9.1.js"></script>
-  <script src="/static/style/jquery-ui.js"></script>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
   <script type="text/javascript">
       function toggle(id) {
         var el = document.getElementById(id);

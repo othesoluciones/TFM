@@ -975,16 +975,16 @@ scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=6,
 
 
 #realmente se ejecuta a las 08:55
-scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=6, minute=59)
+scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=7, minute=02)
 
 #realmente se ejecuta a las 09:10
-scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=7, minute=02)
+scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=7, minute=05)
 
 #realmente se ejecuta a las 09:12
-scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=7, minute=03)
+scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=7, minute=08)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=7, minute=06)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=7, minute=09)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

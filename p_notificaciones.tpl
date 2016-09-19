@@ -54,34 +54,5 @@
         </tbody>
 	</table>
  </form>
-	<h2>Notificaciones Guardadas</h2>
-    <table id="notificaciones_guardadas">
-    %for notif in coleccion_notificaciones:
-      <tr>
-        <td>
-          {{notif['email']}}
-        </td>
-        <td>
-          {{notif['municipio']}}
-        </td>
-		<td>
-          {{notif['realizada'].strftime('%X %d %b %y')}}
-        </td>
-		<td>
-          {{notif['fdesde']}}
-        </td>
-		<td>
-          {{notif['fhasta']}}
-        </td>
-      </tr>
-    %end
-    </table>
-	<div>
-      %if prev_pageN is not None:
-      <a href="/notificaciones/{{prev_pageN}}">&lt; Prev</a>
-      %end
-      %if next_pageN is not None:
-      <a href="/notificaciones/{{next_pageN}}">Next &gt;</a>
-      %end
-    </div>
+
 % include('footer.tpl')

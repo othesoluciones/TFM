@@ -278,20 +278,8 @@ def hoy(page=0):
     ''' List messages. '''
     doc=etree.parse("static/Municipios/madrid.xml")
     muni=doc.findall("municipio")
-    PAGE_SIZE = 3
-    page = int(page)
-    prev_page = None
-    if page > 0:
-        prev_page = page - 1
-    next_page = None
-    if db.calidad_aire.count() > (page + 1) * PAGE_SIZE:
-        next_page = page + 1
-    calidad_aire = (db.calidad_aire.find()
-                .sort('Estacion')
-                .limit(PAGE_SIZE).skip(page * PAGE_SIZE))
-    return {'noticias_del_dia': noticias_del_dia, 'calidad_aire': calidad_aire,
-            'prev_page': prev_page,
-            'next_page': next_page,
+ 
+    return {'noticias_del_dia': noticias_del_dia,
             'muni': muni
             }	
 

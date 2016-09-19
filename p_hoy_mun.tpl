@@ -1,18 +1,21 @@
 % include('header_hoy.tpl', title='Niveles del día', ndd=noticias_del_dia)
     <h1>{{name}}</h1>
-		<img src="data:image/png;base64, {{plot_url_img}}" id="municipio" alt =""/>
-		<img src="data:image/png;base64, {{plot_url_img_cam}}" id="municipio-cam" alt =""/>
-		<table border="0" width="100%" cellpadding="5" cellspacing="5">
+	<img src="data:image/png;base64, {{plot_url_img}}" id="municipio" alt =""/>
+	<img src="data:image/png;base64, {{plot_url_img_cam}}" id="municipio-cam" alt =""/>
+	<table>
 		<tr>
-		<td width="50%"> 
-
+		<td width="50%"  id="idblanco" valign="top"> 
 		<table border="1">
-		% for b in busquedaAEMET:
-			<caption><h2>Datos Meteorológicos</h2></caption>
 			<colgroup>
 				<col />
 				<col />
 			</colgroup>
+			<thead>
+			<tr>
+				<th scope="col" colspan="2" align="center"><b>Datos Meteorológicos</b></th>
+			</tr>
+			</thead>
+			% for b in busquedaAEMET:
 			<tbody>
 				<tr>
 					<th scope="row">Temperatura máxima (ºC)</th>
@@ -50,15 +53,19 @@
 				</tr>
 			</tbody> 
 	     % end
- </table>
- </td>
-<td width="50%"> 
+		</table>
+		</td>
+		<td width="50%"  id="idblanco" valign="top"> 
  		<table border="1">
-			<caption><h2>Datos Calidad del Aire</h2></caption>
 			<colgroup>
 				<col />
 				<col />
 			</colgroup>
+			<thead>
+			<tr>
+				<th scope="col" colspan="2" align="center">Datos Calidad del Aire</th>
+			</tr>
+			</thead>
 			<tbody>
 				<tr>
 					<th scope="row">Dióxido de Nitrógeno</th>
@@ -101,10 +108,10 @@
 					<td>{{cursor3['NO']}}</td>
 				</tr>
 			</tbody> 
- </table>
- </td>
-</tr>
-</table>
+		</table>
+		</td>
+		</tr>
+	</table>
 
-		<a href="../hoy">Volver</a>
+	<a href="../hoy">Volver</a>
 % include('footer.tpl')

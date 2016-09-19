@@ -454,28 +454,28 @@ def error404(error):
 
 @get(['/notificaciones', '/notificaciones/:page#\d+#'])
 @view('p_notificaciones')
-def notificaciones(page=0):
+def notificaciones(pageN=0):
     print "ENTRO POR AQUI"
     manana = (datetime.date.today()+datetime.timedelta(days=1)).strftime('%d/%m/%Y')
     doc=etree.parse("static/Municipios/madrid.xml")
     muni=doc.findall("municipio")
     alta=0
     ''' List messages. '''
-    PAGE_SIZE = 5
-    page = int(page)
-    prev_page = None
-    if page > 0:
-        prev_page = page - 1
-    next_page = None
-    if db.coleccion_notificaciones.count() > (page + 1) * PAGE_SIZE:
-        next_page = page + 1
+    PAGE_SIZEN = 5
+    pageN = int(pageN)
+    prev_pageN = None
+    if pageN > 0:
+        prev_pageN = pageN - 1
+    next_pageN = None
+    if db.coleccion_notificaciones.count() > (pageN + 1) * PAGE_SIZEN:
+        next_pageN = pageN + 1
     coleccion_notificaciones = (db.coleccion_notificaciones.find()
                 .sort('realizada', DESCENDING)
-                .limit(PAGE_SIZE).skip(page * PAGE_SIZE))
+                .limit(PAGE_SIZEN).skip(pageN * PAGE_SIZEN))
     noticias_del_dia=cargaNoticias()
     return {'coleccion_notificaciones': coleccion_notificaciones,
-            'prev_page': prev_page,
-            'next_page': next_page, 'alta':alta, 'muni':muni, 'fdesde':manana, 'fhasta':manana, 'noticias_del_dia':noticias_del_dia
+            'prev_pageN': prev_pageN,
+            'next_pageN': next_pageN, 'alta':alta, 'muni':muni, 'fdesde':manana, 'fhasta':manana, 'noticias_del_dia':noticias_del_dia
             }	
 
 # para PRO hay que ponerle 2 horas +

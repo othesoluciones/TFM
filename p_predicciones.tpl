@@ -8,7 +8,7 @@
 		</tr>
 		<td id="idblanco" valign="top" colspan="2" align="center">
         <form action="/prediccion_muni" method="post" enctype="multipart/form-data">
-			<table border="1">
+			<table border="1" width="100%">
 				<colgroup>
 					<col />
 					<col />
@@ -26,7 +26,7 @@
 				</tbody> 
 				<tbody>
 					<tr>
-						<td colspan="2">
+						<td colspan="2" id="centro2">
 							<input value="Ver Predicción" type="submit" onclick="toggle('spinner');"/>
 							<img src="/static/style/spinner.gif" id="spinner" style="display: none;" alt=""/>
 						</td>

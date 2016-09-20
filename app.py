@@ -22,8 +22,6 @@ def conexion_bbdd():
 	#para local return Connection()
     return Connection(MONGODB_URI)
 
-
-
 import unicodedata
 def elimina_tildes(s):
    return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
@@ -237,38 +235,38 @@ def nuevoReporte(municipio, nivel_alerta):
     print "Dibujo mapa alertas AL REPORTAR"
 
 def cargaNoticias():
-    #import base64
-    #from pymongo import MongoClient as Connection
-    #cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
-    #MONGODB_URI =cadenaCon
-    #conexion = Connection(MONGODB_URI)
+    #Conexion BBDD
     conexion = conexion_bbdd()
     db = conexion.othesoluciones1
     ''' List noticias. '''
     PAGE_SIZE = 10
     noticias_del_dia = (db.noticias_del_dia.find().sort('Fecha de busqueda', DESCENDING).limit(PAGE_SIZE))
+    #Conexion BBDD
     conexion.close()
     return noticias_del_dia	
 	
-#@route('/')
+#Pestana HOME
 @get(['/'])
 @view('index')
 def index():
-	#from pymongo import MongoClient as Connection
-	#cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
-	#MONGODB_URI =cadenaCon
-	#conexion = Connection(MONGODB_URI)
+    #Conexion BBDD
 	conexion = conexion_bbdd()
 	db = conexion.othesoluciones1
+	
+	#Carga de la imagen ALERTAS.png
 	import gridfs
-	fs = gridfs.GridFS(db)
-	gridout = fs.get_last_version("ALERTAS.png")
+	colorzona = gridfs.GridFS(db, "color-zona")
+	gridout = colorzona.get_last_version("COLOR.png")
 	plot_url_img = base64.b64encode(gridout.read())
+	
+	#Carga de noticias
 	noticias_del_dia=cargaNoticias()
+	
+    #Conexion BBDD
 	conexion.close()
 	return {'noticias_del_dia': noticias_del_dia, 'plot_url_img':plot_url_img }		
 	
-
+#Pestana Niveles del dia
 @get(['/hoy', '/hoy/:page#\d+#'])
 @view('p_hoy')
 def hoy(page=0):
@@ -284,23 +282,23 @@ def hoy(page=0):
             }	
 
 
-#@route('/<cod>/<name>')
+#Pestana Niveles del dia - Carga de datos del municipio			
 @get(['/<cod>/<name>'])
 @view('p_hoy_mun')
 def hoy_mun(cod,name):
     import datetime
     import time
-    import base64
     import json
-    from pymongo import MongoClient as Connection
-    cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
-    MONGODB_URI =cadenaCon
-    conexion = Connection(MONGODB_URI)
-    db = conexion.othesoluciones1
-    #db = Connection().othesoluciones1
 
+	
+    #Conexion BBDD
+    conexion = conexion_bbdd()
+    db = conexion.othesoluciones1
+	
+	#Redireccion en la paginacion de la pagina de reportes
     if (cod=='reporte'):
       return reporte(name)
+	  
 	#Busqueda de datos en coleccion: prediccionesAEMET
     collection1 = db.prediccionesAEMET 
     print elimina_tildes(name.decode('utf-8'))
@@ -310,6 +308,7 @@ def hoy_mun(cod,name):
     cursorHoyM1 = collection1.find_one({"Municipio": name2})
     print time.strftime("%Y-%m-%d")
     busquedaAEMET = cursorHoyM1[time.strftime("%Y-%m-%d")]
+	
 	#Carga de imagenes del municipio
     collection2 = db.imagenes
     cursorHoyM2 = collection2.find_one({'municipio':name2})
@@ -319,318 +318,137 @@ def hoy_mun(cod,name):
     plot_url_img = base64.b64encode(f1.read())
     f2 = gridfs.GridFS(db,"images").get_version(cursorHoyM2['filename_img_municipio_cam'])
     plot_url_img_cam = base64.b64encode(f2.read())
+	
 	#Busqueda de datos en coleccion:calidad_aire_por_municipio 
     collection3= db.calidad_aire_por_municipio
     cursor3 = collection3.find_one({'Municipio':name2})
+	
 	#Carga de las noticias del dia
     noticias_del_dia=cargaNoticias()
+	
+    #Conexion BBDD
+    conexion.close()	
+	
     return template("p_hoy_mun.tpl",name=name, busquedaAEMET=busquedaAEMET,plot_url_img=plot_url_img, plot_url_img_cam=plot_url_img_cam, noticias_del_dia=noticias_del_dia, cursor3=cursor3)
 
-	
-#@route('/reporte')
-#def reporte():
-	#return template("p_reporte.tpl")
-@route('/reporte')
-def reporte(page=0):
-    doc=etree.parse("static/Municipios/madrid.xml")
-    muni=doc.findall("municipio")
-    doc=etree.parse("static/Municipios/niveles.xml")
-    nivel=doc.findall("nivel")
-    alta = 0
-    noticias_del_dia=cargaNoticias()
-    conexion = conexion_bbdd()
-    db = conexion.othesoluciones1   
-    ''' List messages. '''
-    PAGE_SIZE = 5
-    page = int(page)
-    prev_page = None
-    if page > 0:
-        prev_page = page - 1
-    next_page = None
-    hoy=datetime.datetime.now().strftime('%d-%m-%Y')
-    if db.coleccion_reportes.find({'realizada':hoy}).count() > (page + 1) * PAGE_SIZE:
-        next_page = page + 1
-    coleccion_reportes = (db.coleccion_reportes.find({'realizada':hoy})
-                .sort('hora', DESCENDING)
-                .limit(PAGE_SIZE).skip(page * PAGE_SIZE)) 
-    
-    return template("p_reporte.tpl", muni=muni, nivel=nivel,alta=alta, noticias_del_dia=noticias_del_dia, prev_page=prev_page, next_page=next_page, coleccion_reportes=coleccion_reportes)	
-
-
-@post('/reporta')
-def reporta():
- doc=etree.parse("static/Municipios/madrid.xml")
- muni=doc.findall("municipio")
- doc=etree.parse("static/Municipios/niveles.xml")
- nivel=doc.findall("nivel")
- if (request.POST['nivel_de_alerta']=='0'):
-    labelAlerta='Bajo'
- elif (request.POST['nivel_de_alerta']=='1'):
-     labelAlerta='Medio'
- else:
-     labelAlerta='Alto'
- 
- i=0
- encontrado=False  
- indice=0
- while( (i<len(muni)) and (encontrado==False)):
-    if (muni[i].attrib["value"][-5:]==request.POST['municipio']):
-        encontrado=True
-        indice=i
-    i=i+1
- from datetime import timedelta
- hora=(datetime.datetime.now() + timedelta(hours=2)).strftime('%H:%M:%S')
-	 
- reporte = {'municipio': request.POST['municipio'], 'municipio_label':muni[indice].text,
-               'nivel_de_alerta': request.POST['nivel_de_alerta'],
-			   'labelAlerta':labelAlerta,
-               'realizada': datetime.datetime.now().strftime('%d-%m-%Y'), 'hora': hora}	
- print "municipio",  reporte['municipio']
- noticias_del_dia=cargaNoticias()
- conexion = conexion_bbdd()
- db = conexion.othesoluciones1
- ''' List messages. '''
- PAGE_SIZE = 5
- prev_page = None
- page=0
- if page > 0:
-        prev_page = page - 1
- next_page = None
- hoy=datetime.datetime.now().strftime('%d-%m-%Y')
- if db.coleccion_reportes.find({'realizada':hoy}).count() > (page + 1) * PAGE_SIZE:
-        next_page = page + 1
- coleccion_reportes = (db.coleccion_reportes.find({'realizada':hoy})
-                .sort('hora', DESCENDING)
-                .limit(PAGE_SIZE).skip(page * PAGE_SIZE))
- 
- if ((reporte['municipio']!='ninguno') and (reporte['nivel_de_alerta']!='ninguno')):	
- 
-
-    db.coleccion_reportes.insert(reporte)
-    alta = 1
-    varmun = str(reporte['municipio'])
-    print type(varmun), "<---", type(reporte['municipio'])
-    varniv = int(reporte['nivel_de_alerta'])
-    print type(varniv), "<---", type(reporte['nivel_de_alerta'])
-    #nuevoReporte(reporte['municipio'],reporte['nivel_de_alerta'])
-    nuevoReporte(varmun,varniv)	
-  
-    
-    return template("p_reporte.tpl", muni=muni, nivel=nivel,alta=alta, noticias_del_dia=noticias_del_dia, prev_page=prev_page, next_page=next_page, coleccion_reportes=coleccion_reportes)		
-    #redirect('/reporte')
- else:
-    listaErrores=[]
-    if (reporte['municipio']=='ninguno'):
-       municipio_OK=False
-    else:
-	   municipio_OK=True
-    listaErrores.append(municipio_OK)
-    if (reporte['nivel_de_alerta']=='ninguno'):
-	    alerta_OK=False
-    else:
-		alerta_OK=True
-    listaErrores.append(alerta_OK)
-    
-      
-    return template("error_views/p_reporte_error.tpl", muni=muni, nivel=nivel, nivsel=reporte['nivel_de_alerta'], munsel=reporte['municipio'], errores=listaErrores, noticias_del_dia=noticias_del_dia, prev_page=prev_page, next_page=next_page, coleccion_reportes=coleccion_reportes)	
-
-
-
+#Pestana Predicciones
 @route('/predicciones')
 def predicciones():
-    #from pymongo import MongoClient as Connection
-    #cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
-    #MONGODB_URI =cadenaCon
-    #conexion = Connection(MONGODB_URI)
+    #Conexion BBDD
     conexion=conexion_bbdd()
     db = conexion.othesoluciones1
+
+	#Carga de noticias
+    noticias_del_dia=cargaNoticias()
+	
+	#Carga de la imagen ALERTAS.png	
     import gridfs
     fs = gridfs.GridFS(db)
     gridout = fs.get_last_version("ALERTAS.png")
     plot_url = base64.b64encode(gridout.read())
-    noticias_del_dia=cargaNoticias()
+
+	#Buscamos en BBDD para cada uno de los 3 proximos dias los 5 municipios con mayor nivel de alerta
     from pymongo import DESCENDING
     import datetime
+	#listaStrings -> lista que almacena la fecha del dia y el campo por el que vamos a filtrar en la pagina
     listaStrings = []
+	#listaPredicciones -> lista que almacena cada uno de los resultados de la busqueda por el dia
     listaPredicciones=[]
+	
+	#Bloque busqueda de hoy
     hoy = (datetime.date.today()+datetime.timedelta(days=0)).strftime('%d-%m-%Y')
     listaStrings.append(hoy)
-    stringHoy = 'Nivel '+hoy
     labelHoy = 'Alerta '+hoy
-    #listaStrings.append(stringHoy)
     listaStrings.append(labelHoy)
+    stringHoy = 'Nivel '+hoy
     prediccionHoy = (db.PrediccionOTHE.find()
                 .sort(stringHoy, DESCENDING)
                 .limit(5))
     listaPredicciones.append(prediccionHoy)
+	
+	#Bloque busqueda de manana
     manana=(datetime.date.today()+datetime.timedelta(days=1)).strftime('%d-%m-%Y')
     listaStrings.append(manana)
-    stringManana = 'Nivel '+manana
     labelManana = 'Alerta '+manana
-    #listaStrings.append(stringManana)
     listaStrings.append(labelManana)	
+    stringManana = 'Nivel '+manana
     prediccionManana = (db.PrediccionOTHE.find()
                 .sort(stringManana, DESCENDING)
                 .limit(5))
     listaPredicciones.append(prediccionManana)
+
+	#Bloque busqueda de pasado manana
     pasadomanana=(datetime.date.today()+datetime.timedelta(days=2)).strftime('%d-%m-%Y')
     listaStrings.append(pasadomanana)
-    stringPasadoManana = 'Nivel '+pasadomanana
     labelPasadoManana = 'Alerta '+pasadomanana
-    #listaStrings.append(stringPasadoManana)
     listaStrings.append(labelPasadoManana)
+    stringPasadoManana = 'Nivel '+pasadomanana
     prediccionPasadoManana = (db.PrediccionOTHE.find()
                 .sort(stringPasadoManana, DESCENDING)
                 .limit(5))
     listaPredicciones.append(prediccionPasadoManana)
+	
+    #Conexion BBDD	
     conexion.close()
+	
+	#Carga de los combos desde los xml
     doc=etree.parse("static/Municipios/madrid.xml")
     muni=doc.findall("municipio")
-    #return template("p_predicciones.tpl", plot_url=plot_url,noticias_del_dia=noticias_del_dia, prediccionHoy=prediccionHoy, prediccionManana=prediccionManana, prediccionPasadoManana=prediccionPasadoManana, listaStrings=listaStrings, muni=muni)
+   
     return template("p_predicciones.tpl", plot_url=plot_url,noticias_del_dia=noticias_del_dia, listaPredicciones=listaPredicciones, listaStrings=listaStrings, muni=muni)
-
 	
-	
-@route('/static/<filepath:path>')
-def server_static(filepath):
-    return static_file(filepath, root='static')
-	
-@error(404)
-def error404(error):
-    return 'Nothing here, sorry'
-
-
-@get(['/notificaciones', '/notificaciones/:page#\d+#'])
-@view('p_notificaciones')
-def notificaciones(pageN=0):
-    print "ENTRO POR AQUI"
-    manana = (datetime.date.today()+datetime.timedelta(days=1)).strftime('%d/%m/%Y')
-    doc=etree.parse("static/Municipios/madrid.xml")
-    muni=doc.findall("municipio")
-    alta=0
-    ''' List messages. '''
-    PAGE_SIZEN = 5
-    pageN = int(pageN)
-    prev_pageN = None
-    if pageN > 0:
-        prev_pageN = pageN - 1
-    next_pageN = None
-    if db.coleccion_notificaciones.count() > (pageN + 1) * PAGE_SIZEN:
-        next_pageN = pageN + 1
-    coleccion_notificaciones = (db.coleccion_notificaciones.find()
-                .sort('realizada', DESCENDING)
-                .limit(PAGE_SIZEN).skip(pageN * PAGE_SIZEN))
-    noticias_del_dia=cargaNoticias()
-    return {'coleccion_notificaciones': coleccion_notificaciones,
-            'prev_pageN': prev_pageN,
-            'next_pageN': next_pageN, 'alta':alta, 'muni':muni, 'fdesde':manana, 'fhasta':manana, 'noticias_del_dia':noticias_del_dia
-            }	
-
-# para PRO hay que ponerle 2 horas +
-@post('/notifica')
-def notifica():
- manana = (datetime.date.today()+datetime.timedelta(days=1)).strftime('%d/%m/%Y')
- PAGE_SIZE = 5
- page = int(0)
- prev_page = None
- if page > 0:
-        prev_page = page - 1
- next_page = None
- if db.coleccion_notificaciones.count() > (page + 1) * PAGE_SIZE:
-        next_page = page + 1
- coleccion_notificaciones = (db.coleccion_notificaciones.find()
-                .sort('realizada', DESCENDING)
-                .limit(PAGE_SIZE).skip(page * PAGE_SIZE))
- print request.POST['fechaHasta']
- fechaHastaIns= datetime.datetime.strptime(request.POST['fechaHasta'],'%d/%m/%Y')
- fechaDesdeIns= datetime.datetime.strptime(request.POST['fechaDesde'],'%d/%m/%Y')
- notif = {'email': request.POST['email'], 'fdesde':request.POST['fechaDesde'], 'fhasta':request.POST['fechaHasta'],
-               'municipio': request.POST['municipio'],
-               'realizada': datetime.datetime.now()}
- #notif = {'email': request.POST['email'], 'fdesde':fechaDesdeIns, 'fhasta':fechaHastaIns,
- #              'municipio': request.POST['municipio'],
- #              'realizada': datetime.datetime.now()}			   
- listaErrores=[]			   
- #Chequeamos el email
- import re
- email_address = request.POST['email']
- #Step 1: Check email
- #Check using Regex that an email meets minimum requirements, throw an error if not
- addressToVerify = email_address
- match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', addressToVerify)
- 
- if match == None:
-    mail_OK=False
-    mailSel=""
- else:
-    mail_OK=True
-    mailSel=email_address
- print mail_OK
- listaErrores.append(mail_OK)	
- #Chequeamos el municipio	
- doc=etree.parse("static/Municipios/madrid.xml")
- muni=doc.findall("municipio")
- if (notif['municipio']=='ninguno'):
-  municipio_OK=False
- else:
-  municipio_OK=True
- listaErrores.append(municipio_OK)
- 
- if ((notif['fdesde']=='')or(notif['fdesde']=='')):
-  fechas_OK=False
- else:
-  fechas_OK=True
-  
- listaErrores.append(fechas_OK) 
- cuentaErrores= listaErrores.count(False)
- print cuentaErrores
- noticias_del_dia=cargaNoticias()
- if(cuentaErrores==0):
-     alta=1
-     db.coleccion_notificaciones.insert(notif)
-     return template("p_notificaciones.tpl", muni=muni, alta=alta, coleccion_notificaciones=coleccion_notificaciones, prev_page=prev_page, next_page=next_page, fdesde=manana, fhasta=manana, noticias_del_dia=noticias_del_dia)	
- else:
-  return template("error_views/p_notificaciones_error.tpl", muni=muni, errores=listaErrores, coleccion_notificaciones=coleccion_notificaciones, prev_page=prev_page, next_page=next_page, munsel=notif['municipio'], mailSel=mailSel, fdesde=notif['fdesde'], fhasta=notif['fhasta'], noticias_del_dia=noticias_del_dia )			
-    
- #db.coleccion_notificaciones.insert(notif)
- #redirect('/notificaciones')
-
+#Acciones a realizar tras pulsar sobre el formulario de la pestana Predicciones -> redirige a Predicciones y prediccion_mun	
 @post('/prediccion_muni')
 def prediccion_muni():
+    #Conexion BBDD
     conexion=conexion_bbdd()
     db = conexion.othesoluciones1
+
+	#Carga de noticias
+    noticias_del_dia=cargaNoticias()
+	
+	#Parseamos el valor del munipio
     recibido= request.POST['municipio']
     codigo= recibido[0:5]
     name =  recibido[6:]
+	
+    import datetime
+	#listaStrings -> lista que almacena la fecha del dia y el campo por el que vamos a filtrar en la pagina	
     listaStrings = []
+	
+	#listaPredicciones -> lista que almacena cada uno de los resultados de la busqueda por el dia	
     listaPredicciones=[]
+
+	#Bloque busqueda de hoy
     hoy = (datetime.date.today()+datetime.timedelta(days=0)).strftime('%d-%m-%Y')
     listaStrings.append(hoy)
-    #stringHoy = 'Nivel '+hoy
     stringHoy = 'Alerta '+hoy
     listaStrings.append(stringHoy)
     prediccionHoy = (db.PrediccionOTHE.find_one({'Codigo':codigo}))
     listaPredicciones.append(prediccionHoy)
+	
+	#Bloque busqueda de manana	
     manana=(datetime.date.today()+datetime.timedelta(days=1)).strftime('%d-%m-%Y')
     listaStrings.append(manana)
-    #stringManana = 'Nivel '+manana
     stringManana = 'Alerta '+manana
     listaStrings.append(stringManana)
     prediccionManana = (db.PrediccionOTHE.find_one({'Codigo':codigo}))
     listaPredicciones.append(prediccionManana)
+	
+	#Bloque busqueda de pasado manana	
     pasadomanana=(datetime.date.today()+datetime.timedelta(days=2)).strftime('%d-%m-%Y')
     listaStrings.append(pasadomanana)
-    #stringPasadoManana = 'Nivel '+pasadomanana
     stringPasadoManana = 'Alerta '+pasadomanana
     listaStrings.append(stringPasadoManana)
     prediccionPasadoManana = (db.PrediccionOTHE.find_one({'Codigo':codigo}))
     listaPredicciones.append(prediccionPasadoManana)
-	#Carga de imagenes del municipio
+	
+	#Buscamos en imagenes los tags por los que vamos a buscar en funcion del nivel de alerta del municipio
     collection2 = db.imagenes
     name2 =  elimina_tildes(name.decode('utf-8'))
     cursor2 = collection2.find_one({'municipio':name2})
     
-    print prediccionHoy[stringHoy]
+	#Obtenemos las imagenes correctas de los municipios
     if (prediccionHoy[stringHoy]=='Bajo'):
       f1 = gridfs.GridFS(db,"images").get_version(cursor2['filename_img_municipio_bajo']) 
       plot_url_img = base64.b64encode(f1.read())
@@ -647,13 +465,250 @@ def prediccion_muni():
            f2 = gridfs.GridFS(db,"images").get_version(cursor2['filename_img_municipio_cam_alto']) 
            plot_url_img_cam = base64.b64encode(f2.read())	
 
-		
-		
+    #Conexion BBDD		
+    conexion.close()
+    return template("p_predicciones_mun.tpl", name=name, noticias_del_dia=noticias_del_dia, listaPredicciones=listaPredicciones, listaStrings=listaStrings, plot_url_img=plot_url_img, plot_url_img_cam=plot_url_img_cam)	
+
+#Pestana Reportanos	
+@route('/reporte')
+def reporte(page=0):
+    #Conexion BBDD
+    conexion = conexion_bbdd()
+    db = conexion.othesoluciones1   
+
+	#Carga de las noticias del dia
+    noticias_del_dia=cargaNoticias()
+	
+	#Carga de los combos desde los xml
     doc=etree.parse("static/Municipios/madrid.xml")
     muni=doc.findall("municipio")
+    doc=etree.parse("static/Municipios/niveles.xml")
+    nivel=doc.findall("nivel")
+	
+	#Flag para mostrar mensaje de alta correcta o no
+    alta = 0
+
+    #Paginacion
+    ''' List messages. '''
+    PAGE_SIZE = 5
+    page = int(page)
+    prev_page = None
+    if page > 0:
+        prev_page = page - 1
+    next_page = None
+    hoy=datetime.datetime.now().strftime('%d-%m-%Y')
+    if db.coleccion_reportes.find({'realizada':hoy}).count() > (page + 1) * PAGE_SIZE:
+        next_page = page + 1
+    coleccion_reportes = (db.coleccion_reportes.find({'realizada':hoy})
+                .sort('hora', DESCENDING)
+                .limit(PAGE_SIZE).skip(page * PAGE_SIZE)) 
+
+    #Conexion BBDD
+    conexion.close()					
+    return template("p_reporte.tpl", muni=muni, nivel=nivel,alta=alta, noticias_del_dia=noticias_del_dia, prev_page=prev_page, next_page=next_page, coleccion_reportes=coleccion_reportes, hoy=hoy)	
+
+#Acciones a realizar tras pulsar sobre el formulario de la pestana Reportanos -> redirige a Reportanos y p_reporte_error
+@post('/reporta')
+def reporta():
+ #Carga de los combos desde los xml y establecemos la etiqueta que mostraremos en funcion del valor de la alerta reportada
+ doc=etree.parse("static/Municipios/madrid.xml")
+ muni=doc.findall("municipio")
+ doc=etree.parse("static/Municipios/niveles.xml")
+ nivel=doc.findall("nivel")
+ if (request.POST['nivel_de_alerta']=='0'):
+    labelAlerta='Bajo'
+ elif (request.POST['nivel_de_alerta']=='1'):
+     labelAlerta='Medio'
+ else:
+     labelAlerta='Alto'
+ 
+ #Carga del nombre del municipio desde el xml (con acentos)
+ i=0
+ encontrado=False  
+ indice=0
+ while( (i<len(muni)) and (encontrado==False)):
+    if (muni[i].attrib["value"][-5:]==request.POST['municipio']):
+        encontrado=True
+        indice=i
+    i=i+1
+ from datetime import timedelta
+ hora=(datetime.datetime.now() + timedelta(hours=2)).strftime('%H:%M:%S')
+
+ #Diccionario que vamos a insertar en la BBDD 
+ reporte = {'municipio': request.POST['municipio'], 'municipio_label':muni[indice].text,
+               'nivel_de_alerta': request.POST['nivel_de_alerta'],
+			   'labelAlerta':labelAlerta,
+               'realizada': datetime.datetime.now().strftime('%d-%m-%Y'), 'hora': hora}	
+ print "municipio",  reporte['municipio']
+ 
+ 
+ #Carga de las noticias del dia
+ noticias_del_dia=cargaNoticias()
+
+ #Conexion BBDD
+ conexion = conexion_bbdd()
+ db = conexion.othesoluciones1
+ ''' List messages. '''
+ PAGE_SIZE = 5
+ prev_page = None
+ page=0
+ if page > 0:
+        prev_page = page - 1
+ next_page = None
+ hoy=datetime.datetime.now().strftime('%d-%m-%Y')
+ if db.coleccion_reportes.find({'realizada':hoy}).count() > (page + 1) * PAGE_SIZE:
+        next_page = page + 1
+ coleccion_reportes = (db.coleccion_reportes.find({'realizada':hoy})
+                .sort('hora', DESCENDING)
+                .limit(PAGE_SIZE).skip(page * PAGE_SIZE)) 
+ 
+ if ((reporte['municipio']!='ninguno') and (reporte['nivel_de_alerta']!='ninguno')):	
+    #Formulario rellenado correctamente
+	
+	#Insert del reporte
+    db.coleccion_reportes.insert(reporte)
+	
+	#Flag activado para mostrar mensaje de alta OK
+    alta = 1
+	
+	#Llamada a la funcion nuevoReporte para actualizar la tabla de Predicciones 
+    varmun = str(reporte['municipio'])
+    varniv = int(reporte['nivel_de_alerta'])
+    nuevoReporte(varmun,varniv)	
+  
+	#Actualizacion de la paginacion 
+    ''' List messages. '''
+    PAGE_SIZE = 5
+    prev_page = None
+    page=0
+    if page > 0:
+        prev_page = page - 1
+    next_page = None
+    hoy=datetime.datetime.now().strftime('%d-%m-%Y')
+    if db.coleccion_reportes.find({'realizada':hoy}).count() > (page + 1) * PAGE_SIZE:
+        next_page = page + 1
+    coleccion_reportes = (db.coleccion_reportes.find({'realizada':hoy})
+                .sort('hora', DESCENDING)
+                .limit(PAGE_SIZE).skip(page * PAGE_SIZE))
+				
+    #Conexion BBDD
+    conexion.close()	
+	
+    return template("p_reporte.tpl", muni=muni, nivel=nivel,alta=alta, noticias_del_dia=noticias_del_dia, prev_page=prev_page, next_page=next_page, coleccion_reportes=coleccion_reportes, hoy=hoy)		
+
+ else:
+    # Tratamos los errores en el envio del formulario
+    listaErrores=[]
+    if (reporte['municipio']=='ninguno'):
+       municipio_OK=False
+    else:
+	   municipio_OK=True
+    listaErrores.append(municipio_OK)
+    if (reporte['nivel_de_alerta']=='ninguno'):
+	    alerta_OK=False
+    else:
+		alerta_OK=True
+    listaErrores.append(alerta_OK)
+    
+      
+    return template("error_views/p_reporte_error.tpl", muni=muni, nivel=nivel, nivsel=reporte['nivel_de_alerta'], munsel=reporte['municipio'], errores=listaErrores, noticias_del_dia=noticias_del_dia, prev_page=prev_page, next_page=next_page, coleccion_reportes=coleccion_reportes, hoy=hoy)		
+
+#Pestana Notificaciones	
+@get(['/notificaciones'])
+@view('p_notificaciones')
+def notificaciones():
+	#Carga de noticias
     noticias_del_dia=cargaNoticias()
-    conexion.close()
-    return template("p_predicciones_mun.tpl", name=name, noticias_del_dia=noticias_del_dia, listaPredicciones=listaPredicciones, listaStrings=listaStrings, plot_url_img=plot_url_img, plot_url_img_cam=plot_url_img_cam, muni=muni)	
+	
+	#Obtenemos la fecha de manana para inicializar los campos fechadesde y fechahasta
+    import datetime	
+    manana = (datetime.date.today()+datetime.timedelta(days=1)).strftime('%d/%m/%Y')
+
+	#Carga de los combos desde los xml	
+    doc=etree.parse("static/Municipios/madrid.xml")
+    muni=doc.findall("municipio")
+	
+	#Flag para mostrar mensaje de alta correcta o no	
+    alta=0    
+
+    return { 'alta':alta, 'muni':muni, 'fdesde':manana, 'fhasta':manana, 'noticias_del_dia':noticias_del_dia }	
+
+#Acciones a realizar tras pulsar sobre el formulario de la pestana Notificaciones -> redirige a Notificaciones y p_notificaciones_error
+@post('/notifica')
+def notifica():
+ #Carga de noticias
+ noticias_del_dia=cargaNoticias()
+ 
+ #Carga de los combos desde los xml	 
+ doc=etree.parse("static/Municipios/madrid.xml")
+ muni=doc.findall("municipio") 
+ 
+ #Obtenemos las fechas en el formato que queremos desde el formulario
+ import datetime
+ fechaHastaIns= datetime.datetime.strptime(request.POST['fechaHasta'],'%d/%m/%Y')
+ fechaDesdeIns= datetime.datetime.strptime(request.POST['fechaDesde'],'%d/%m/%Y')
+ 
+ #Diccionario que almacena los campos recibidos del formulario 
+ notif = {'email': request.POST['email'], 'fdesde':request.POST['fechaDesde'], 'fhasta':request.POST['fechaHasta'],
+               'municipio': request.POST['municipio'],
+               'realizada': datetime.datetime.now()}
+
+ #listaErrores -> es una lista de booleanos donde vamos a almacenar si los 3 campos del formulario se han rellenado correctamente o no			   
+ listaErrores=[]			   
+ 
+ #Validacion Email
+ import re
+ email_address = request.POST['email']
+ #Comprobamos que el email cumple los requerimientos minimos
+ addressToVerify = email_address
+ match = re.match('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$', addressToVerify)
+ if match == None:
+    mail_OK=False
+    mailSel=""
+ else:
+    mail_OK=True
+    mailSel=email_address
+ print mail_OK
+ listaErrores.append(mail_OK)	
+ 
+ #Validamos municipio	
+ if (notif['municipio']=='ninguno'):
+  municipio_OK=False
+ else:
+  municipio_OK=True
+ listaErrores.append(municipio_OK)
+ 
+ #Validamos las fechas
+ if ((notif['fdesde']=='')or(notif['fdesde']=='')):
+  fechas_OK=False
+ else:
+  fechas_OK=True
+  
+ listaErrores.append(fechas_OK) 
+ 
+ #En cuentaErrores contamos el numero de falses introducidos para ver si se ha rellenado el formulario correctamente o no y asi redirigir la navegacion correctamente
+ cuentaErrores= listaErrores.count(False)
+
+ #Sin errores
+ if(cuentaErrores==0):
+     alta=1
+     db.coleccion_notificaciones.insert(notif)
+     #Obtenemos la fecha de manana para inicializar los campos fechadesde y fechahasta para en caso de exito cargarlas en la pantalla inicial de notificaciones
+     manana = (datetime.date.today()+datetime.timedelta(days=1)).strftime('%d/%m/%Y')
+     return template("p_notificaciones.tpl", muni=muni, alta=alta, coleccion_notificaciones=coleccion_notificaciones, prev_page=prev_page, next_page=next_page, fdesde=manana, fhasta=manana, noticias_del_dia=noticias_del_dia)	
+ else:
+  #Con errores
+  return template("error_views/p_notificaciones_error.tpl", muni=muni, errores=listaErrores, coleccion_notificaciones=coleccion_notificaciones, prev_page=prev_page, next_page=next_page, munsel=notif['municipio'], mailSel=mailSel, fdesde=notif['fdesde'], fhasta=notif['fhasta'], noticias_del_dia=noticias_del_dia )			
+    
+#Obtencion de los estaticos de la carpeta /static
+@route('/static/<filepath:path>')
+def server_static(filepath):
+    return static_file(filepath, root='static')
+	
+#Pantalla de error	
+@error(404)
+def error404(error):
+    return 'Nothing here, sorry'
 
 	
 cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'

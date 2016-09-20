@@ -51,7 +51,7 @@
         </tbody>
 	</form>			
  </table>
-<h2>Alertas notificadas por nuestros usuarios durante el día</h2>
+<h2>Alertas notificadas por nuestros usuarios durante el día {{hoy}}</h2>
 	<table border="1">
 
         <colgroup>

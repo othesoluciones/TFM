@@ -387,12 +387,25 @@ def reporta():
                'realizada': datetime.datetime.now().strftime('%d-%m-%Y'), 'hora': hora}	
  print "municipio",  reporte['municipio']
  noticias_del_dia=cargaNoticias()
- 
+ conexion = conexion_bbdd()
+ db = conexion.othesoluciones1
+ ''' List messages. '''
+ PAGE_SIZE = 5
+ prev_page = None
+ page=0
+ if page > 0:
+        prev_page = page - 1
+ next_page = None
+ hoy=datetime.datetime.now().strftime('%d-%m-%Y')
+ if db.coleccion_reportes.find({'realizada':hoy}).count() > (page + 1) * PAGE_SIZE:
+        next_page = page + 1
+ coleccion_reportes = (db.coleccion_reportes.find({'realizada':hoy})
+                .sort('hora', DESCENDING)
+                .limit(PAGE_SIZE).skip(page * PAGE_SIZE))
  
  if ((reporte['municipio']!='ninguno') and (reporte['nivel_de_alerta']!='ninguno')):	
  
-    conexion = conexion_bbdd()
-    db = conexion.othesoluciones1 
+
     db.coleccion_reportes.insert(reporte)
     alta = 1
     varmun = str(reporte['municipio'])
@@ -402,19 +415,7 @@ def reporta():
     #nuevoReporte(reporte['municipio'],reporte['nivel_de_alerta'])
     nuevoReporte(varmun,varniv)	
   
-    ''' List messages. '''
-    PAGE_SIZE = 5
-    prev_page = None
-    page=0
-    if page > 0:
-        prev_page = page - 1
-    next_page = None
-    hoy=datetime.datetime.now().strftime('%d-%m-%Y')
-    if db.coleccion_reportes.find({'realizada':hoy}).count() > (page + 1) * PAGE_SIZE:
-        next_page = page + 1
-    coleccion_reportes = (db.coleccion_reportes.find({'realizada':hoy})
-                .sort('hora', DESCENDING)
-                .limit(PAGE_SIZE).skip(page * PAGE_SIZE))
+    
     return template("p_reporte.tpl", muni=muni, nivel=nivel,alta=alta, noticias_del_dia=noticias_del_dia, prev_page=prev_page, next_page=next_page, coleccion_reportes=coleccion_reportes)		
     #redirect('/reporte')
  else:
@@ -431,7 +432,7 @@ def reporta():
     listaErrores.append(alerta_OK)
     
       
-    return template("error_views/p_reporte_error.tpl", muni=muni, nivel=nivel, nivsel=reporte['nivel_de_alerta'], munsel=reporte['municipio'], errores=listaErrores, noticias_del_dia=noticias_del_dia)
+    return template("error_views/p_reporte_error.tpl", muni=muni, nivel=nivel, nivsel=reporte['nivel_de_alerta'], munsel=reporte['municipio'], errores=listaErrores, noticias_del_dia=noticias_del_dia, prev_page=prev_page, next_page=next_page, coleccion_reportes=coleccion_reportes)	
 
 
 

@@ -267,9 +267,9 @@ def envioMail():
 							name2 =  elimina_tildes(unicode(muni[k].text[:]))
 							cursor1 = collection1.find_one({"Municipio": name2})
 							print "Llego a leer de la bbdd"
-							predHoy = cursor1["Nivel "+hoy]
-							predManana= cursor1["Nivel "+manana]
-							predPasadoManana=cursor1["Nivel "+pasadomanana]
+							predHoy = cursor1["Alerta "+hoy]
+							predManana= cursor1["Alerta "+manana]
+							predPasadoManana=cursor1["Alerta "+pasadomanana]
 							print "Llego a escribir el texto"
 							texto = texto+str("<h3>"+name2+"</h3>")
 							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +hoy+" es: <b>"+str(int(predHoy))+"</b><p></br>")
@@ -995,24 +995,24 @@ def algoritmoPredictivo():
 
 
 #realmente se ejecuta a las 08:47. Este tarda
-scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=4, minute=50)
+scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=5, minute=30)
 
 
 #realmente se ejecuta a las 08:46
-scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=5, minute=1)
+scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=5, minute=37)
 
 
 #realmente se ejecuta a las 08:55
-scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=5, minute=2)
+scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=5, minute=38)
 
 #realmente se ejecuta a las 09:10
-scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=5, minute=3)
+scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=5, minute=38)
 
 #realmente se ejecuta a las 09:12
-scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=5, minute=4)
+scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=5, minute=40)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=5, minute=7)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=5, minute=47)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

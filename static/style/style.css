@@ -297,15 +297,26 @@ h2#idrojo {
    color: red;
 }
 
-td#idblanco{
+td#idblanco1{
   text-align: center;
   background: white;	
 }
 
-td#centro{
- text-align: center;
-  background: #3B3B3B;
-  color: #FFF;
-  padding: 7px 4px;	
-	
+td#idblanco2{
+  text-align: center;
+  background: white;	
+}
+
+td#idblanco3{
+  text-align: center;
+  background: white;	
+}
+td#idblanco4{
+  text-align: center;
+  background: white;	
+}
+
+td#idblanco5{
+  text-align: center;
+  background: white;	
 }

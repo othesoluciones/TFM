@@ -272,13 +272,93 @@ def index():
 def hoy(page=0):
     # CARGA DE NOTICIAS DEL DIA
     noticias_del_dia=cargaNoticias()
-
+    #Conexion BBDD
+    conexion = conexion_bbdd()
+    db = conexion.othesoluciones1
+	#Carga de la imagen ALERTAS.png
+    import gridfs
+    colorzona = gridfs.GridFS(db, "color-zona")
+    gridout = colorzona.get_last_version("COLOR.png")
+    plot_url_img = base64.b64encode(gridout.read())
     ''' List messages. '''
     doc=etree.parse("static/Municipios/madrid.xml")
     muni=doc.findall("municipio")
- 
-    return {'noticias_del_dia': noticias_del_dia,
-            'muni': muni
+
+    listaZona1Texto=[]
+    listaZona1Valor=[]
+    listaZona2Texto=[]
+    listaZona2Valor=[]
+    listaZona3Texto=[]
+    listaZona3Valor=[]
+    listaZona4Texto=[]
+    listaZona4Valor=[]
+    listaZona5Texto=[]
+    listaZona5Valor=[]
+    listaZona6Texto=[]
+    listaZona6Valor=[]	
+    listaZona7Texto=[]
+    listaZona7Valor=[]
+    contZona1=0
+    contZona2=0
+    contZona3=0
+    contZona4=0
+    contZona5=0
+    contZona6=0
+    contZona7=0
+	
+    for i in (range(0,len(muni))):
+		if(muni[i].attrib["zona"]=="1"):
+			contZona1=contZona1+1
+			listaZona1Texto.append(muni[i].text)
+			listaZona1Valor.append("/"+muni[i].attrib["value"][-5:]+"/"+muni[i].text)
+		elif(muni[i].attrib["zona"]=="2"):
+			contZona2=contZona2+1
+			listaZona2Texto.append(muni[i].text)
+			listaZona2Valor.append("/"+muni[i].attrib["value"][-5:]+"/"+muni[i].text)
+		elif(muni[i].attrib["zona"]=="3"):
+			contZona3=contZona3+1
+			listaZona3Texto.append(muni[i].text)
+			listaZona3Valor.append("/"+muni[i].attrib["value"][-5:]+"/"+muni[i].text)
+		elif(muni[i].attrib["zona"]=="4"):
+			contZona4=contZona4+1
+			listaZona4Texto.append(muni[i].text)
+			listaZona4Valor.append("/"+muni[i].attrib["value"][-5:]+"/"+muni[i].text)
+		elif(muni[i].attrib["zona"]=="5"):
+			contZona5=contZona5+1
+			listaZona5Texto.append(muni[i].text)
+			listaZona5Valor.append("/"+muni[i].attrib["value"][-5:]+"/"+muni[i].text)
+		elif(muni[i].attrib["zona"]=="6"):
+			contZona6=contZona6+1
+			listaZona6Texto.append(muni[i].text)
+			listaZona6Valor.append("/"+muni[i].attrib["value"][-5:]+"/"+muni[i].text)
+		else:
+			contZona7=contZona7+1
+			listaZona7Texto.append(muni[i].text)
+			listaZona7Valor.append("/"+muni[i].attrib["value"][-5:]+"/"+muni[i].text)
+
+    listaZona1=[]
+    listaZona1.append(listaZona1Valor)
+    listaZona1.append(listaZona1Texto)			
+    listaZona2=[]
+    listaZona2.append(listaZona2Valor)
+    listaZona2.append(listaZona2Texto)
+    listaZona3=[]
+    listaZona3.append(listaZona3Valor)
+    listaZona3.append(listaZona3Texto)	
+    listaZona4=[]
+    listaZona4.append(listaZona4Valor)
+    listaZona4.append(listaZona4Texto)	
+    listaZona5=[]
+    listaZona5.append(listaZona5Valor)
+    listaZona5.append(listaZona5Texto)	
+    listaZona6=[]
+    listaZona6.append(listaZona6Valor)
+    listaZona6.append(listaZona6Texto)	
+    listaZona7=[]
+    listaZona7.append(listaZona7Valor)
+    listaZona7.append(listaZona7Texto)		
+    return {'noticias_del_dia': noticias_del_dia,'plot_url_img':plot_url_img,  'listaZona1':listaZona1,
+            'muni': muni, 'listaZona2':listaZona2, 'listaZona3':listaZona3,'listaZona4':listaZona4,'listaZona5':listaZona5,'listaZona6':listaZona6,'listaZona7':listaZona7
             }	
 
 

@@ -6,6 +6,7 @@
 		<h2>Por favor seleccione el municipio del que desee visualizar la predicción del nivel de gramíneas para los próximos 3 días</h2>
 		</td>
 		</tr>
+		<tr>
 		<td id="idblanco" valign="top" colspan="2" align="center">
         <form action="/prediccion_muni" method="post" enctype="multipart/form-data">
 			<table border="1" width="100%">

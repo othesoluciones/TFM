@@ -1,13 +1,14 @@
 % include('header_notificaciones.tpl', title='Notificaciones', ndd=noticias_del_dia)
 <h1>Recibe notificaciones</h1>
+<p>Si quieres recibir en tu correo electrónico un email con la predicción del nivel de alertas del municipio que desees, por favor rellena este formulario.</p>
 % if errores[0]==False:
- <h2 id="idrojo">Por favor, introduzca una dirección de correo electrónico correcta</h2>
+ <p id="idrojo">Por favor, introduzca una dirección de correo electrónico correcta</p>
 % end
 % if errores[1]==False:
- <h2 id="idrojo">Por favor, seleccione un municipio correcto</h2>
+ <p id="idrojo">Por favor, seleccione un municipio correcto</p>
 % end
 % if errores[2]==False:
- <h2 id="idrojo">Por favor, rellene ambas fechas</h2>
+ <p id="idrojo">Por favor, rellene ambas fechas</p>
 % end
 
 <form action="/notifica" method="post" enctype="multipart/form-data">

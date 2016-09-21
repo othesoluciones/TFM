@@ -1,12 +1,7 @@
 % include('header_predicciones.tpl', title='Predicciones', ndd=noticias_del_dia)
-	<h1>Predicción del Nivel de Gramíneas</h1>
+	<h1>Predicciones del nivel de alérgenos por municipio</h1>
+	<p>Seleccione un municipio para visualizar la predicción del nivel de brote alérgico de gramíneas para los próximos 3 días.</p>
 	<table>
-		<tr>
-		<td id="idblanco" valign="top" colspan="2" align="center"> 
-		<h2>Por favor seleccione el municipio del que desee visualizar la predicción del nivel de gramíneas para los próximos 3 días</h2>
-		</td>
-		</tr>
-		<tr>
 		<td id="idblanco" valign="top" colspan="2" align="center">
         <form action="/prediccion_muni" method="post" enctype="multipart/form-data">
 			<table border="1" width="100%">
@@ -42,7 +37,7 @@
 			<table border="1">
 				<thead>
 					<tr>
-						<th scope="col" colspan="2" align="center">TOP 5 Municipios con mayor nivel de gramíneas para el día: <b>{{listaStrings[0]}}</b> </th>
+						<th scope="col" colspan="2" align="center">Municipios con mayor nivel de alerta para el día: <b>{{listaStrings[0]}}</b></th>
 					</tr>
 				</thead>
 				% for p in listaPredicciones[0]:
@@ -70,7 +65,7 @@
 			<table border="1">
 				<thead>
 					<tr>
-						<th scope="col" colspan="2" align="center">TOP 5 Municipios con mayor nivel de gramíneas para el día: <b>{{listaStrings[2]}}</b> </th>
+						<th scope="col" colspan="2" align="center">Municipios con mayor nivel de alerta para el día: <b>{{listaStrings[2]}}</b> </th>
 					</tr>
 				</thead>
 				% for p in listaPredicciones[1]:
@@ -92,7 +87,7 @@
 			<table border="1">
 				<thead>
 					<tr>
-						<th scope="col" colspan="2" align="center">TOP 5 Municipios con mayor nivel de gramíneas para el día<b>{{listaStrings[4]}}</b> </th>
+						<th scope="col" colspan="2" align="center">Municipios con mayor nivel de alerta para el día: <b>{{listaStrings[4]}}</b> </th>
 					</tr>
 				</thead>
 				% for p in listaPredicciones[2]:

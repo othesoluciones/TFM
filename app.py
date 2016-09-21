@@ -284,6 +284,8 @@ def hoy(page=0):
     doc=etree.parse("static/Municipios/madrid.xml")
     muni=doc.findall("municipio")
 
+    import time
+    hoy= time.strftime("%d-%m-%Y")
     listaZona1Texto=[]
     listaZona1Valor=[]
     listaZona2Texto=[]
@@ -357,7 +359,7 @@ def hoy(page=0):
     listaZona7=[]
     listaZona7.append(listaZona7Valor)
     listaZona7.append(listaZona7Texto)		
-    return {'noticias_del_dia': noticias_del_dia,'plot_url':plot_url,  'listaZona1':listaZona1,
+    return {'noticias_del_dia': noticias_del_dia,'plot_url':plot_url, 'hoy':hoy,  'listaZona1':listaZona1,
             'muni': muni, 'listaZona2':listaZona2, 'listaZona3':listaZona3,'listaZona4':listaZona4,'listaZona5':listaZona5,'listaZona6':listaZona6,'listaZona7':listaZona7
             }	
 
@@ -775,10 +777,10 @@ def notifica():
      db.coleccion_notificaciones.insert(notif)
      #Obtenemos la fecha de manana para inicializar los campos fechadesde y fechahasta para en caso de exito cargarlas en la pantalla inicial de notificaciones
      manana = (datetime.date.today()+datetime.timedelta(days=1)).strftime('%d/%m/%Y')
-     return template("p_notificaciones.tpl", muni=muni, alta=alta, coleccion_notificaciones=coleccion_notificaciones, prev_page=prev_page, next_page=next_page, fdesde=manana, fhasta=manana, noticias_del_dia=noticias_del_dia)	
+     return template("p_notificaciones.tpl", muni=muni, alta=alta, fdesde=manana, fhasta=manana, noticias_del_dia=noticias_del_dia)	
  else:
   #Con errores
-  return template("error_views/p_notificaciones_error.tpl", muni=muni, errores=listaErrores, coleccion_notificaciones=coleccion_notificaciones, prev_page=prev_page, next_page=next_page, munsel=notif['municipio'], mailSel=mailSel, fdesde=notif['fdesde'], fhasta=notif['fhasta'], noticias_del_dia=noticias_del_dia )			
+  return template("error_views/p_notificaciones_error.tpl", muni=muni, errores=listaErrores, munsel=notif['municipio'], mailSel=mailSel, fdesde=notif['fdesde'], fhasta=notif['fhasta'], noticias_del_dia=noticias_del_dia )			
     
 #Obtencion de los estaticos de la carpeta /static
 @route('/static/<filepath:path>')

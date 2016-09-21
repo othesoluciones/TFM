@@ -253,7 +253,7 @@ def envioMail():
 			texto=""
 			mensaje = MIMEMultipart()
 			mensaje['From']=cuentaDesde
-			mensaje['Subject']="Suscripcion a Notificaciones de OtheSoluciones"
+			mensaje['Subject']="Suscripcion a Notificaciones de Gramineas-Madrid"
 			cuentaPara=j
 			mensaje['To']=cuentaPara
 			for i in range(0, len(dfmm)):                 

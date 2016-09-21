@@ -1,15 +1,16 @@
 % include('header_hoy.tpl', title='Niveles del día', ndd=noticias_del_dia)
 	<h1>Municipios de Madrid</h1>
+	<p>Seleccione un municipio de la Comunidad de Madrid para visualizar sus datos meteorológicos y de calidad del aire correspondientes al día de <b>{{hoy}}</b></p>
 	<table>
 		<tr>
 		<td width="33%"  id="idblanco" valign="top"> 
-		<table border="1" valign="top">
+		<table border="1" valign="center">
 			<colgroup>
 				<col />
 			</colgroup>
 			<thead>
 			<tr>
-				<th scope="col">Zona1</th>
+				<th scope="col">Madrid Capital</th>
 			</tr>
 			</thead>
 			<tbody valign="top">
@@ -40,9 +41,9 @@
 
         <thead>
            <tr>
-             <th scope="col">Zona2</th>
-             <th scope="col">Zona4</th>
-			 <th scope="col">Zona6</th>
+             <th scope="col">Corredor del Henares</th>
+             <th scope="col">Zona Noroeste</th>
+			 <th scope="col">Cuenca del Alberche</th>
            </tr>
         </thead>
 
@@ -74,9 +75,9 @@
 		</tbody>
         <thead align="center">
            <tr>
-             <th scope="col">Zona3</th>
-             <th scope="col">Zona5</th>
-			 <th scope="col">Zona7</th>
+             <th scope="col">Zona Sur</th>
+             <th scope="col">Sierra Norte</th>
+			 <th scope="col">Cuenca del Tajuña</th>
            </tr>
         </thead>
         <tbody valign="top">

@@ -1,7 +1,8 @@
 % include('header_reporte.tpl', title='¡Repórtanos!', ndd=noticias_del_dia)
 <h1>Repórtanos alertas</h1>
+<p>Si quieres ayudarnos a mejorar nuestra predicción, puedes hacerlo si nos reportas una alerta del municipio en el que te encuentres.</b></p>
 % if alta==1:
- <h2 id="idverde">Alerta recibida con éxito. Gracias por su colaboración</h2>
+ <p id="idverde"><b>Alerta recibida con éxito. Gracias por su colaboración</b></p>
 % end
 <form action="/reporta" method="post">
 <table border="1">
@@ -50,7 +51,7 @@
 		
  </table>
 </form>	
-<h2>Alertas notificadas por nuestros usuarios durante el día {{hoy}}</h2>
+<p>Alertas notificadas por nuestros usuarios durante el día <b>{{hoy}}</b>:</p>
 	<table border="1">
 
         <colgroup>

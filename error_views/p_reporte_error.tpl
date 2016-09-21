@@ -1,10 +1,11 @@
 % include('header_reporte.tpl', title='¡Repórtanos!', ndd=noticias_del_dia)
 <h1>Repórtanos alertas</h1>
+<p>Si quieres ayudarnos a mejorar nuestra predicción, puedes hacerlo si nos reportas una alerta del municipio en el que te encuentres.</b></p>
 % if errores[0]==False:
-<h2 id="idrojo">Por favor, seleccione un municipio correcto</h2>
+<p id="idrojo"><b>Por favor, seleccione un municipio correcto</b></p>
 % end
 % if errores[1]==False:
-<h2 id="idrojo">Por favor seleccione un nivel correcto</h2>
+<p id="idrojo"><b>Por favor seleccione un nivel correcto</b></p>
 % end
 
 <table border="1">
@@ -51,7 +52,7 @@
         </tbody>
 	</form>			
  </table>
-<h2>Alertas notificadas por nuestros usuarios durante el día {{hoy}}</h2>
+<p>Alertas notificadas por nuestros usuarios durante el día <b>{{hoy}}</b>:</p>
 	<table border="1">
 
         <colgroup>

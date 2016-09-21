@@ -272,9 +272,9 @@ def envioMail():
 							predPasadoManana=cursor1["Alerta "+pasadomanana]
 							print "Llego a escribir el texto"
 							texto = texto+str("<h3>"+name2+"</h3>")
-							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +hoy+" es: <b>"+str(int(predHoy))+"</b><p></br>")
-							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +manana+" es: <b>"+str(int(predManana))+"</b><p></br>")
-							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +pasadomanana+" es: <b>"+str(int(predPasadoManana))+"</b><p></br>")
+							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +hoy+" es: <b>"+str((predHoy))+"</b><p></br>")
+							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +manana+" es: <b>"+str((predManana))+"</b><p></br>")
+							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +pasadomanana+" es: <b>"+str((predPasadoManana))+"</b><p></br>")
 							texto = texto+str("<hr>")
 							#collection1 = db.prediccionesAEMET 
 							#name2 =  elimina_tildes(unicode(muni[k].text[:]))
@@ -1012,7 +1012,7 @@ scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=5, minut
 scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=5, minute=50)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=5, minute=57)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=13, minute=38)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

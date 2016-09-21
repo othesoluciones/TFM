@@ -280,6 +280,8 @@ def hoy(page=0):
     colorzona = gridfs.GridFS(db, "color-zona")
     gridout = colorzona.get_last_version("COLOR.png")
     plot_url = base64.b64encode(gridout.read())
+    gridout_ley = colorzona.get_last_version("Leyenda.png")
+    plot_url_ley = base64.b64encode(gridout_ley.read())
     ''' List messages. '''
     doc=etree.parse("static/Municipios/madrid.xml")
     muni=doc.findall("municipio")
@@ -359,7 +361,7 @@ def hoy(page=0):
     listaZona7=[]
     listaZona7.append(listaZona7Valor)
     listaZona7.append(listaZona7Texto)		
-    return {'noticias_del_dia': noticias_del_dia,'plot_url':plot_url, 'hoy':hoy,  'listaZona1':listaZona1,
+    return {'noticias_del_dia': noticias_del_dia,'plot_url':plot_url, 'plot_url_ley':plot_url_ley, 'hoy':hoy,  'listaZona1':listaZona1,
             'muni': muni, 'listaZona2':listaZona2, 'listaZona3':listaZona3,'listaZona4':listaZona4,'listaZona5':listaZona5,'listaZona6':listaZona6,'listaZona7':listaZona7
             }	
 

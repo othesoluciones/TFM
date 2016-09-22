@@ -14,7 +14,6 @@
 		<tr>
 			<th scope="col">Madrid Capital</th>
 			<td colspan="2">
-			<br></br>
 				<ul>
 				% for i in range(0,len(listaZona1[0])):
 					<li><a href="{{listaZona1[0][i]}}">{{listaZona1[1][i]}}</a></li>

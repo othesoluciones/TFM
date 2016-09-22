@@ -10,7 +10,7 @@
            <col />
            <col />
         </colgroup>
-	<thead >
+	<tbody>
 		<tr>
 			<th scope="col">Madrid Capital</th>
 			<td colspan="2">
@@ -27,10 +27,7 @@
              <th scope="col">Zona Noroeste</th>
 			 <th scope="col">Cuenca del Alberche</th>
            </tr>
-        </thead>
 
-
-        <tbody>
 			<tr>
 				<td>
 					<ul>
@@ -54,15 +51,13 @@
 					</ul>
 				</td>
 			</tr>
-		</tbody>
-        <thead>
+
            <tr>
              <th scope="col">Zona Sur</th>
              <th scope="col">Zona Sierra Norte</th>
 			 <th scope="col">Cuenca del Tajuña</th>
            </tr>
-        </thead>
-        <tbody>
+
 			<tr>
 				<td>
 					<ul>

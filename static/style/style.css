@@ -330,3 +330,30 @@ table.table1 tr td
   color: #47433F;
   border-top: 1px solid #FFF;
   vertical-align:top}
+
+table.centro 
+{ margin: 10px 0 30px 0;
+  width: 100%;
+}
+
+table.centro .boton{
+background-color: #CCC;
+text-align:center;
+}
+
+
+table.centro .centrotd{
+background-color: #3B3B3B;
+text-align:center;
+}
+
+
+table.blanco 
+{ margin: 10px 0 30px 0;
+  width: 100%;
+}
+
+table.blanco .fondo
+{ 
+  background-color: white;
+}

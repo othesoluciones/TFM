@@ -2,7 +2,7 @@
 	<h1>Predicciones del nivel de alérgenos por municipio</h1>
 	<p>Seleccione un municipio para visualizar la predicción del nivel de brote alérgico de gramíneas para los próximos 3 días.</p>
 	<table>
-		<td id="idblanco" valign="top" colspan="2" align="center">
+		<td>
         <form action="/prediccion_muni" method="post" enctype="multipart/form-data">
 			<table border="1">
 				<colgroup>

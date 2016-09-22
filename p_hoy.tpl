@@ -17,7 +17,7 @@
 			</br>
 				<ul>
 				% for i in range(0,len(listaZona1[0])):
-					<li><a href={{listaZona1[0][i]}}>{{listaZona1[1][i]}}</a></li>
+					<li><a href="{{listaZona1[0][i]}}">{{listaZona1[1][i]}}</a></li>
 				%end
 				</ul>
 			</td>			

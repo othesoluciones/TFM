@@ -52,6 +52,10 @@
         </tbody>
 	</form>			
  </table>
+% if cuantosReportes==0:
+<p>No existen alertas notificadas por nuestros usuarios durante el día <b>{{hoy}}</b></p>
+% end
+% if cuantosReportes >=1:
 <p>Alertas notificadas por nuestros usuarios durante el día <b>{{hoy}}</b>:</p>
 	<table border="1">
 
@@ -85,6 +89,7 @@
 		</tbody>
 		%end
  </table>
+ %end
 	<div>
       %if prev_page is not None:
       <a href="/reporte/{{prev_page}}">&lt; Prev</a>

@@ -1,6 +1,6 @@
 % include('header_reporte.tpl', title='¡Repórtanos!', ndd=noticias_del_dia)
 <h1>Repórtanos alertas</h1>
-<p>Si quieres ayudarnos a mejorar nuestra predicción, puedes hacerlo si nos reportas una alerta del municipio en el que te encuentres.</b></p>
+<p>Si quieres ayudarnos a mejorar nuestra predicción, puedes hacerlo si nos reportas una alerta del municipio en el que te encuentres.</p>
 % if alta==1:
  <p id="idverde"><b>Alerta recibida con éxito. Gracias por su colaboración</b></p>
 % end

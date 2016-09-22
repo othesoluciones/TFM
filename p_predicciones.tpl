@@ -1,40 +1,31 @@
 % include('header_predicciones.tpl', title='Predicciones', ndd=noticias_del_dia)
 	<h1>Predicciones del nivel de alérgenos por municipio</h1>
 	<p>Seleccione un municipio para visualizar la predicción del nivel de brote alérgico de gramíneas para los próximos 3 días.</p>
-	<table>
+	<form action="/prediccion_muni" method="post" enctype="multipart/form-data">
+		<table border="1" class="centro">
+		<colgroup>
+			<col />
+		</colgroup>
 		<tr>
-		<td>
-        <form action="/prediccion_muni" method="post" enctype="multipart/form-data">
-			<table border="1">
-				<colgroup>
-					<col />
-					<col />
-				</colgroup>
-				<tbody>
-					<tr>
-						<td colspan="2" >
-							<select name="municipio">
-							% for m in muni:
-								<option value="{{m.attrib["value"][-5:]}}-{{m.text}}">{{m.text}}</option>
-							%end
-							</select>
-						</td>
-					</tr>
-				</tbody> 
-				<tbody>
-					<tr>
-						<td colspan="2" >
-							<input value="Ver Predicción" type="submit" onclick="toggle('spinner');"/>
-							<img src="/static/style/spinner.gif" id="spinner" style="display: none;" alt=""/>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</form>
-		</td>
+			<td class="centrotd">
+				<select name="municipio">
+				% for m in muni:
+				<option value="{{m.attrib["value"][-5:]}}-{{m.text}}">{{m.text}}</option>
+				%end
+				</select>
+			</td>
 		</tr>
 		<tr>
-		<td> 
+			<td class="boton">
+				<input value="Ver Predicción" type="submit" onclick="toggle('spinner');"/>
+				<img src="/static/style/spinner.gif" id="spinner" style="display: none;" alt=""/>
+			</td>
+		</tr>
+		</table>
+	</form>	
+	<table class="blanco">
+		<tr>
+		<td class="fondo"> 
 			<table border="1">
 				<colgroup>
 					<col />
@@ -55,14 +46,14 @@
 				</tbody> 			
 			</table>
 		</td>
-		<td> 
+		<td  class="fondo"> 
 		  <img src="data:image/png;base64, {{plot_url}}" alt="" id="municipio-cam" />
 		</td>
 		</tr>
 	</table>
-	<table>
+	<table class="blanco">
 		<tr>
-		<td> 
+		<td class="fondo"> 
 			<table border="1">
 				<colgroup>
 					<col />
@@ -83,7 +74,7 @@
 				</tbody> 
 			</table>
 		</td>
-		<td> 
+		<td class="fondo"> 
 			<table border="1">
 				<colgroup>
 					<col />

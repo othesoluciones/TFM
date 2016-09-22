@@ -1,47 +1,28 @@
 % include('header_hoy.tpl', title='Niveles del día', ndd=noticias_del_dia)
 	<h1>Municipios de Madrid</h1>
 	<p>Seleccione un municipio de la Comunidad de Madrid para visualizar sus datos meteorológicos y de calidad del aire correspondientes al día de <b>{{hoy}}</b></p>
-			  <img src="data:image/png;base64, {{plot_url}}" alt="" id="municipio-cam" />
-		  <img src="data:image/png;base64, {{plot_url_ley}}" alt="" id="municipio" />
-	<table>
-		<tr>
-		<td width="10%"  id="idblanco" valign="top"> 
-		<table border="1" valign="center">
-			<colgroup>
-				<col />
-			</colgroup>
-			<thead>
-			<tr>
-				<th scope="col">Madrid Capital</th>
-			</tr>
-			</thead>
-			<tbody valign="top">
-				<tr>
-					<td>
-						<ul>
-						% for i in range(0,len(listaZona1[0])):
-							<li><a href={{listaZona1[0][i]}}>{{listaZona1[1][i]}}</a></li>
-						%end
-						</ul>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-		</td>
-		<td width="90%"  id="idblanco" valign="top"> 
-		  <img src="data:image/png;base64, {{plot_url}}" alt="" id="municipio-cam" />
-		  <img src="data:image/png;base64, {{plot_url_ley}}" alt="" id="municipio" />
-		</td>
-		</tr>
-	</table>	
-	
+	<img src="data:image/png;base64, {{plot_url}}" alt="" id="municipio-cam" />
+	<img src="data:image/png;base64, {{plot_url_ley}}" alt="" id="municipio" />
 	<table border="1" valign="top">
 
         <colgroup>
            <col />
            <col />
+           <col />
         </colgroup>
-
+	<thead >
+		<tr>
+			<th scope="col">Madrid Capital</th>
+			<td colspan="2">
+			</br>
+				<ul>
+				% for i in range(0,len(listaZona1[0])):
+					<li><a href={{listaZona1[0][i]}}>{{listaZona1[1][i]}}</a></li>
+				%end
+				</ul>
+			</td>			
+		</tr>
+	</thead>
         <thead>
            <tr>
              <th scope="col">Corredor del Henares</th>

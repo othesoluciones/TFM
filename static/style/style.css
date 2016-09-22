@@ -314,3 +314,19 @@ td#centro{
 td#centro2{
  text-align: center;
 }
+
+
+table.table1
+{ margin: 10px 0 30px 0;}
+
+table.table1 tr th, table.table1 tr td
+{ text-align: left;
+  background: #3B3B3B;
+  color: #FFF;
+  padding: 7px 4px;}
+  
+table.table1 tr td
+{ background: #CCCCCC;
+  color: #47433F;
+  border-top: 1px solid #FFF;
+  vertical-align:top}

@@ -4,14 +4,14 @@
 	<table>
 		<td id="idblanco" valign="top" colspan="2" align="center">
         <form action="/prediccion_muni" method="post" enctype="multipart/form-data">
-			<table border="1" width="100%">
+			<table border="1">
 				<colgroup>
 					<col />
 					<col />
 				</colgroup>
 				<tbody>
 					<tr>
-						<td colspan="2" id="centro">
+						<td colspan="2" >
 							<select name="municipio">
 							% for m in muni:
 								<option value="{{m.attrib["value"][-5:]}}-{{m.text}}">{{m.text}}</option>
@@ -22,7 +22,7 @@
 				</tbody> 
 				<tbody>
 					<tr>
-						<td colspan="2" id="centro2">
+						<td colspan="2" >
 							<input value="Ver Predicción" type="submit" onclick="toggle('spinner');"/>
 							<img src="/static/style/spinner.gif" id="spinner" style="display: none;" alt=""/>
 						</td>
@@ -33,7 +33,7 @@
 		</td>
 		</tr>
 		<tr>
-		<td width="50%"  id="idblanco" valign="top"> 
+		<td> 
 			<table border="1">
 				<thead>
 					<tr>
@@ -54,14 +54,14 @@
 				% end
 			</table>
 		</td>
-		<td width="50%"  id="idblanco" valign="top"> 
+		<td> 
 		  <img src="data:image/png;base64, {{plot_url}}" alt="" id="municipio-cam" />
 		</td>
 		</tr>
 	</table>
 	<table>
 		<tr>
-		<td width="50%"  id="idblanco" valign="top"> 
+		<td> 
 			<table border="1">
 				<thead>
 					<tr>
@@ -83,11 +83,11 @@
 				% end
 			</table>
 		</td>
-		<td width="50%"  id="idblanco" valign="top"> 
+		<td> 
 			<table border="1">
 				<thead>
 					<tr>
-						<th scope="col" colspan="2" align="center">Municipios con mayor nivel de alerta para el día: <b>{{listaStrings[4]}}</b> </th>
+						<th>Municipios con mayor nivel de alerta para el día: <b>{{listaStrings[4]}}</b> </th>
 					</tr>
 				</thead>
 				% for p in listaPredicciones[2]:

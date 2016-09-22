@@ -580,8 +580,8 @@ def reporte(page=0):
     if page > 0:
         prev_page = page - 1
     next_page = None
-    cuantosReportes = db.coleccion_reportes.find({'realizada':hoy}).count()
     hoy=datetime.datetime.now().strftime('%d-%m-%Y')
+    cuantosReportes = db.coleccion_reportes.find({'realizada':hoy}).count()
     if db.coleccion_reportes.find({'realizada':hoy}).count() > (page + 1) * PAGE_SIZE:
         next_page = page + 1
     coleccion_reportes = (db.coleccion_reportes.find({'realizada':hoy})

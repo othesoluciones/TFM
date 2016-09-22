@@ -82,7 +82,7 @@
 				</colgroup>
 				<thead>
 					<tr>
-						<th>Municipios con mayor nivel de alerta para el día: <b>{{listaStrings[4]}}</b> </th>
+						<th scope="col" colspan="2" align="center">Municipios con mayor nivel de alerta para el día: <b>{{listaStrings[4]}}</b> </th>
 					</tr>
 				</thead>
 				<tbody>

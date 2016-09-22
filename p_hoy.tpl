@@ -60,7 +60,7 @@
         <thead align="center">
            <tr>
              <th scope="col">Zona Sur</th>
-             <th scope="col">Sierra Norte</th>
+             <th scope="col">Zona Sierra Norte</th>
 			 <th scope="col">Cuenca del Tajuña</th>
            </tr>
         </thead>

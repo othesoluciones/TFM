@@ -52,7 +52,7 @@
  </table>
 </form>	
 <p>Alertas notificadas por nuestros usuarios durante el día <b>{{hoy}}</b>:</p>
-	<table border="1">
+<table border="1">
 
         <colgroup>
            <col />
@@ -68,8 +68,9 @@
            </tr>
         </thead>
 
-		%for colRep in coleccion_reportes:
+		
         <tbody>
+        	%for colRep in coleccion_reportes:
 			<tr>
 				<td>
 					{{colRep['municipio_label']}}
@@ -81,8 +82,9 @@
 					{{colRep['hora']}}
 				</td>
 			</tr>
-		</tbody>
 		%end
+	</tbody>
+
  </table>
 	<div>
       %if prev_page is not None:

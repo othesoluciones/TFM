@@ -2,13 +2,13 @@
 <h1>Recibe notificaciones</h1>
 <p>Si quieres recibir en tu correo electrónico un email con la predicción del nivel de alertas del municipio que desees, por favor rellena este formulario.</p>
 % if errores[0]==False:
- <p id="idrojo">Por favor, introduzca una dirección de correo electrónico correcta</p>
+ <p id="idrojo"><b></b>Por favor, introduzca una dirección de correo electrónico correcta</b></p>
 % end
 % if errores[1]==False:
- <p id="idrojo">Por favor, seleccione un municipio correcto</p>
+ <p id="idrojo"><b>Por favor, seleccione un municipio correcto</b></p>
 % end
 % if errores[2]==False:
- <p id="idrojo">Por favor, rellene ambas fechas</p>
+ <p id="idrojo"><b>Por favor, rellene ambas fechas</b></p>
 % end
 
 <form action="/notifica" method="post" enctype="multipart/form-data">

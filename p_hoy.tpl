@@ -14,7 +14,7 @@
 		<tr>
 			<th scope="col">Madrid Capital</th>
 			<td colspan="2">
-			</br>
+			<br></br>
 				<ul>
 				% for i in range(0,len(listaZona1[0])):
 					<li><a href="{{listaZona1[0][i]}}">{{listaZona1[1][i]}}</a></li>
@@ -23,6 +23,7 @@
 			</td>			
 		</tr>
 	</thead>
+	<tbody></tbody>
         <thead>
            <tr>
              <th scope="col">Corredor del Henares</th>
@@ -57,7 +58,7 @@
 				</td>
 			</tr>
 		</tbody>
-        <thead align="center">
+        <thead>
            <tr>
              <th scope="col">Zona Sur</th>
              <th scope="col">Zona Sierra Norte</th>

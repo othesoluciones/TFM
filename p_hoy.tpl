@@ -22,10 +22,6 @@
 				</ul>
 			</td>			
 		</tr>
-	</thead>
-	<tbody>
-	</tbody>
-        <thead>
            <tr>
              <th scope="col">Corredor del Henares</th>
              <th scope="col">Zona Noroeste</th>

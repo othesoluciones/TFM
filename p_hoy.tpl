@@ -37,21 +37,21 @@
 				<td>
 					<ul>
 						% for i in range(0,len(listaZona2[0])):
-							<li><a href={{listaZona2[0][i]}}>{{listaZona2[1][i]}}</a></li>
+							<li><a href="{{listaZona2[0][i]}}">{{listaZona2[1][i]}}</a></li>
 						%end
 					</ul>
 				</td>
 				<td>
 					<ul>
 						% for i in range(0,len(listaZona4[0])):
-							<li><a href={{listaZona4[0][i]}}>{{listaZona4[1][i]}}</a></li>
+							<li><a href="{{listaZona4[0][i]}}">{{listaZona4[1][i]}}</a></li>
 						%end
 					</ul>
 				</td>
 				<td>
 					<ul>
 						% for i in range(0,len(listaZona6[0])):
-							<li><a href={{listaZona6[0][i]}}>{{listaZona6[1][i]}}</a></li>
+							<li><a href="{{listaZona6[0][i]}}">{{listaZona6[1][i]}}</a></li>
 						%end
 					</ul>
 				</td>
@@ -69,21 +69,21 @@
 				<td>
 					<ul>
 						% for i in range(0,len(listaZona3[0])):
-							<li><a href={{listaZona3[0][i]}}>{{listaZona3[1][i]}}</a></li>
+							<li><a href="{{listaZona3[0][i]}}">{{listaZona3[1][i]}}</a></li>
 						%end
 					</ul>
 				</td>
 				<td>
 					<ul>
 						% for i in range(0,len(listaZona5[0])):
-							<li><a href={{listaZona5[0][i]}}>{{listaZona5[1][i]}}</a></li>
+							<li><a href="{{listaZona5[0][i]}}">{{listaZona5[1][i]}}</a></li>
 						%end
 					</ul>
 				</td>
 				<td>
 					<ul>
 						% for i in range(0,len(listaZona7[0])):
-							<li><a href={{listaZona7[0][i]}}>{{listaZona7[1][i]}}</a></li>
+							<li><a href="{{listaZona7[0][i]}}">{{listaZona7[1][i]}}</a></li>
 						%end
 					</ul>
 				</td>

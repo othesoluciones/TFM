@@ -34,7 +34,7 @@
         </thead>
 
 
-        <tbody valign="top">
+        <tbody>
 			<tr>
 				<td>
 					<ul>
@@ -66,7 +66,7 @@
 			 <th scope="col">Cuenca del Tajuña</th>
            </tr>
         </thead>
-        <tbody valign="top">
+        <tbody>
 			<tr>
 				<td>
 					<ul>

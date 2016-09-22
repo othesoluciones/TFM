@@ -51,10 +51,10 @@
 		
  </table>
 </form>	
-% if cuantosReportes==0:
+% if cuantosReportes==0 or alta!=1:
 <p>No existen alertas notificadas por nuestros usuarios durante el día <b>{{hoy}}</b></p>
 % end
-% if cuantosReportes >=1:
+% if cuantosReportes >=1 or alta==1:
 <p>Alertas notificadas por nuestros usuarios durante el día <b>{{hoy}}</b>:</p>
 <table border="1">
 

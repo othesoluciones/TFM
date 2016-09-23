@@ -585,8 +585,8 @@ def NivelesPolenMadrid():
     tabla = soup.findAll("table")[1]
     datos = []
     #print tabla
-    print len(tabla.find_all("td"))
-    if (len(tabla.find_all("td"))==1):
+    print "Numero de filas en la tabla", len(tabla.find_all("tr"))
+    if (len(tabla.find_all("tr"))<=2):
        listaColumnas=[]
        listaColumnas.append("Polen/Fecha")
        from datetime import date, timedelta
@@ -999,20 +999,20 @@ scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=6, minu
 
 
 #realmente se ejecuta a las 08:46
-scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=6, minute=32)
+scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=7, minute=30)
 
 
 #realmente se ejecuta a las 08:55
-scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=6, minute=33)
+scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=7, minute=31)
 
 #realmente se ejecuta a las 09:10
-scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=6, minute=34)
+scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=7, minute=32)
 
 #realmente se ejecuta a las 09:12
-scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=6, minute=35)
+scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=7, minute=34)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=6, minute=38)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=7, minute=38)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

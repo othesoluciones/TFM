@@ -253,7 +253,7 @@ def envioMail():
 			texto=""
 			mensaje = MIMEMultipart()
 			mensaje['From']=cuentaDesde
-			mensaje['Subject']="Suscripcion a Notificaciones de Gramineas-Madrid"
+			#mensaje['Subject']= "Servicio de Notificaciones de Gramineas-Madrid"
 			cuentaPara=j
 			mensaje['To']=cuentaPara
 			for i in range(0, len(dfmm)):                 
@@ -271,10 +271,10 @@ def envioMail():
 							predManana= cursor1["Alerta "+manana]
 							predPasadoManana=cursor1["Alerta "+pasadomanana]
 							print "Llego a escribir el texto"
-							texto = texto+str("<h3>"+name2+"</h3>")
-							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +hoy+" es: <b>"+str((predHoy))+"</b><p></br>")
-							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +manana+" es: <b>"+str((predManana))+"</b><p></br>")
-							texto = texto+str("<p>El Nivel de Alerta de Gramineas para el dia " +pasadomanana+" es: <b>"+str((predPasadoManana))+"</b><p></br>")
+							texto = texto+str("<h3>"+name2+":</h3><p> </p>")
+							texto = texto+str("<p>El Nivel de Alerta de Gram&iacute;neas para el d&iacute;a " +hoy+" es: <b>"+str((predHoy))+"</b></p>")
+							texto = texto+str("<p>El Nivel de Alerta de Gram&iacute;neas para el d&iacute;a " +manana+" es: <b>"+str((predManana))+"</b></p>")
+							texto = texto+str("<p>El Nivel de Alerta de Gram&iacute;neas para el d&iacute;a " +pasadomanana+" es: <b>"+str((predPasadoManana))+"</b></p>")
 							texto = texto+str("<hr>")
 							#collection1 = db.prediccionesAEMET 
 							#name2 =  elimina_tildes(unicode(muni[k].text[:]))
@@ -282,19 +282,25 @@ def envioMail():
 							#busquedaAEMET = cursor1[time.strftime("%Y-%m-%d")]
 							#texto = texto+str("<p>Email para el usuario: "+cuentaPara+". La Temperatura Maxima de " + name2 + " es: " + busquedaAEMET[0]['Temperatura maxima'] + " C. Codigo Postal: "+dfmm.ix[i,1] +"</p>")
 			#print texto
+			mensaje['Subject']= hoy+". Servicio de Notificaciones"
 			html_inic = """\
 				<html>
 					<head></head>
 					<body>
-					<p>Buenos dias,</p>
+					<p>Buenos d&iacute;as,</p>
 					<p>Estas son las notificaciones que ha solicitado:</p>"""  
 			html_fin="""\
+			    <p>Deseamos que pase un gran d&iacute;a.</p>
+				<p>Para m&aacute;s informaci&oacute;n puede consultar nuestra web: https://gramineas-madrid.herokuapp.com/</p>
+				<p>Reciba un cordial saludo por parte del equipo de Othe Soluciones</p>
 				<img src="cid:logo" alt="Othe Soluciones" height="52" width="52"></img>
 				</html>"""
 			html=str(html_inic+texto+html_fin)
 			mensaje.attach(MIMEText(html,'html'))
 			# Adjuntamos la imagen
-			file = open("logo.jpg", "rb")
+			#file = open("logo.jpg", "rb")
+			file = open("static/style/logo.jpg", "rb")
+			
 			contenido = MIMEImage(file.read())
 			contenido.add_header('Content-ID', '<logo>')
 			mensaje.attach(contenido)
@@ -1012,7 +1018,7 @@ scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=7, minut
 scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=7, minute=34)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=7, minute=38)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=10, minute=32)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

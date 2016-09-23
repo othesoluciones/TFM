@@ -1,20 +1,22 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">-->
+<!DOCTYPE html>
+<html> <!--xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">-->
 
 <head>
   <title>{{title}}</title>
-  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
+  <!--<meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />-->
+  <meta charset="iso-8859-1">
   <link rel="stylesheet" type="text/css" href="/static/style/style.css" />
   <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.1/themes/base/jquery-ui.css" />
-  <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
-  <script type="text/javascript" src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
   <script type="text/javascript">
       function toggle(id) {
         var el = document.getElementById(id);
         el.style.display = (el.style.display != 'none' ? 'none' : '' );
       }
   </script>
-  <script type="text/javascript"> $.datepicker.regional['es'] = {
+  <script> $.datepicker.regional['es'] = {
  		closeText: 'Cerrar',
 		 prevText: '<Ant',
  nextText: 'Sig>',

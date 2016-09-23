@@ -817,6 +817,7 @@ def algoritmoPredictivo():
     #doc = etree.parse("C:/Users/soterod/TFM/static/Municipios/madrid.xml")
     muni=doc.findall("municipio")
     municipio=[]
+    municipioOrig=[]
     zona=[]
     codigo=[]
     
@@ -831,6 +832,7 @@ def algoritmoPredictivo():
         zona.append(zonaXML)
         intZona = int(zonaXML)
         municipio.append(municipioXML)
+        municipioOrig.append(localidad.text)
         codigo.append(localidad.attrib["value"][-5:])
         if municipioXML not in ['Madrid']:
             cno2= round(dfMEDIACalAire['NO2'][intZona],2)
@@ -860,6 +862,7 @@ def algoritmoPredictivo():
     
     dfMun=pd.DataFrame()
     dfMun['Municipio']=municipio
+    dfMun['MunicipioOrig']=municipioOrig
     dfMun['Zona']=zona
     dfMun['Codigo']=codigo
 
@@ -872,6 +875,7 @@ def algoritmoPredictivo():
     nivelesAEMET2=[]
     nivelesAEMET3=[]
     codigoP=[]
+    municipiosOrig2=[]
     dia1 = datetime.date.today()
     dia2 = datetime.date.today() + datetime.timedelta(days=1)
     dia3 = datetime.date.today() + datetime.timedelta(days=2)
@@ -893,7 +897,7 @@ def algoritmoPredictivo():
         nivelCalidad.append(dfMEDIA.ix[int(valZona)]['NIVEL'])
         codigoP.append(string.join(dfMun[dfMun.Municipio.isin([pred['Municipio']])]['Codigo'].values))
         Zona.append(valZona)
-
+        municipiosOrig2.append(string.join(dfMun[dfMun.Municipio.isin([pred['Municipio']])]['MunicipioOrig'].values))
         for indice in range(len(dias)):
             nivelAEMETDia=0
             for predaux in pred[dias[indice]]:
@@ -938,6 +942,7 @@ def algoritmoPredictivo():
     #Creamos un nuevo df con las predicciones calculadas.
     dfPredAEMET=pd.DataFrame()
     dfPredAEMET['Municipio']=Municipios
+    dfPredAEMET['MunicipioOrig']=municipiosOrig2
     dfPredAEMET['Codigo']=codigoP
     dfPredAEMET['Nivel Base']=NivelBase
     dfPredAEMET['Plus Calidad Aire']=nivelCalidad
@@ -949,7 +954,7 @@ def algoritmoPredictivo():
     dfPredAEMET['Nivel '+str(dia3F)]=dfPredAEMET['Nivel Base']*(dfPredAEMET['Nivel Base']+dfPredAEMET['Plus Calidad Aire']+dfPredAEMET['Plus AEMET '+str(dia3F)])
 
     dfPredAEMET
-    dfFinal = dfPredAEMET[['Municipio','Codigo','Nivel '+str(dia1F),'Nivel '+str(dia2F),'Nivel '+str(dia3F)]]
+    dfFinal = dfPredAEMET[['Municipio','MunicipioOrig','Codigo','Nivel '+str(dia1F),'Nivel '+str(dia2F),'Nivel '+str(dia3F)]]
     alerta1 = []
     alerta2 = []
     alerta3 = []
@@ -1015,10 +1020,10 @@ scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=7, min
 scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=7, minute=32)
 
 #realmente se ejecuta a las 09:12
-scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=7, minute=34)
+scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=7, minute=33)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=10, minute=32)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=7, minute=34)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

@@ -39,7 +39,7 @@
 				<tbody>				
 				% for p in listaPredicciones[0]:
 					<tr>
-						<th scope="row">{{p['Municipio']}}</th>
+						<th scope="row">{{p['MunicipioOrig']}}</th>
 						<td>{{p[listaStrings[1]]}}</td>
 					</tr>
 				% end
@@ -67,7 +67,7 @@
 				<tbody>
 				% for p in listaPredicciones[1]:
 					<tr>
-						<th scope="row">{{p['Municipio']}}</th>
+						<th scope="row">{{p['MunicipioOrig']}}</th>
 						<td>{{p[listaStrings[3]]}}</td>
 					</tr>
 				% end
@@ -88,7 +88,7 @@
 				<tbody>
 				% for p in listaPredicciones[2]:
 					<tr>
-						<th scope="row">{{p['Municipio']}}</th>
+						<th scope="row">{{p['MunicipioOrig']}}</th>
 						<td>{{p[listaStrings[5]]}}</td>
 					</tr>
 				% end

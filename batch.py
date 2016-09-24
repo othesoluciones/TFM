@@ -290,7 +290,8 @@ def envioMail():
 					<p>Buenos d&iacute;as,</p>
 					<p>Estas son las notificaciones que ha solicitado:</p>"""  
 			html_fin="""\
-			    <p>Deseamos que pase un gran d&iacute;a.</p>
+			    <br></br>
+				<p>Deseamos que pase un gran d&iacute;a.</p>
 				<p>Para m&aacute;s informaci&oacute;n puede consultar nuestra web: https://gramineas-madrid.herokuapp.com/</p>
 				<p>Reciba un cordial saludo por parte del equipo de Othe Soluciones</p>
 				<img src="cid:logo" alt="Othe Soluciones" height="52" width="52"></img>
@@ -1023,7 +1024,7 @@ scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=8, minut
 scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=8, minute=35)
 
 #realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=8, minute=37)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=10, minute=08)
 #realmente se ejecuta a las 20:30
 #scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
 

@@ -1,6 +1,6 @@
 % include('header_hoy.tpl', title='Niveles del día', ndd=noticias_del_dia)
 	<h1>Municipios de Madrid</h1>
-	<p>Seleccione un municipio de la Comunidad de Madrid para visualizar sus datos meteorológicos y de calidad del aire correspondientes al día de <b>{{hoy}}</b></p>
+	<p>Seleccione un municipio de la Comunidad de Madrid para visualizar sus datos meteorológicos y de calidad del aire correspondientes al día: <b>{{hoy}}</b></p>
 	<img src="data:image/png;base64, {{plot_url}}" alt="" id="municipio-cam" />
 	<img src="data:image/png;base64, {{plot_url_ley}}" alt="" id="municipio" />
 	<table border="1" class="table1">

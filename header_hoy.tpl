@@ -25,7 +25,7 @@
       </div>
     </div>
     <div id="site_content">
-      <div id="panel"><img src="/static/style/panel.jpg" alt="tree tops" /></div>
+      <div id="panel"><img src="/static/style/panel2.jpg" alt="tree tops" /></div>
       <div class="sidebar">
         <!-- insert your sidebar items here -->
         <h1>Links de interés</h1>

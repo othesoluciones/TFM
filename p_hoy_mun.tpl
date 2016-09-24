@@ -2,9 +2,9 @@
     <h1>{{name}}</h1>
 	<img src="data:image/png;base64, {{plot_url_img}}" id="municipio" alt =""/>
 	<img src="data:image/png;base64, {{plot_url_img_cam}}" id="municipio-cam" alt =""/>
-	<table>
+	<table class="blanco">
 		<tr>
-		<td width="40%"  id="idblanco" valign="top"> 
+		<td class="fondo" valign="top"> 
 		<table border="1">
 			<colgroup>
 				<col />
@@ -55,7 +55,7 @@
 	     % end
 		</table>
 		</td>
-		<td width="60%"  id="idblanco" valign="top"> 
+		<td class="fondo">
  		<table border="1">
 			<colgroup>
 				<col />

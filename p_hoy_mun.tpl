@@ -4,7 +4,7 @@
 	<img src="data:image/png;base64, {{plot_url_img_cam}}" id="municipio-cam" alt =""/>
 	<table>
 		<tr>
-		<td width="50%"  id="idblanco" valign="top"> 
+		<td width="40%"  id="idblanco" valign="top"> 
 		<table border="1">
 			<colgroup>
 				<col />
@@ -30,32 +30,32 @@
 			</tbody> 
 			<tbody>
 				<tr>
-					<th scope="row">Humedad relativa máxima</th>
+					<th scope="row">Humedad relativa máxima (%)</th>
 					<td>{{b['Humedad relativa maxima']}}</td>
 				</tr>
 			</tbody> 
 			<tbody>
 				<tr>
-					<th scope="row">Humedad relativa mínima</th>
+					<th scope="row">Humedad relativa mínima (%)</th>
 					<td>{{b['Humedad relativa minima']}}</td>
 				</tr>
 			</tbody> 
 			<tbody>
 				<tr>
-					<th scope="row">% Precipitaciones</th>
+					<th scope="row">Precipitaciones (%)</th>
 					<td>{{b['precipitaciones 00-24']}}</td>
 				</tr>
 			</tbody> 
 			<tbody>
 				<tr>
-					<th scope="row">Velocidad del Viento</th>
+					<th scope="row">Velocidad del Viento (km/h)</th>
 					<td>{{b['viento 00-24']}}</td>
 				</tr>
 			</tbody> 
 	     % end
 		</table>
 		</td>
-		<td width="50%"  id="idblanco" valign="top"> 
+		<td width="60%"  id="idblanco" valign="top"> 
  		<table border="1">
 			<colgroup>
 				<col />
@@ -68,43 +68,43 @@
 			</thead>
 			<tbody>
 				<tr>
-					<th scope="row">Dióxido de Nitrógeno</th>
+					<th scope="row">Dióxido de Nitrógeno (µg/m<sup>3</sup>)</th>
 					<td>{{cursor3['NO2']}}</td>
 				</tr>
 			</tbody> 
 			<tbody>
 				<tr>
-					<th scope="row">Partículas en Suspensión < PM10</th>
+					<th scope="row">Partículas en Suspensión < PM10 (µg/m<sup>3</sup>)</th>
 					<td>{{cursor3['PM10']}}</td>
 				</tr>
 			</tbody> 	
 			<tbody>
 				<tr>
-					<th scope="row">Partículas en Suspensión < PM2,5</th>
+					<th scope="row">Partículas en Suspensión < PM2,5 (µg/m<sup>3</sup>N)</th>
 					<td>{{cursor3['PM25']}}</td>
 				</tr>
 			</tbody>
 			<tbody>
 				<tr>
-					<th scope="row">Monóxido de Carbono</th>
+					<th scope="row">Monóxido de Carbono (mg/m<sup>3</sup>)</th>
 					<td>{{cursor3['CO']}}</td>
 				</tr>
 			</tbody> 
 			<tbody>
 				<tr>
-					<th scope="row">Concentración de Ozono</th>
+					<th scope="row">Concentración de Ozono (µg/m<sup>3</sup>)</th>
 					<td>{{cursor3['O3']}}</td>
 				</tr>
 			</tbody> 
 			<tbody>
 				<tr>
-					<th scope="row">Dióxido de Azufre</th>
+					<th scope="row">Dióxido de Azufre (µg/m<sup>3</sup>)</th>
 					<td>{{cursor3['SO2']}}</td>
 				</tr>
 			</tbody> 
 			<tbody>
 				<tr>
-					<th scope="row">Monóxido de Nitrogeno</th>
+					<th scope="row">Monóxido de Nitrogeno (µg/m<sup>3</sup>)</th>
 					<td>{{cursor3['NO']}}</td>
 				</tr>
 			</tbody> 

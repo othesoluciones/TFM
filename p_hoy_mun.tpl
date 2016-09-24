@@ -74,13 +74,13 @@
 			</tbody> 
 			<tbody>
 				<tr>
-					<th scope="row">Partículas en Suspensión < PM10 (µg/m<sup>3</sup>)</th>
+					<th scope="row">Partículas en Suspensión &lt; PM10 (µg/m<sup>3</sup>)</th>
 					<td>{{cursor3['PM10']}}</td>
 				</tr>
 			</tbody> 	
 			<tbody>
 				<tr>
-					<th scope="row">Partículas en Suspensión < PM2,5 (µg/m<sup>3</sup>N)</th>
+					<th scope="row">Partículas en Suspensión &lt; PM2,5 (µg/m<sup>3</sup>N)</th>
 					<td>{{cursor3['PM25']}}</td>
 				</tr>
 			</tbody>

@@ -8,6 +8,6 @@
 	<p>Para mañana, día <b>{{listaStrings[2]}}</b>, el nivel de alerta es: <b>{{listaPredicciones[1][listaStrings[3]]}}</b> <img src="data:image/png;base64, {{plot_url_img_fm}}" id="peq" alt =""/></p>
 	
 	<p>Para pasado mañana, día <b>{{listaStrings[4]}}</b>, el nivel de alerta es: <b>{{listaPredicciones[2][listaStrings[5]]}}</b> <img src="data:image/png;base64, {{plot_url_img_fpm}}" id="peq" alt =""/></p>
-	
+	<br></br>
  <a href="/predicciones">Volver</a>
 % include('footer.tpl')

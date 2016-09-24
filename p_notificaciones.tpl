@@ -1,6 +1,6 @@
 % include('header_notificaciones.tpl', title='Notificaciones', ndd=noticias_del_dia)
-<p>Si quieres recibir en tu correo electrónico un email con la predicción del nivel de alertas del municipio que desees, por favor rellena este formulario.</p>
 <h1>Recibe notificaciones</h1>
+<p>Si quieres recibir en tu correo electrónico un email con la predicción del nivel de alertas del municipio que desees, por favor rellena este formulario.</p>
 % if alta==1:
  <p id="idverde"><b>Servicio de notificación recibido con éxito. Gracias por su colaboración</b></p>
 % end

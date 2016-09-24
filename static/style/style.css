@@ -64,6 +64,9 @@ img
    width: 300px;
 }
 
+ img#peq {
+   width: 30px;
+}
 .right
 { float: right; 
   border-left: 20px solid #FFF;}

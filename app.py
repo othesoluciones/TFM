@@ -548,10 +548,33 @@ def prediccion_muni():
            plot_url_img = base64.b64encode(f1.read())
            f2 = gridfs.GridFS(db,"images").get_version(cursor2['filename_img_municipio_cam_alto']) 
            plot_url_img_cam = base64.b64encode(f2.read())	
+		   
+		   
+	#Obtenemos las imagenes correctas de los municipios para manana
+    if (prediccionManana[stringManana]=='Bajo'):
+      fm = gridfs.GridFS(db,"images").get_version(cursor2['filename_img_municipio_bajo']) 
+      plot_url_img_fm = base64.b64encode(fm.read())
+    elif (prediccionManana[stringManana]=='Medio'):
+           fm = gridfs.GridFS(db,"images").get_version(cursor2['filename_img_municipio_medio']) 
+           plot_url_img_fm = base64.b64encode(fm.read())
+    else:
+           fm = gridfs.GridFS(db,"images").get_version(cursor2['filename_img_municipio_alto']) 
+           plot_url_img_fm = base64.b64encode(fm.read())	
 
+	#Obtenemos las imagenes correctas de los municipios para manana
+    if (prediccionPasadoManana[stringPasadoManana]=='Bajo'):
+      fpm = gridfs.GridFS(db,"images").get_version(cursor2['filename_img_municipio_bajo']) 
+      plot_url_img_fpm = base64.b64encode(fpm.read())
+    elif (prediccionPasadoManana[stringPasadoManana]=='Medio'):
+           fpm = gridfs.GridFS(db,"images").get_version(cursor2['filename_img_municipio_medio']) 
+           plot_url_img_fpm = base64.b64encode(fpm.read())
+    else:
+           fpm = gridfs.GridFS(db,"images").get_version(cursor2['filename_img_municipio_alto']) 
+           plot_url_img_fpm = base64.b64encode(fpm.read())
+		   
     #Conexion BBDD		
     conexion.close()
-    return template("p_predicciones_mun.tpl", name=name, noticias_del_dia=noticias_del_dia, listaPredicciones=listaPredicciones, listaStrings=listaStrings, plot_url_img=plot_url_img, plot_url_img_cam=plot_url_img_cam)	
+    return template("p_predicciones_mun.tpl", name=name, noticias_del_dia=noticias_del_dia, listaPredicciones=listaPredicciones, listaStrings=listaStrings, plot_url_img=plot_url_img, plot_url_img_cam=plot_url_img_cam, plot_url_img_fm=plot_url_img_fm, plot_url_img_fpm=plot_url_img_fpm)		
 
 #Pestana Reportanos	
 @route('/reporte')

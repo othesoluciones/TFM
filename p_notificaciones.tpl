@@ -38,7 +38,7 @@
 <label for="fechaDesde">Fecha desde:
  <input type="text" name="fechaDesde" id="fechaDesde" value={{fdesde}} readonly/>
 </label><br/><br/>
-<label for="fechaHasta">Fecha Hasta:
+<label for="fechaHasta">Fecha hasta:
  <input type="text" name="fechaHasta" id="fechaHasta" value={{fhasta}} readonly/>
 </label>
 			  </td>

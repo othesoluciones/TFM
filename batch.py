@@ -271,7 +271,15 @@ def envioMail():
 							predManana= cursor1["Alerta "+manana]
 							predPasadoManana=cursor1["Alerta "+pasadomanana]
 							print "Llego a escribir el texto"
-							texto = texto+str("<h3>"+name2+":</h3><p> </p>")
+							print name2
+							print unicode(muni[k].text[:])
+							from bs4.dammit import EntitySubstitution
+							unsubbed = unicode(muni[k].text[:])
+							esub = EntitySubstitution()
+							subbed = esub.substitute_html(unsubbed)
+							print subbed
+							#texto = texto+str("<h3>"+name2+":</h3><p> </p>")
+							texto = texto+str("<h3>"+subbed+":</h3><p> </p>")
 							texto = texto+str("<p>El Nivel de Alerta de Gram&iacute;neas para el d&iacute;a " +hoy+" es: <b>"+str((predHoy))+"</b></p>")
 							texto = texto+str("<p>El Nivel de Alerta de Gram&iacute;neas para el d&iacute;a " +manana+" es: <b>"+str((predManana))+"</b></p>")
 							texto = texto+str("<p>El Nivel de Alerta de Gram&iacute;neas para el d&iacute;a " +pasadomanana+" es: <b>"+str((predPasadoManana))+"</b></p>")
@@ -288,11 +296,11 @@ def envioMail():
 					<head></head>
 					<body>
 					<p>Buenos d&iacute;as,</p>
-					<p>Estas son las notificaciones que ha solicitado:</p>"""  
+					<p>Estas son las notificaciones que ha solicitado:</p><br></br>"""  
 			html_fin="""\
 			    <br></br>
 				<p>Deseamos que pase un gran d&iacute;a.</p>
-				<p>Para m&aacute;s informaci&oacute;n puede consultar nuestra web: https://gramineas-madrid.herokuapp.com/</p>
+				<p>Para m&aacute;s informaci&oacute;n puede consultar nuestra web: http://gramineas-madrid.herokuapp.com/</p>
 				<p>Reciba un cordial saludo por parte del equipo de Othe Soluciones</p>
 				<img src="cid:logo" alt="Othe Soluciones" height="52" width="52"></img>
 				</html>"""
@@ -311,7 +319,7 @@ def envioMail():
 			mailServer.sendmail(cuentaDesde, cuentaPara, mensaje.as_string())
 		# Cierre de la conexion
 		mailServer.close()
-		print "Enviado"
+		print "Fin de Envio de mails"
     else:
 		print "No existen notificaciones que enviar para el dia de hoy"
 		mailServer.close()
@@ -998,35 +1006,31 @@ def algoritmoPredictivo():
     print "Fin Dibujo mapa alertas"
 	
 #Hay que poner 2 horas menos de las que son en realidad debido a problemas en heroku de horas
+#Entre el primer y ultimo job no puede haber mas de 30 minutos
+#Ejemplo de como se definiria un job que se ejecuta a intervalos de 5 segundos
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 
 
-
-
-
-
-
-#realmente se ejecuta a las 08:47. Este tarda
+#realmente se ejecuta a las 07:32. Este tarda
 scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=5, minute=32)
 
 
-#realmente se ejecuta a las 08:46
+#realmente se ejecuta a las 07:38
 scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=5, minute=38)
 
 
-#realmente se ejecuta a las 08:55
+#realmente se ejecuta a las 07:39
 scheduler.add_job(NivelesPolenMadrid, 'cron', day_of_week='mon-sun', hour=5, minute=39)
 
-#realmente se ejecuta a las 09:10
+#realmente se ejecuta a las 07:40
 scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=5, minute=40)
 
-#realmente se ejecuta a las 09:12
+#realmente se ejecuta a las 07:41
 scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=5, minute=41)
 
-#realmente se ejecuta a las 08:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=5, minute=45)
-#realmente se ejecuta a las 20:30
-#scheduler.add_job(actualiza_calidad_aire, 'cron', day_of_week='mon-sun', hour=18, minute=30)
+#realmente se ejecuta a las 07:45
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=05, minute=45)
+
 
 
 

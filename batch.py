@@ -207,9 +207,7 @@ def envioMail():
     cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
     MONGODB_URI =cadenaCon
     MONGODB_URI = 'mongodb://othesoluciones:othesoluciones@ds029635.mlab.com:29635/othesoluciones1'
-    #import unicodedata
-    #def elimina_tildes(s):
-    #   return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
+
 
     db = Connection(MONGODB_URI).othesoluciones1
 
@@ -223,7 +221,7 @@ def envioMail():
     for doc in db.coleccion_notificaciones.find():
         if ((datetime.datetime.strptime(doc['fdesde'],'%d/%m/%Y')<= fecha) and (fecha <= datetime.datetime.strptime(doc['fhasta'],'%d/%m/%Y'))):
 
-            df_aux=pd.DataFrame([doc['email'],doc['municipio']])
+            df_aux=pd.DataFrame([doc['email'],doc['municipio'], doc['fhasta']])
 
             dfmm= dfmm.append(df_aux.T, ignore_index=True)
             
@@ -240,6 +238,7 @@ def envioMail():
     print dfmm
     if (len(dfmm)>0):
 		print "Existen notificaciones que enviar"
+		#Obtenemos la lista de emails distintos
 		for j in dfmm[0].unique():
 		    # Construimos un mensaje Multipart, en el que vamos a incluir texto y una imagen adjunta
 			# El cuerpo del texto del mensaje dependera del numero de suscripciones activas que tenga un usuario para el dia actual
@@ -265,10 +264,16 @@ def envioMail():
 							unsubbed = unicode(muni[k].text[:])
 							esub = EntitySubstitution()
 							subbed = esub.substitute_html(unsubbed)
+							print "Activa hasta el: ", dfmm.ix[i,2]
+							fhasta = str(dfmm.ix[i,2]).replace("/","-")
 							texto = texto+str("<h3>"+subbed+":</h3><p> </p>")
 							texto = texto+str("<p>El Nivel de Alerta de Gram&iacute;neas para el d&iacute;a " +hoy+" es: <b>"+str((predHoy))+"</b></p>")
 							texto = texto+str("<p>El Nivel de Alerta de Gram&iacute;neas para el d&iacute;a " +manana+" es: <b>"+str((predManana))+"</b></p>")
 							texto = texto+str("<p>El Nivel de Alerta de Gram&iacute;neas para el d&iacute;a " +pasadomanana+" es: <b>"+str((predPasadoManana))+"</b></p>")
+							if (hoy!=fhasta):
+							   texto = texto+str("<p>Recibir&aacute; esta notificaci&oacute;n hasta el: <b>"+fhasta+"</b></p>")
+							else:
+							    texto = texto+str("<p>Hoy d&iacute;a <b>"+fhasta+"</b> es el &uacute;ltimo en el que recibir&aacute; esta notificaci&oacute;n</p>")
 							texto = texto+str("<hr>")
 							
 			#Establecemos el Asunto del Email

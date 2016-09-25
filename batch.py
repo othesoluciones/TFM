@@ -144,8 +144,6 @@ def dibuja_mapa_alertas():
         collection1=db.PrediccionOTHE
         cursor1=collection1.find_one({"Municipio": name2})
         predHoy = cursor1["Nivel "+hoy]
-        #import random
-        #predHoy= random.randint(0,2)
         color=round(predHoy)
         if (nombreMunicipio in diccionarioMunicipiosErroneos):
             finrango1= diccionarioMunicipiosErroneos[nombreMunicipio]['finrango1']
@@ -184,7 +182,7 @@ def dibuja_mapa_alertas():
     os.remove(nomMapaAlerta)
     
 def envioMail():
-    print "Comenzamos envio mail"
+    print "Comenzamos envioMail"
     import base64
     from email.mime.multipart import MIMEMultipart
     from email.mime.text import MIMEText
@@ -197,12 +195,9 @@ def envioMail():
     password = base64.b64decode("Q29uc3RhbmNpYTIx")
     mailServer.login("othesoluciones@gmail.com",password)
     # Construimos un mensaje Multipart, con un texto y una imagen adjunta
+	# Establecemos la cuentadesde
     cuentaDesde = "othesoluciones@gmail.com"
-    #cuentaPara = "cesarhernandez@campusciff.net"
-    #mensaje = MIMEMultipart()
-    #mensaje['From']=cuentaDesde
-    #mensaje['To']=cuentaPara
-    #mensaje['Subject']="Tienes un correo"
+
 
 
     from pymongo import MongoClient as Connection
@@ -212,34 +207,30 @@ def envioMail():
     cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
     MONGODB_URI =cadenaCon
     MONGODB_URI = 'mongodb://othesoluciones:othesoluciones@ds029635.mlab.com:29635/othesoluciones1'
-    import unicodedata
-    def elimina_tildes(s):
-       return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
+    #import unicodedata
+    #def elimina_tildes(s):
+    #   return ''.join((c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn'))
 
     db = Connection(MONGODB_URI).othesoluciones1
 
-    #Para ejecutar con BBDD local 
-    #db = Connection().othesoluciones1
-    #db.coleccion_notificaciones.drop()
     import datetime
     import numpy as np
     import pandas as pd
     fecha = (datetime.date.today()+datetime.timedelta(days=0)).strftime('%d/%m/%Y')
     fecha = datetime.datetime.strptime(fecha,'%d/%m/%Y')
-    print "Fecha supuesta de hoy-->", fecha
+    print "Fecha de hoy-->", fecha
     dfmm = pd.DataFrame()
-
-    for doc in db.coleccion_notificaciones.find():#{\"$and\":[{'fdesde': {'$lte': man}},{'fhasta': {'$gte':man}}]}):\n",
+    for doc in db.coleccion_notificaciones.find():
         if ((datetime.datetime.strptime(doc['fdesde'],'%d/%m/%Y')<= fecha) and (fecha <= datetime.datetime.strptime(doc['fhasta'],'%d/%m/%Y'))):
 
             df_aux=pd.DataFrame([doc['email'],doc['municipio']])
 
             dfmm= dfmm.append(df_aux.T, ignore_index=True)
-            #print doc
+            
 
     print "****************************************************************"
 
-    #df_index = dfmm.set_index(0)
+
 
     from lxml import etree
     import time
@@ -250,10 +241,11 @@ def envioMail():
     if (len(dfmm)>0):
 		print "Existen notificaciones que enviar"
 		for j in dfmm[0].unique():
+		    # Construimos un mensaje Multipart, en el que vamos a incluir texto y una imagen adjunta
+			# El cuerpo del texto del mensaje dependera del numero de suscripciones activas que tenga un usuario para el dia actual
 			texto=""
 			mensaje = MIMEMultipart()
 			mensaje['From']=cuentaDesde
-			#mensaje['Subject']= "Servicio de Notificaciones de Gramineas-Madrid"
 			cuentaPara=j
 			mensaje['To']=cuentaPara
 			for i in range(0, len(dfmm)):                 
@@ -266,31 +258,22 @@ def envioMail():
 							collection1 = db.PrediccionOTHE
 							name2 =  elimina_tildes(unicode(muni[k].text[:]))
 							cursor1 = collection1.find_one({"Municipio": name2})
-							print "Llego a leer de la bbdd"
 							predHoy = cursor1["Alerta "+hoy]
 							predManana= cursor1["Alerta "+manana]
 							predPasadoManana=cursor1["Alerta "+pasadomanana]
-							print "Llego a escribir el texto"
-							print name2
-							print unicode(muni[k].text[:])
 							from bs4.dammit import EntitySubstitution
 							unsubbed = unicode(muni[k].text[:])
 							esub = EntitySubstitution()
 							subbed = esub.substitute_html(unsubbed)
-							print subbed
-							#texto = texto+str("<h3>"+name2+":</h3><p> </p>")
 							texto = texto+str("<h3>"+subbed+":</h3><p> </p>")
 							texto = texto+str("<p>El Nivel de Alerta de Gram&iacute;neas para el d&iacute;a " +hoy+" es: <b>"+str((predHoy))+"</b></p>")
 							texto = texto+str("<p>El Nivel de Alerta de Gram&iacute;neas para el d&iacute;a " +manana+" es: <b>"+str((predManana))+"</b></p>")
 							texto = texto+str("<p>El Nivel de Alerta de Gram&iacute;neas para el d&iacute;a " +pasadomanana+" es: <b>"+str((predPasadoManana))+"</b></p>")
 							texto = texto+str("<hr>")
-							#collection1 = db.prediccionesAEMET 
-							#name2 =  elimina_tildes(unicode(muni[k].text[:]))
-							#cursor1 = collection1.find_one({"Municipio": name2})
-							#busquedaAEMET = cursor1[time.strftime("%Y-%m-%d")]
-							#texto = texto+str("<p>Email para el usuario: "+cuentaPara+". La Temperatura Maxima de " + name2 + " es: " + busquedaAEMET[0]['Temperatura maxima'] + " C. Codigo Postal: "+dfmm.ix[i,1] +"</p>")
-			#print texto
+							
+			#Establecemos el Asunto del Email
 			mensaje['Subject']= hoy+". Servicio de Notificaciones"
+			#Establecemos el texto comun de los emails
 			html_inic = """\
 				<html>
 					<head></head>
@@ -304,25 +287,27 @@ def envioMail():
 				<p>Reciba un cordial saludo por parte del equipo de Othe Soluciones</p>
 				<img src="cid:logo" alt="Othe Soluciones" height="52" width="52"></img>
 				</html>"""
+			#Y lo juntamos en una cadena
 			html=str(html_inic+texto+html_fin)
-			mensaje.attach(MIMEText(html,'html'))
-			# Adjuntamos la imagen
-			#file = open("logo.jpg", "rb")
-			file = open("static/style/logo.jpg", "rb")
 			
+			#Montamos todo el cuerpo del mensaje
+			mensaje.attach(MIMEText(html,'html'))
+			
+			# Adjuntamos la imagen
+			file = open("static/style/logo.jpg", "rb")			
 			contenido = MIMEImage(file.read())
 			contenido.add_header('Content-ID', '<logo>')
 			mensaje.attach(contenido)
-			#print mensaje.as_string()
-			print "Envio mail"
+			print "Envio mail a: ", cuentaPara
 			# Enviamos el correo, con los campos from y to.
 			mailServer.sendmail(cuentaDesde, cuentaPara, mensaje.as_string())
 		# Cierre de la conexion
 		mailServer.close()
-		print "Fin de Envio de mails"
+		print "Fin de envioMail con emails enviados"
     else:
-		print "No existen notificaciones que enviar para el dia de hoy"
+	    # Cierre de la conexion
 		mailServer.close()
+		print "Fin de envioMail no habia emails que enviar"
  
 def actualiza_calidad_aire():
     print "Empezamos actualiza_calidad_aire"
@@ -341,7 +326,8 @@ def actualiza_calidad_aire():
     MONGODB_URI =cadenaCon
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
-    #db = Connection().othesoluciones1
+
+	
     primeraVez = True
 
     for i in range (2,8):
@@ -426,13 +412,13 @@ def noticias_del_dia():
     import json
     from pymongo import MongoClient as Connection
     from bs4 import BeautifulSoup
+    #Conectamos a la base de datos
     cadenaCon= 'mongodb://othesoluciones:'+base64.b64decode("b3RoZXNvbHVjaW9uZXM=")+'@ds029635.mlab.com:29635/othesoluciones1'
     MONGODB_URI =cadenaCon
-    #MONGODB_URI = 'mongodb://othesoluciones:othesoluciones@ds029635.mlab.com:29635/othesoluciones1'
     db = Connection(MONGODB_URI).othesoluciones1 
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
-    #db = Connection().othesoluciones1
+
     
     from googleapiclient.discovery import build
     import time
@@ -481,50 +467,37 @@ def prediccionAEMET (xmlUrl,municipio,CP):
 
     diccionario = {}
     diccionario['Municipio']=municipio
-    #diccionario['link_xml']=xmlUrl
-    #diccionario['Codigo_Postal']=CP
-    #diccionario[municipio]={}
+
     for dia in data['root']['prediccion']['dia']:
         diccionario[dia['@fecha']]=[]
-        #diccionario[municipio][dia['@fecha']]={}
         dicFech ={}
         tamPrecip = len(dia['prob_precipitacion'])
         if type(dia['prob_precipitacion']) ==list:
             for periodo in dia['prob_precipitacion']:
                 if  len(periodo)>1:
-                    dicFech['precipitaciones '+periodo['@periodo']]=periodo.items()[1][1]
-                    #diccionario[municipio][dia['@fecha']]['precipitaciones '+periodo['@periodo']]=periodo.items()[1][1] #periodo['#text']          
+                    dicFech['precipitaciones '+periodo['@periodo']]=periodo.items()[1][1]         
         else:
-            #diccionario[municipio][dia['@fecha']]['precipitaciones']=dia['prob_precipitacion']
             dicFech['precipitaciones']=dia['prob_precipitacion']
         tamViento = len(dia['viento'])  
         if tamViento>2:
             for viento in dia['viento']:
                 if  len(viento)>1:
-                    #diccionario[municipio][dia['@fecha']]['viento '+viento['@periodo']]= viento['velocidad']
                     dicFech['viento '+viento['@periodo']]= viento['velocidad']
         else:
-            #diccionario[municipio][dia['@fecha']]['viento']= viento['velocidad']
             dicFech['viento']= viento['velocidad']
-        #diccionario[municipio][dia['@fecha']]['Temperatura maxima']= dia['temperatura']['maxima']
-        #diccionario[municipio][dia['@fecha']]['Temperatura minima']= dia['temperatura']['minima']
         dicFech['Temperatura maxima']= dia['temperatura']['maxima']
         dicFech['Temperatura minima']= dia['temperatura']['minima']
         tamTemp=len(dia['temperatura'])  
         if tamTemp>2:
             for temp in dia['temperatura']['dato']:
-                if len(temp)>1:
-                 #diccionario[municipio][dia['@fecha']]['Temperatura '+temp['@hora']]= temp.items()[1][1] #temp['#text'] 
+                if len(temp)>1: 
                  dicFech['Temperatura '+temp['@hora']]= temp.items()[1][1]
-        #diccionario[municipio][dia['@fecha']]['Humedad relativa maxima']= dia['humedad_relativa']['maxima']
-        #diccionario[municipio][dia['@fecha']]['Humedad relativa minima']= dia['humedad_relativa']['minima'] 
         dicFech['Humedad relativa maxima']= dia['humedad_relativa']['maxima']
         dicFech['Humedad relativa minima']= dia['humedad_relativa']['minima'] 
         tamHum=len(dia['humedad_relativa'])  
         if tamHum>2:
             for temp in dia['humedad_relativa']['dato']:
-              if len(temp)>1:
-                 #diccionario[municipio][dia['@fecha']]['Humedad relativa '+temp['@hora']]= temp.items()[1][1]#temp['#text']    
+              if len(temp)>1:   
                  dicFech['Humedad relativa '+temp['@hora']]= temp.items()[1][1]
         diccionario[dia['@fecha']].append(dicFech)
     return diccionario
@@ -548,7 +521,8 @@ def prediccionesAEMET():
     MONGODB_URI =cadenaCon
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
-    #db = Connection().othesoluciones1
+
+	
     db.prediccionesAEMET.drop()
 
     for urls in soup.find_all('td'):
@@ -590,7 +564,7 @@ def NivelesPolenMadrid():
     MONGODB_URI =cadenaCon
     conexion = Connection(MONGODB_URI)
     db = conexion.othesoluciones1
-    #db = Connection().othesoluciones1
+
     link ="http://polenes.com/graficos/jsp/ImgGrafico.jsp?chkSelTodos=on&chkPolenes=CUPRE&chkPolenes=PALMA&chkPolenes=RUMEX&chkPolenes=MERCU&chkPolenes=MORUS&chkPolenes=URTIC&chkPolenes=ALNUS&chkPolenes=BETUL&chkPolenes=CAREX&chkPolenes=FRAXI&chkPolenes=QUERC&chkPolenes=OLEA&chkPolenes=PINUS&chkPolenes=ULMUS&chkPolenes=CASTA&chkPolenes=POPUL&chkPolenes=GRAMI&chkPolenes=QUEAM&chkPolenes=PLATA&chkPolenes=PLANT&chkPolenes=ARTEM&chkPolenes=ALTER&selEstacion=MAD&selAnioTrimes=&selPeriodo=USE&txtFDesde=01%2F01%2F2010&txtFHasta=12%2F08%2F2016&prov=MAD&hidPolen=%26polen%3DCUPRE%26polen%3DPALMA%26polen%3DRUMEX%26polen%3DMERCU%26polen%3DMORUS%26polen%3DURTIC%26polen%3DALNUS%26polen%3DBETUL%26polen%3DCAREX%26polen%3DFRAXI%26polen%3DQUERC%26polen%3DOLEA%26polen%3DPINUS%26polen%3DULMUS%26polen%3DCASTA%26polen%3DPOPUL%26polen%3DGRAMI%26polen%3DQUEAM%26polen%3DPLATA%26polen%3DPLANT%26polen%3DARTEM%26polen%3DALTER&hidCheckSel=&mostrarGraf=S&hidPolenSolo=N&idio=ES&numPolenesSeleccionados=22&hidAniosEstacion=&primero=trueutm_source=twitter&utm_medium=twitter&utm_campaign=twitter"
     
     f = urllib.urlopen(link)
@@ -599,7 +573,7 @@ def NivelesPolenMadrid():
     soup = BeautifulSoup(myfile)
     tabla = soup.findAll("table")[1]
     datos = []
-    #print tabla
+
     print "Numero de filas en la tabla", len(tabla.find_all("tr"))
     if (len(tabla.find_all("tr"))<=2):
        listaColumnas=[]
@@ -689,7 +663,6 @@ def NivelesPolenMadrid():
     recordsdf = json.loads(df.T.to_json()).values()
     db.nivelesPolenSEAIC.insert_many(recordsdf)
     conexion.close()  
-    #print recordsdf
     print "Finalizado NivelesPolenMadrid"
 
 def algoritmoPredictivo():
@@ -710,7 +683,7 @@ def algoritmoPredictivo():
     #Calculamos el mes y la semana actual
     mes = datetime.date.today().month
     semana = datetime.date.today().isocalendar()[1]
-    print "Comienza algoritmo", semana, " ",mes
+    print "Comienza algoritmo Semana: ", semana, ", Mes: ",mes
     #Obtenemos el nivel inicial
     NivelBase=db.calendarioPolen.find_one({"Mes": mes})['Nivel']
 
@@ -899,10 +872,8 @@ def algoritmoPredictivo():
         valZona = string.join(dfMun[dfMun.Municipio.isin([pred['Municipio']])]['Zona'].values)
         
         if (valZona==''):
-            print pred['Municipio']
-            print "DEBERIA FALLAR AQUI"
-            print "VALOR DE VALZONA -->", valZona, "<--"
-            print "El municipio del que no se esta recuperando la zona", pred['Municipio'],"******"
+            print "El municipio del que no se esta recuperando la zona: ",pred['Municipio']," VALOR DE VALZONA -->", valZona,"******"
+
         nivelCalidad.append(dfMEDIA.ix[int(valZona)]['NIVEL'])
         codigoP.append(string.join(dfMun[dfMun.Municipio.isin([pred['Municipio']])]['Codigo'].values))
         Zona.append(valZona)
@@ -1006,10 +977,12 @@ def algoritmoPredictivo():
     print "Fin Dibujo mapa alertas"
 	
 #Hay que poner 2 horas menos de las que son en realidad debido a problemas en heroku de horas
-#Entre el primer y ultimo job no puede haber mas de 30 minutos
+
+
 #Ejemplo de como se definiria un job que se ejecuta a intervalos de 5 segundos
 #scheduler.add_job(timed_job, 'interval', seconds=5)
 
+#Entre el primer y ultimo job no puede haber mas de 30 minutos
 
 #realmente se ejecuta a las 07:32. Este tarda
 scheduler.add_job(prediccionesAEMET, 'cron', day_of_week='mon-sun', hour=5, minute=32)
@@ -1029,7 +1002,7 @@ scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=5, minut
 scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=5, minute=41)
 
 #realmente se ejecuta a las 07:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=05, minute=45)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=5, minute=45)
 
 
 

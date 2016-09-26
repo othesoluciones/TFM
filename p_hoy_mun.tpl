@@ -19,13 +19,13 @@
 			<tbody>
 				<tr>
 					<th scope="row">Temperatura máxima (ºC)</th>
-					<td>{{b['Temperatura minima']}}</td>
+					<td>{{b['Temperatura maxima']}}</td>
 				</tr>
 			</tbody> 
 			<tbody>
 				<tr>
 					<th scope="row">Temperatura mínima (ºC)</th>
-					<td>{{b['Temperatura maxima']}}</td>
+					<td>{{b['Temperatura minima']}}</td>
 				</tr>
 			</tbody> 
 			<tbody>

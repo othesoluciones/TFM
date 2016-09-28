@@ -1007,7 +1007,7 @@ scheduler.add_job(noticias_del_dia, 'cron', day_of_week='mon-sun', hour=5, minut
 scheduler.add_job(algoritmoPredictivo, 'cron', day_of_week='mon-sun', hour=5, minute=41)
 
 #realmente se ejecuta a las 07:45
-scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=5, minute=45)
+scheduler.add_job(envioMail, 'cron', day_of_week='mon-sun', hour=6, minute=45)
 
 
 

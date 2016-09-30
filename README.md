@@ -7,7 +7,21 @@
 #### Sara Otero de Navascués Tomé
 #### César Hernández Martín
 
+## Descripción
+Aplicación web dirigida al estudio y predicción de brotes alérgicos producidos por el polen de gramíneas en la Comunidad de Madrid
+
+### Configuración
+
+
+
+
+
+
+
 [![Heroku](https://www.herokucdn.com/deploy/button.png)](http://gramineas-madrid.herokuapp.com/)
+
+
+<img src="https://www.python.org/static/community_logos/python-logo-master-v3-TM.png" height="50" alt="Python">
 
 Licencia
 ----

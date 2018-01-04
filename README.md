@@ -1,6 +1,6 @@
 # SISTEMA DE GENERACIÓN DE ALERTAS DE BROTES ALÉRGICOS POR GRAMÍNEAS
 ## Máster en Big Data y Business Analytics 2015/2016
-[![UAH](http://www3.uah.es/biologiadesistemas/secuah2017/wp-content/uploads/2017/02/image4.png)](http://www.uah.es/es/)
+[![UAH](http://www.uah.es/export/sites/uah/.galleries/imagenes-estructura/logo1.png_105938625.png)](http://www.uah.es/es/)
 
 ## Autores:
 #### Sara Otero de Navascués Tomé
